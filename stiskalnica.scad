@@ -1,9 +1,10 @@
-ro = 25;
-ri = 13;
-ho = 25;
-h = 40;
-c1 = 3;
-hole = [16, 16, 20];  
+ro = 25;  // outer radius
+ri = 15;  // inner radius
+ho = 25;  // height of bottom part
+h = 40;   // full height
+c1 = 2;   // rounded corners
+hole = [16, 16, 20]; // cut-out
+
 precision1 = 30;
 precisiono = 200;
 
