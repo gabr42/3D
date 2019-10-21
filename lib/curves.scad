@@ -1,50 +1,39 @@
-function translate(points, dx, dy) = 
-  [for (i = points) [i.x + dx, i.y + dy]];
-
-function translate(points, dx, dy, dz) = 
-  [for (i = points) [i.x + dx, i.y + dy, is_undef(i.z) ? dz : i.z + dz]];
+use <helpers.scad>
     
-function make_list(from, to) = 
-  [for (i = [from:to]) i];
-    
-function reverse(list) = 
-  [for (i = [len(list)-1:-1:0]) list[i]];
-    
-function wave_points(width, height, num_waves) = 
+function wave_points(length, height, num_waves, offset = 0) = 
   let (steps = $fn > 0 ? $fn : 10)
-  let (delta = width / steps)
-  [for (i = [0:steps]) [i*width/steps, sin((i/steps)*360*num_waves) * height]];
+  let (delta = length / steps)
+  [for (i = [0:steps]) [i*length/steps, sin((i/steps)*360*num_waves - offset) * height]];
 
-function offset_wave(width, height, num_waves, offset) = 
-  let (w1 = wave_points(width, height, num_waves))
-  let (w2 = reverse(translate(w1, 0, offset)))
+function offset_wave(length, height, num_waves, thickness, offset) = 
+  let (w1 = wave_points(length, height, num_waves, offset))
+  let (w2 = reverse(translate(w1, [0, thickness])))
   concat(w1,w2);
 
-wave = offset_wave(50, 5, 2, 3, $fn=81);
+module sinus_wave(length, height, thickness, num_waves, offset = 0) {
+  polygon(offset_wave(length, height, num_waves, thickness, offset));
+}
 
-//color("red")
-//polygon(wave);
-//  
-//color("green")
-//translate([0, 3, 0])
-//mirror([0, 1, 0])
-//polygon(wave);
+module test_sinus_wave(length, height, thickness, num_waves) {
+  color("red")
+  sinus_wave(length, height, thickness, num_waves);
+    
+  color("green")
+  sinus_wave(length, height, thickness, num_waves, offset = 180);
+}
 
-function wave_points_3d_sin(width, yheight, zheight, num_waves) = 
+//test_sinus_wave(50, 5, 2, 3, $fn=81);
+
+function wave_points_3d(width, yheight, zheight, num_waves, yoffset = 0,zoffset = 0) = 
   let (steps = $fn > 0 ? $fn : 10)
   let (delta = width / steps)
-  [for (i = [0:steps]) [i*width/steps, sin((i/steps)*360*num_waves) * yheight, sin((i/steps)*360*(num_waves/2)) * zheight]];
+  [for (i = [0:steps]) [i*width/steps, sin((i/steps)*360*num_waves - yoffset) * yheight, sin((i/steps)*360*num_waves - zoffset) * zheight]];
 
-function wave_points_3d_cos(width, yheight, zheight, num_waves) = 
-  let (steps = $fn > 0 ? $fn : 10)
-  let (delta = width / steps)
-  [for (i = [0:steps]) [i*width/steps, cos((i/steps)*360*num_waves) * yheight, cos((i/steps)*360*(num_waves/2)) * zheight]];
-  
 function snake_points(curve, dy, dz) = 
   concat(curve, 
-    translate(curve, 0, dy, 0),
-    translate(curve, 0, 0, dz),
-    translate(curve, 0, dy, dz));
+    translate(curve, [0, dy, 0]),
+    translate(curve, [0, 0, dz]),
+    translate(curve, [0, dy, dz]));
   
 function snake_faces(curve) =
   let (o2 = len(curve))
@@ -61,17 +50,19 @@ function snake_faces(curve) =
       ])],
     [[o2 - 1, o1u + o2 - 1, o2u + o2 - 1, o2 + o2 - 1]]
   );
+ 
+module sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, offset = 0) {
+  wsin = wave_points_3d(length, yheight, zheight, num_waves, offset, offset + 90);
+  polyhedron(snake_points(wsin, ythick, zthick), snake_faces(wsin));  
+}
     
-wsin = wave_points_3d_sin(80, 5, 5, 3, $fn = 50);
 
-color("red")
-polyhedron(snake_points(wsin, 5, 5), snake_faces(wsin));
+module test_sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves) {
+  color("red")
+  sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, 0);
+  
+  color("green")
+  sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, 180);
+}
 
-wcos = wave_points_3d_cos(80, 5, 5, 3, $fn = 50);
-
-color("green")
-polyhedron(snake_points(wcos, 5, 5), snake_faces(wcos));
-
-//color("green")
-//mirror([0, 1, 0])
-//polyhedron(concat(w1l, w2l, w1u, w2u), faces);
+//test_sinus_spiral(80, 10, 5, 5, 5, 2, $fn=50);
