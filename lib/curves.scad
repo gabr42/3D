@@ -57,12 +57,12 @@ module sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, offset 
 }
     
 
-module test_sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves) {
+module test_sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, offset = 0) {
   color("red")
-  sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, 0);
+  sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, offset);
   
   color("green")
-  sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, 180);
+  sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, offset + 180);
 }
 
 //test_sinus_spiral(80, 10, 5, 5, 5, 2, $fn=50);
