@@ -5,8 +5,8 @@ e = 2.71828;
 
 // Creates a list of integers.
 
-function make_list(from, to) = 
-  [for (i = [from:to]) i];
+function range(r) = 
+  [for (x = r) x];
 
 // Reverses a list.
     
