@@ -1,17 +1,18 @@
 ro = 30;  // outer radius
 ri = 20;  // inner radius
 ho = 10;  // height of bottom part
-h  = 30;  // full height
+h  = 40;  // full height
 c1 = 2;   // rounded corners
 ci = 8;   // inner corner
 
-hole       = [16, 16, 15]; // cut-out
-lock_hole  = [8, 3, 15];   // space for lock mechanism
+hole       = [18.8, 18.9, 25]; // cut-out
+lock_hole  = [8, 3, 5];   // space for lock mechanism
 lockerw    = 1;   // depth of the locker tab
 locker_cut = 0.5; // depth of the locker cut
 
 tooth_side = 2;   
 tooth_under = 2; // distance from top of the tooth to top of the model
+tooth_to_bottom = 31.5; // distance from the middle of the tooth to the bottom of the hole
 
 precision1 = 30;
 precisioni = 100;
