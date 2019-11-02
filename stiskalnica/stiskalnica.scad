@@ -10,7 +10,7 @@ lock_hole  = [8, 3, 5];   // space for lock mechanism
 lockerw    = 1;   // depth of the locker tab
 locker_cut = 0.5; // depth of the locker cut
 
-tooth_side = 2;   
+tooth_side = 1.5;   
 tooth_under = 2; // distance from top of the tooth to top of the model
 tooth_to_bottom = 31.5; // distance from the middle of the tooth to the bottom of the hole
 
@@ -75,10 +75,16 @@ module lock_hole() {
 }
 
 module tooth() {
-  translate([lock_hole.x / 2, (hole.y - tooth_side) / 2, h - tooth_side - tooth_under])
+  translate([lock_hole.x / 2, (hole.y - tooth_side) / 2, h - hole.z + tooth_to_bottom])
   rotate([90, 0, -90])
   linear_extrude(lock_hole.x)
   circle(tooth_side, $fn=3);
+}
+
+module tooth_holder() {
+  translate([0, (hole.y + lockerw)/2,  
+    h - hole.z + tooth_to_bottom + tooth_side/2 + tooth_under - tooth_to_bottom/2])
+  cube([lock_hole.x, lockerw, tooth_to_bottom], center=true);
 }
 
 union() {
@@ -90,4 +96,5 @@ union() {
   };
   
   tooth();
+  tooth_holder();
 }
