@@ -1,0 +1,3 @@
+The Openscad General Library of Relativity (http://www.thingiverse.com/thing:349943) by 16807 is licensed under the GNU - GPL license.
+http://creativecommons.org/licenses/GPL/2.0/
+
