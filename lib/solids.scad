@@ -26,3 +26,10 @@ module slab(length, dy, dz) {
 module mesh_polyhedron(mesh) {
   polyhedron(mesh, make_band_faces(mesh));
 }
+
+module torus_segment(r1, r2, angle_from=0, angle_to=360) {
+  rotate(angle_from)
+  rotate_extrude(angle = (angle_to - angle_from))
+  translate([r1, 0, 0])
+  circle(r = r2);
+}
