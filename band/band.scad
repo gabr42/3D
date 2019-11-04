@@ -3,6 +3,10 @@ use <../lib/curves.scad>
 use <../lib/mesh.scad>
 use <../lib/solids.scad>
 
+letter1 = "Ž";
+letter2 = "P";
+stamp_proStyle = true;
+
 $fn = 100;
 
 r = 20;
@@ -23,11 +27,11 @@ heart_rotatex = 26;
 hearts_rotate = 0;
 
 letter_height = 1;
-letter_size = 6;
-letter_dy = 2;
+letter_size = 5;
+letter_dy = 1;
 
 ///
-
+ 
 length = 2 * pi * r * 1.2;
 
 mesh1 = rotate_mesh(
@@ -76,8 +80,43 @@ color("red")
 round_mesh(mesh2);
 
 color("blue")
-round_mesh(under);
+difference () {
+  round_mesh(under);
+  
+  if (stamp_proStyle) {
+    proStyle();
+  }
+}
 /**/
+
+module proStyle() {
+  rotate(-angle)
+  translate([0, (yheight + ythick)/2, - 2*r - zthick])
+  linear_extrude(height = 20)
+  text("proStyle", 
+       size=3,
+       font="Frutiger",
+       halign="center",
+       valign="center");  
+
+  rotate(-angle)
+  translate([0, -(yheight + ythick)/2 + 2, - 2*r - 2*zthick])
+  linear_extrude(height = 20)
+  text("Z nami", 
+       size=3,
+       font="Frutiger",
+       halign="center",
+       valign="center");  
+
+  rotate(-angle)
+  translate([0, -(yheight + ythick)/2 - 2, - 2*r - 2*zthick - 0.5])
+  linear_extrude(height = 20)
+  text("do plesa", 
+       size=3,
+       font="Frutiger",
+       halign="center",
+       valign="center");  
+}
 
 module outlined_heart(size, height, border, border_height) {
   difference () {  
@@ -123,4 +162,4 @@ module hearts (letter1, letter2) {
 }
 
 rotate(hearts_rotate)
-hearts("K", "P");
+hearts(letter1, letter2);
