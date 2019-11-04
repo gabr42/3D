@@ -13,6 +13,21 @@ zthick = 2;
 num_waves = 5;
 angle = 7;
 
+heart_size = 16;
+heart_z = 2;
+heart_border = 4;
+heart_border_z = 2;
+heart_dy = heart_size/2 + 0.2;
+heart_rotatex = 26;
+
+hearts_rotate = 0;
+
+letter_height = 1;
+letter_size = 6;
+letter_dy = 2;
+
+///
+
 length = 2 * pi * r * 1.2;
 
 mesh1 = rotate_mesh(
@@ -63,3 +78,49 @@ round_mesh(mesh2);
 color("blue")
 round_mesh(under);
 /**/
+
+module outlined_heart(size, height, border, border_height) {
+  difference () {  
+    linear_extrude(height = height + border_height)
+    text("♥", 
+         size=size + border,
+         font="Arial",
+         halign="center",
+         valign="center");  
+
+    translate([0, 0, border_height + 0.01])
+    linear_extrude(height = height)
+    text("♥", 
+         size=size,
+         font="Arial",
+         halign="center",
+         valign="center");
+  }
+}
+
+module heart_with_letter (letter) {
+  outlined_heart(heart_size, heart_z, heart_border, heart_border_z);
+  
+  translate([0, letter_dy, heart_z])
+  linear_extrude(height = letter_height)
+  text(letter, 
+       size=letter_size,
+       font="Arial",
+       halign="center",
+       valign="center");  
+}
+
+module hearts (letter1, letter2) {
+  translate([0, -heart_dy, 0])
+  rotate(heart_rotatex)
+  translate([0, heart_dy, zthick])
+  heart_with_letter(letter1);
+  
+  translate([0, -heart_dy, 0])
+  rotate(-heart_rotatex)
+  translate([0, heart_dy, zthick])
+  heart_with_letter(letter2);  
+}
+
+rotate(hearts_rotate)
+hearts("K", "P");
