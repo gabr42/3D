@@ -85,6 +85,7 @@ module test_wrap_solid_around_cylinder_outer() {
          valign="center");  
   }
 }
+
 module test_wrap_solid_around_cylinder_inner() {
   wrap_solid_around_cylinder(-20, 20, 15, $fa=1, inner = true) {
     linear_extrude(height = 3, convexity = 5)
