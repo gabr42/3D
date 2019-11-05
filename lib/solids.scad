@@ -44,12 +44,13 @@ module torus_segment(r1, r2, angle_from=0, angle_to=360) {
   circle(r = r2);
 }
 
-// Wraps a solid lying along the x axis with y close to 0
+// Wraps a solid lying along the x axis with z close to 0
 // around cylinder with radius r and axis [0, y, -r].
 // The solid should lay at z<=0, near z=0.
 // WARNING: EXTREMELY SLOW
 
-module wrap_around_cylinder_outer(x_from, x_to, r) {
+module wrap_solid_around_cylinder(x_from, x_to, r, inner) {
+  let (sign = (is_undef(inner) || (!inner)) ? 1 : -1)
   let (a_from = 360*x_from/(2*pi*r))
   let (a_to = 360*x_to/(2*pi*r))
   let (steps = (is_undef($fn) || ($fn <= 0)) ? ceil(((a_to - a_from)/$fa)) : $fn)
@@ -58,11 +59,11 @@ module wrap_around_cylinder_outer(x_from, x_to, r) {
     for (interval = [1:steps]) {
       let (a = a_from + (interval - 1) * a_step + a_step/2) 
       let (x = x_from + (interval - 1) * x_step + x_step/2) {
-        rotate_around([0, 0, -r], a, [0, 1, 0])
+        rotate_around([0, 0, - sign * r], sign * a, [0, 1, 0])
         translate ([-x, 0, 0])
         intersection () {
           translate([x, 0, 0])
-          cube([x_step, 10, 10], center = true);
+          cube([x_step, 100, 100], center = true);
       
           children();
         }  
@@ -71,12 +72,29 @@ module wrap_around_cylinder_outer(x_from, x_to, r) {
   } 
 }
 
-wrap_around_cylinder_outer(-20, 20, 10, $fa=3) {
-  translate([0, 0, -3])
-  linear_extrude(height = 3, convexity = 5)
-  text("xX.Xx", 
-       size=8,
-       font="Arial",
-       halign="center",
-       valign="center");  
+// tests for wrap_solid_around_cylinder
+
+module test_wrap_solid_around_cylinder_outer() {
+  wrap_solid_around_cylinder(-20, 20, 15, $fa=1) {
+    translate([0, 0, -3])
+    linear_extrude(height = 3, convexity = 5)
+    text("xX.Xx", 
+         size=8,
+         font="Arial",
+         halign="center",
+         valign="center");  
+  }
 }
+module test_wrap_solid_around_cylinder_inner() {
+  wrap_solid_around_cylinder(-20, 20, 15, $fa=1, inner = true) {
+    linear_extrude(height = 3, convexity = 5)
+    text("xX.Xx", 
+         size=8,
+         font="Arial",
+         halign="center",
+         valign="center");  
+  }
+}
+
+//test_wrap_solid_around_cylinder_outer();
+//test_wrap_solid_around_cylinder_inner();
