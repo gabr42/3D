@@ -10,7 +10,7 @@ function translate(mesh, offset) =
   [for (i = mesh) is_undef(offset.z) ? [i.x + offset.x, i.y + offset.y] :
     [i.x + offset.x, i.y + offset.y, is_undef(i.z) ? offset.z : i.z + offset.z]];
 
-// Wraps a mesh around the cylinder with radius r and axis = (z = -r). 
+// Wraps a mesh around the cylinder with radius r and axis [0, y, -r]. 
 
 function wrap_point(pt, r) =
   let (alpha = 360 / (2 * pi * r) * pt.x)
