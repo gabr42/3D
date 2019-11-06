@@ -1,0 +1,12 @@
+[submodule "external/SolidPython"]
+	path = external/SolidPython
+	url = https://github.com/SolidCode/SolidPython
+[submodule "external/text_on"]
+	path = external/text_on
+	url = https://github.com/brodykenrick/text_on_OpenSCAD
+[submodule "external/MCAD"]
+	path = external/MCAD
+	url = https://github.com/openscad/MCAD
+[submodule "external/Voronoi_generator"]
+	path = external/Voronoi_generator
+	url = https://github.com/felipesanches/OpenSCAD_Voronoi_Generator
