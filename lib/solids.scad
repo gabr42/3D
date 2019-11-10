@@ -4,8 +4,8 @@ use <mesh.scad>
 
 // makes a polyhedron out of a mesh
 
-module mesh_polyhedron(mesh) {
-  polyhedron(mesh, make_band_faces(mesh));
+module mesh_polyhedron(mesh, closed = false) {
+  polyhedron(mesh, make_band_faces(mesh, closed));
 }
 
 // renders a band sinusoidally oscillating along y and z axes

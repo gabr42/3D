@@ -9,6 +9,10 @@ include <helpers.scad>
 function translate(mesh, offset) = 
   [for (i = mesh) is_undef(offset.z) ? [i.x + offset.x, i.y + offset.y] :
     [i.x + offset.x, i.y + offset.y, is_undef(i.z) ? offset.z : i.z + offset.z]];
+  
+// Scales all points in a mesh relatively to (0,0)
+  
+function scale(mesh, factor) = [for (i = mesh) i * factor];
 
 // Wraps a mesh around the cylinder with radius r and axis [0, y, -r]. 
 
@@ -64,4 +68,3 @@ function make_band_faces(mesh, closed = false) =
            : [ [b1l, b2l, b2u, b1u],
                [num - 1 + b1l, num - 1 + b1u, num - 1 + b2u, num - 1 + b2l] ]
   );
-
