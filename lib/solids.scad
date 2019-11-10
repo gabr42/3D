@@ -1,12 +1,7 @@
 include <helpers.scad>
 use <curves.scad>
 use <mesh.scad>
-
-// makes a polyhedron out of a mesh
-
-module mesh_polyhedron(mesh, closed = false) {
-  polyhedron(mesh, make_band_faces(mesh, closed));
-}
+use <mesh_solids.scad>
 
 // renders a band sinusoidally oscillating along y and z axes
 
