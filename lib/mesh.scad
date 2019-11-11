@@ -45,6 +45,22 @@ function zshear_mesh(mesh, begin1, end1, begin2, end2) =
     [pt2.x + (pt.x - pt1.x), pt2.y + (pt.y - pt1.y), pt.z]
   ];
 
+// Twist mesh along a curve.
+
+function twist_mesh(mesh, curve, angle) =
+  let (full_len = curve_len(curve))
+  [for (pt = mesh) 
+    let (find = curve_find_closest_point(curve, pt),
+         pt_len = curve_partial_len(curve, find[1], find[0]))
+    echo(pt_len/full_len)
+    
+  ];
+
+echo(  
+twist_mesh([[1,1,1], [1,1,2], [1,1,3]], 
+           [[0,0,0], [0,0,3]],
+           90));
+
 // Makes four copies of a list of points, offset in y, z, and y+z directions.
 // Output can be plugged into polyhedron().    
 

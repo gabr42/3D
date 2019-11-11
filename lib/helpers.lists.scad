@@ -23,6 +23,13 @@ function quicksort(list) = !(len(list)>0) ? [] : let(
     quicksort(lesser), equal, quicksort(greater) 
 ); 
 
-// Returns sum of squares of list elements
+// Returns sum of squares of list elements.
 
 function sum_squares(list) = list*list;
+
+// Returns sum of list elements.
+
+function sum_list(list, idx = 0) =
+  len(list) == 0 ? 0
+                 :  idx < len(list) - 1 ? list[idx] + sum_list(list, idx + 1)
+                                        : list[idx];

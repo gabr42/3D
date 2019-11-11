@@ -4,9 +4,9 @@ use <geometry.scad>
 // Rotates geometry for angle `a`, around vector `v`, origin in point `pt`.
 // https://stackoverflow.com/a/45826244/4997
 
-module rotate_around(pt, a, v) {
+module rotate_around(pt, angle, v) {
   translate(pt)
-  rotate(a, v)
+  rotate(angle, v)
   translate(-pt)
   children();   
 }

@@ -1,5 +1,6 @@
 include <helpers.math.scad>
-include <geometry.scad>
+use <helpers.lists.scad> 
+use <geometry.scad>
 
 // Multi-segment straight line between two 3D points.
 
@@ -53,3 +54,17 @@ function curve_find_closest_point(curve, pt) = // [pt_on_curve, distance, segmen
 // curve = [[1,1], [2,3], [3, 5]];
 // echo(curve_find_closest_point(curve, [2,2]));
 // echo(curve_find_closest_point(curve, [2,3]));
+
+// Returns length of a curve.
+
+function curve_len(curve) = 
+  sum_list([for (i = [0:1:len(curve)-2]) distance(curve[i], curve[i+1])]);
+
+// Returns partial length from start of the curve to segment/point.
+
+function curve_partial_len(curve, segment, pt) =
+  sum_list([for (i = [0:1:segment-1]) distance(curve[i], curve[i+1])])
+  + distance(pt, curve[segment]);
+  
+//echo(curve_partial_len([[0,0], [1,1], [2,2]], 1, [1.5, 1.5]));
+  
