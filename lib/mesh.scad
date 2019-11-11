@@ -1,18 +1,17 @@
-include <helpers.scad>
+include <helpers.math.scad>
+use <geometry.scad>
+use <curves.scad>
 
-// Translates all points in a mesh by a specified offset.
-// Supports 2D and 3D points. Supports 2D and 3D offsets.
-// Offsetting a 2D point in 3 dimensions creates a 3D point.
-// Offsetting a 3D point in 2 dimensions creates a 2D point.
-// Starting z is assumed to be 0.
+// Generates a regular polygon, offset in y and z direction.
 
-function translate(mesh, offset) = 
-  [for (i = mesh) is_undef(offset.z) ? [i.x + offset.x, i.y + offset.y] :
-    [i.x + offset.x, i.y + offset.y, is_undef(i.z) ? offset.z : i.z + offset.z]];
-  
-// Scales all points in a mesh relatively to (0,0)
-  
-function scale(mesh, factor) = [for (i = mesh) i * factor];
+function make_polyhedron_mesh(radius, numSides, ywidth, zwidth) =
+  let (p1o = make_unit_polygon(numSides) * radius,
+       p1 = concat(p1o, [p1o[0]]),
+       p2 = scale(p1, (radius - ywidth) / radius))
+  concat(p2,
+         p1,
+         translate(p2, [0, 0, zwidth]),
+         translate(p1, [0, 0, zwidth]));
 
 // Wraps a mesh around the cylinder with radius r and axis [0, y, -r]. 
 
@@ -33,7 +32,7 @@ function rotate_point(pt, alpha) =
 
 function rotate_mesh(mesh, alpha) = 
   [for (pt = mesh) [each rotate_point(pt, alpha)]];
-  
+
 // Linear shear perpendicular to Z axis. `begin1/end1` segment is sheared to `begin2/end2` segment.
   
 function zshear_mesh(mesh, begin1, end1, begin2, end2) = 

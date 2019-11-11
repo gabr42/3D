@@ -1,6 +1,6 @@
 use <../lib/curves.scad>
 use <../lib/mesh.scad>
-use <../lib/mesh_solids.scad>
+use <../lib/mesh.solids.scad>
 
 height = 70;
 radius = 20;
@@ -14,14 +14,14 @@ module rings () {
   for (i = [0:step:height]) {
     mesh_polyhedron(
       translate(
-        make_polygon_mesh(radius * (height - i)/height, numsides, ywidth, zwidth),
+        make_polyhedron_mesh(radius * (height - i)/height, numsides, ywidth, zwidth),
         [0, 0, i])
     );
   }
 }
 
 module tent () {
-  b = translate(segment_line([0,0,0], [0,0,height], $fn=4), [-xwidth/2, -ywidth/2, 0]);
+  b = translate(make_segment_line([0,0,0], [0,0,height], $fn=4), [-xwidth/2, -ywidth/2, 0]);
   b1 = concat(b, 
               translate(b, [xwidth, 0, 0]),
               translate(b, [0, ywidth, 0]),

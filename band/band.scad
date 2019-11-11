@@ -1,7 +1,7 @@
-include <../lib/helpers.scad>
+include <../lib/helpers.math.scad>
 use <../lib/curves.scad>
 use <../lib/mesh.scad>
-use <../lib/solids.scad>
+//use <../lib/solids.scad>
 
 letter1 = "Ž";
 letter2 = "P";
@@ -37,19 +37,19 @@ length = 2 * pi * r * 1.2;
 mesh1 = rotate_mesh(
           translate(
             make_band_points(
-              wave_points(length, yheight, zheight, num_waves, 0, 90), ythick, zthick),
+              make_wave(length, yheight, zheight, num_waves, 0, 90), ythick, zthick),
             [-length/2, -yheight, 0]),                                                                    
           angle);
 
 mesh2 = rotate_mesh(
           translate(
-            make_band_points(wave_points(length, yheight, zheight, num_waves, 180, 270), ythick, zthick),
+            make_band_points(make_wave(length, yheight, zheight, num_waves, 180, 270), ythick, zthick),
             [-length/2, -yheight, 0]),                                                                    
           angle);
         
 under = rotate_mesh(
           translate(
-            make_band_points(segment_line([0, 0, -zthick/2], [length, 0, -zthick/2]), ythick, zthick),
+            make_band_points(make_segment_line([0, 0, -zthick/2], [length, 0, -zthick/2]), ythick, zthick),
             [-length/2, -yheight, 0]
           ),
           angle);
