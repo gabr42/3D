@@ -60,7 +60,7 @@ function find_closest_point(from, to, pt) =
 
 // Rotates point around `origin` for `angle` perpendicular to `v`.
 
-function rotate_point(pt, origin, angle, v) =
+function rotate_point(pt, angle, origin = [0, 0, 0], v = [0, 0, 1]) =
   let (u = normalize(v),
        m = translate([pt], -1 * origin),
        c = cos(angle),
@@ -70,5 +70,5 @@ function rotate_point(pt, origin, angle, v) =
             [u.z * u.x * (1 - c) + u.y * s,   u.z * u.y * (1 - c) + u.x * s,  c + u.z * u.z * (1 - c)]])
   translate([R * m[0]], origin)[0];
 
-echo(rotate_point([1, 1, 1], [0, 0, 0], 90, [0, 0, 1])); // [-1, 1, 1]
-echo(rotate_point([1, 1, 1], [1, 0, 0], 90, [0, 0, 1])); // [0, 0, 1]
+// echo(rotate_point([1, 1, 1], 90)); // [-1, 1, 1]
+// echo(rotate_point([1, 1, 1], 90, [1, 0, 0], [0, 0, 1])); // [0, 0, 1]

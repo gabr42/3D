@@ -22,16 +22,10 @@ function wrap_point(pt, r) =
 function wrap_around_cylinder(mesh, r) = 
   [for (pt = mesh) [each wrap_point(pt, r)]];
 
-// Rotates a mesh around [0, 0, 1] by `alpha` degrees. Positive angle rotates CCW. Rotation is limited to XY plane.
+// Rotates a mesh around `origin` by `alpha` degrees along rotation axis `v`. Positive angle rotates CCW. Rotation is limited to XY plane.
 
-function rotate_point(pt, alpha) =
-  let (ca = cos(alpha))
-  let (sa = sin(alpha))
-  is_undef(pt.z) ? [pt.x * ca - pt.y * sa, pt.y * ca + pt.x * sa]
-                 : [pt.x * ca - pt.y * sa, pt.y * ca + pt.x * sa, pt.z];
-
-function rotate_mesh(mesh, alpha) = 
-  [for (pt = mesh) [each rotate_point(pt, alpha)]];
+function rotate_mesh(mesh, angle, origin = [0, 0, 0], v = [0, 0, 1]) = 
+  [for (pt = mesh) rotate_point(pt, angle, origin, v)];
 
 // Linear shear perpendicular to Z axis. `begin1/end1` segment is sheared to `begin2/end2` segment.
   
@@ -53,7 +47,7 @@ function twist_mesh(mesh, curve, angle) =
     let (find = curve_find_closest_point(curve, pt),
          pt_len = curve_partial_len(curve, find[1], find[0]))
     echo(pt_len/full_len)
-    
+    pt    
   ];
 
 echo(  

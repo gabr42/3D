@@ -1,7 +1,7 @@
 include <../lib/helpers.math.scad>
+use <../lib/geometry.scad>
 use <../lib/curves.scad>
 use <../lib/mesh.scad>
-//use <../lib/solids.scad>
 
 letter1 = "Ž";
 letter2 = "P";
@@ -95,7 +95,7 @@ module proStyle() {
   linear_extrude(height = 20)
   text("proStyle", 
        size=3,
-       font="Frutiger",
+       font="Frutiger:style=Bold",
        halign="center",
        valign="center");  
 
@@ -104,7 +104,7 @@ module proStyle() {
   linear_extrude(height = 20)
   text("Z nami", 
        size=3,
-       font="Frutiger",
+       font="Frutiger:style=Bold",
        halign="center",
        valign="center");  
 
@@ -113,7 +113,7 @@ module proStyle() {
   linear_extrude(height = 20)
   text("do plesa", 
        size=3,
-       font="Frutiger",
+       font="Frutiger:style=Bold",
        halign="center",
        valign="center");  
 }
@@ -144,7 +144,7 @@ module heart_with_letter (letter) {
   linear_extrude(height = letter_height)
   text(letter, 
        size=letter_size,
-       font="Arial",
+       font="Arial:style=Bold",
        halign="center",
        valign="center");  
 }
