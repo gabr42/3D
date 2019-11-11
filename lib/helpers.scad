@@ -25,3 +25,15 @@ module rotate_around(pt, a, v) {
   translate(-pt)
   children();   
 }
+
+// quicksort
+// http://forum.openscad.org/OpenJSCAD-our-javascript-friends-td7835.html
+
+function quicksort(arr) = !(len(arr)>0) ? [] : let( 
+    pivot   = arr[floor(len(arr)/2)], 
+    lesser  = [ for (y = arr) if (y  < pivot) y ], 
+    equal   = [ for (y = arr) if (y == pivot) y ], 
+    greater = [ for (y = arr) if (y  > pivot) y ] 
+) concat( 
+    quicksort(lesser), equal, quicksort(greater) 
+); 
