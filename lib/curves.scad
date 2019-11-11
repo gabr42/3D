@@ -35,3 +35,35 @@ function make_logistic_curve(x1, x2, xscale, yscale) =
 
 function make_strip_points(curve, offset) = 
   concat(curve, reverse(translate(curve, offset)));
+
+// Finds a closest point on a curve and returns point-on-curve and the segment index (starting from 0).
+
+function _point_closest(ptA, ptB, pt) = 
+  let (dA = distance(pt, ptA),
+       dB = distance(pt, ptB))
+  dA < dB ? ptA : ptB;
+
+function _segment_fcp(from, to, pt) = 
+  let(v = Z0(to) - Z0(from),
+      u = Z0(from) - Z0(pt),
+      vu = v*u,
+      vv = v*v,
+      t = -vu/vv)
+  t >= 0 && t <= 1 ? interpolate(t, from, to)
+                   : _point_closest(from, to, pt);
+
+function _curve_fcp(curve, pt, idx, best) = 
+  let (pt1 = _segment_fcp(curve[idx], curve[idx+1], pt),
+       d1 =  distance(pt1, pt),
+       b1 = is_undef(best) ? [pt1, d1, idx]
+                           : d1 < best[1] ? [pt1, d1, idx] : best)
+  idx == 0 ? b1 : _curve_fcp(curve, pt, idx - 1, b1);
+
+function curve_find_closest_point(curve, pt) = // [pt_on_curve, distance, segment_index]
+  assert(len(curve) > 1, "Curve must have at least one segment")
+  let (tmp = _curve_fcp(curve, pt, len(curve) - 2, undef))
+  [tmp[0], tmp[2]];
+
+// curve = [[1,1], [2,3], [3, 5]];
+// echo(curve_find_closest_point(curve, [2,2]));
+// echo(curve_find_closest_point(curve, [2,3]));

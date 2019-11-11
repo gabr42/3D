@@ -31,3 +31,8 @@ function translate(points, offset) =
 function scale(points, factor, origin) = 
   [for (i = points) is_undef(origin) ? i * factor
                                      : (i - origin) * factor + origin];
+
+// Sets Z coordinate to 0 if it is not defined
+
+function Z0(pt) = 
+  is_undef(pt.z) ? concat(pt, 0) : pt;
