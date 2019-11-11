@@ -4,14 +4,15 @@ use <../lib/mesh.solids.scad>
 
 height = 70;
 radius = 20;
-step = 3;
+step = 7;
+ring_height = height - 2*step;
 numsides = 7;
 xwidth = 1;
 ywidth = 1;
 zwidth = 1;
 
 module rings () {
-  for (i = [0:step:height]) {
+  for (i = [0:step:ring_height]) {
     mesh_polyhedron(
       translate(
         make_polyhedron_mesh(radius * (height - i)/height, numsides, ywidth, zwidth),

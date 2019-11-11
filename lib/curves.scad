@@ -38,22 +38,8 @@ function make_strip_points(curve, offset) =
 
 // Finds a closest point on a curve and returns point-on-curve and the segment index (starting from 0).
 
-function _point_closest(ptA, ptB, pt) = 
-  let (dA = distance(pt, ptA),
-       dB = distance(pt, ptB))
-  dA < dB ? ptA : ptB;
-
-function _segment_fcp(from, to, pt) = 
-  let(v = Z0(to) - Z0(from),
-      u = Z0(from) - Z0(pt),
-      vu = v*u,
-      vv = v*v,
-      t = -vu/vv)
-  t >= 0 && t <= 1 ? interpolate(t, from, to)
-                   : _point_closest(from, to, pt);
-
 function _curve_fcp(curve, pt, idx, best) = 
-  let (pt1 = _segment_fcp(curve[idx], curve[idx+1], pt),
+  let (pt1 = find_closest_point(curve[idx], curve[idx+1], pt),
        d1 =  distance(pt1, pt),
        b1 = is_undef(best) ? [pt1, d1, idx]
                            : d1 < best[1] ? [pt1, d1, idx] : best)

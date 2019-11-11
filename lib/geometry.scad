@@ -36,3 +36,16 @@ function scale(points, factor, origin) =
 
 function Z0(pt) = 
   is_undef(pt.z) ? concat(pt, 0) : pt;
+
+// Finds closest point on a segment.
+
+function find_closest_point(from, to, pt) = 
+  let(v = Z0(to) - Z0(from),
+      u = Z0(from) - Z0(pt),
+      vu = v*u,
+      vv = v*v,
+      t = -vu/vv)
+  t >= 0 && t <= 1 ? interpolate(t, from, to)
+                   : let (dF = distance(pt, from),
+                          dT = distance(pt, to))
+                     dF < dT ? from : to;
