@@ -23,7 +23,7 @@ function wrap_point(pt, r) =
 function wrap_around_cylinder(mesh, r) = 
   [for (pt = mesh) [each wrap_point(pt, r)]];
 
-// Rotates a mesh around [0, 0, 1] by `alpha` degrees. Positive angle rotates CCW.
+// Rotates a mesh around [0, 0, 1] by `alpha` degrees. Positive angle rotates CCW. Rotation is limited to XY plane.
 
 function rotate_point(pt, alpha) =
   let (ca = cos(alpha))
@@ -33,6 +33,18 @@ function rotate_point(pt, alpha) =
 
 function rotate_mesh(mesh, alpha) = 
   [for (pt = mesh) [each rotate_point(pt, alpha)]];
+  
+// Linear shear perpendicular to Z axis. `begin1/end1` segment is sheared to `begin2/end2` segment.
+  
+function zshear_mesh(mesh, begin1, end1, begin2, end2) = 
+  let (dz1 = end1.z - begin1.z,
+       dz2 = end2.z - begin2.z)
+  [for (pt = mesh)
+    let (k = (pt.z - begin1.z) / dz1,
+         pt1 = interpolate(k, begin1, end1),
+         pt2 = interpolate(k, begin2, end2))     
+    [pt2.x + (pt.x - pt1.x), pt2.y + (pt.y - pt1.y), pt.z]
+  ];
 
 // Makes four copies of a list of points, offset in y, z, and y+z directions.
 // Output can be plugged into polyhedron().    

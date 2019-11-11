@@ -7,10 +7,6 @@ function segment_line(from, to) =
   let (d = [(to.x - from.x)/segments, (to.y - from.y)/segments, (to.z - from.z)/segments])
   [for (i = [0:segments]) [from.x + i * d.x, from.y + i * d.y, from.z + i * d.z]];
     
-// Point on the unit circle corresponding to `angle` (in degrees).
-  
-function point_on_unit_circle(angle) = [cos(angle), sin(angle)];
-  
 // Reqular polygon inscribed in a unit circle with one vertex at (1,0).
   
 function unit_polygon(numsides) =

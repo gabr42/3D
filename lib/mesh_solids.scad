@@ -7,7 +7,7 @@ module mesh_polyhedron(mesh, closed = false) {
   polyhedron(mesh, make_band_faces(mesh, closed));
 }
 
-// Generates a polygon offset in y and z direction.
+// Generates a polygon, offset in y and z direction.
 
 function make_polygon_mesh(r, numSides, ywidth, zwidth) =
   let (p1o = unit_polygon(numSides) * r)
