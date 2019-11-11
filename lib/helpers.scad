@@ -10,7 +10,7 @@ function range(r) = [for (x = r) x];
 
 // Reverses a list.
     
-function reverse(list) = [for (i = [num(list)-1:-1:0]) list[i]];
+function reverse(list) = [for (i = [len(list)-1:-1:0]) list[i]];
   
 // Concatenates two lists. If either of them is `undef`, it is ignored.
 
