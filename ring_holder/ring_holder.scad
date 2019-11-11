@@ -11,30 +11,35 @@ numsides = 7;
 xwidth = 1;
 ywidth = 1;
 zwidth = 1;
+twist = 720;
 
-module rings () {
+$fn = 100;
+
+module rings (twist) {
   for (i = [0:step:ring_height]) {
     mesh_polyhedron(
-      translate(
-        make_polyhedron_mesh(radius * (height - i)/height, numsides, ywidth, zwidth),
-        [0, 0, i])
+      rotate_mesh(
+        translate(
+          make_polyhedron_mesh(radius * (height - i)/height, numsides, ywidth, zwidth),
+          [0, 0, i]),
+      twist * i/height)
     );
   }
 }
 
-module tent () {
-  b = translate(make_segment_line([0,0,0], [0,0,height], $fn=4), [-xwidth/2, -ywidth/2, 0]);
-  mesh = concat(b, 
+module tent (twist) {
+  b = translate(make_segment_line([0,0,0], [0,0,height]), [-xwidth/2, -ywidth/2, 0]);
+  b1 = concat(b, 
                 translate(b, [xwidth, 0, 0]),
                 translate(b, [0, ywidth, 0]),
                 translate(b, [xwidth, ywidth, 0]));
-  b1 = /*twist_mesh(*/mesh/*, [0,0,0], [0,0,height], 360)*/;
   for (pt = [0:1:numsides-1]) {
     v = point_on_unit_circle(360/numsides*pt) * (radius - xwidth/2);
     c = zshear_mesh(b1, [0, 0, height], [0, 0, 0], [0, 0, height], [v.x, v.y, 0]);
-    mesh_polyhedron(c);
+    mesh_polyhedron(twist_mesh(c, [[0,0,0], [0,0,height]], twist));
   }
 }
 
-// rings();
-tent();
+// rings(twist);
+tent(twist);
+tent(-twist);

@@ -46,14 +46,8 @@ function twist_mesh(mesh, curve, angle) =
   [for (pt = mesh) 
     let (find = curve_find_closest_point(curve, pt),
          pt_len = curve_partial_len(curve, find[1], find[0]))
-    echo(pt_len/full_len)
-    pt    
+    rotate_point(pt, angle * pt_len/full_len, find[0], curve[find[1]+1] - curve[find[1]])
   ];
-
-echo(  
-twist_mesh([[1,1,1], [1,1,2], [1,1,3]], 
-           [[0,0,0], [0,0,3]],
-           90));
 
 // Makes four copies of a list of points, offset in y, z, and y+z directions.
 // Output can be plugged into polyhedron().    
