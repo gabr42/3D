@@ -35,7 +35,7 @@ function zshear_mesh(mesh, begin1, end1, begin2, end2) =
   [for (pt = mesh)
     let (k = (pt.z - begin1.z) / dz1,
          pt1 = interpolate(k, begin1, end1),
-         pt2 = interpolate(k, begin2, end2))     
+         pt2 = interpolate(k, begin2, end2))
     [pt2.x + (pt.x - pt1.x), pt2.y + (pt.y - pt1.y), pt.z]
   ];
 
@@ -48,6 +48,20 @@ function twist_mesh(mesh, curve, angle) =
          pt_len = curve_partial_len(curve, find[1], find[0]))
     rotate_point(pt, angle * pt_len/full_len, find[0], curve[find[1]+1] - curve[find[1]])
   ];
+
+// Reflows mesh extending along source_path into new mesh extending along target_path.
+
+function reflow_mesh(mesh, source_path, target_path) = 
+  let (source_len = curve_len(source_path),
+       target_len = curve_len(target_path))
+  [for (pt = mesh) 
+    let (nearest_s = curve_find_closest_point(source_path, pt),
+         nearest_len = curve_partial_len(source_path, nearest_s[1], nearest_s[0]),
+         nearest_t = curve_find_offset(target_path, nearest_len/source_len),
+         u = source_path[nearest_s[1]+1] - source_path[nearest_s[1]],
+         v = target_path[nearest_t[1]+1] - target_path[nearest_t[1]],
+         pt_t = rotate_point(pt, angle(u, v), nearest_s[0], cross(u , v)))
+    pt_t +  nearest_t[0] - nearest_s[0]];
 
 // Makes four copies of a list of points, offset in y, z, and y+z directions.
 // Output can be plugged into polyhedron().    

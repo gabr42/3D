@@ -7,13 +7,13 @@ height = 70;
 radius = 20;
 step = 7;
 ring_height = height - 2*step;
-numsides = 7;
+numsides = 5;
 xwidth = 1;
 ywidth = 1;
 zwidth = 1;
 twist = 720;
 
-$fn = 100;
+$fn = 50;
 
 module rings (twist) {
   for (i = [0:step:ring_height]) {
@@ -40,6 +40,6 @@ module tent (twist) {
   }
 }
 
-// rings(twist);
+//rings(twist);
 tent(twist);
 tent(-twist);
