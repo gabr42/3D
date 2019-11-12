@@ -1,4 +1,5 @@
 use <helpers.lists.scad>
+use <helpers.math.scad>
 
 // Calculates distance between two points.
 
@@ -9,14 +10,6 @@ function distance(pt1, pt2) =
 
 function interpolate(k, pt1, pt2) = 
   [for (i = [0:1:len(pt1)-1]) pt1[i] + (pt2[i] - pt1[i]) * k];
-
-// Calculates length of a vector.
-
-function length(v) = sqrt(sum_squares(v));
-
-// Normalizes a vector.
-
-function normalize(v) = v / length(v);
   
 // Point on the unit circle on XY plane corresponding to `angle` (in degrees).
   
@@ -39,6 +32,23 @@ function translate(points, offset) =
 function scale(points, factor, origin) = 
   [for (i = points) is_undef(origin) ? i * factor
                                      : (i - origin) * factor + origin];
+
+// Mirrors x => -x
+
+function mirror_X(points) = 
+  [for (pt = points) 
+    is_undef(pt.z) ? [-pt.x, pt.y] : [-pt.x, pt.y, pt.z]];
+
+// Mirrors y => -y
+
+function mirror_Y(points) = 
+  [for (pt = points) 
+    is_undef(pt.z) ? [pt.x, -pt.y] : [pt.x, -pt.y, pt.z]];
+
+// Mirrors z => -z
+
+function mirror_Z(points) = 
+  [for (pt = points) [pt.x, pt.y, -pt.z]];
 
 // Sets Z coordinate to 0 if it is not defined
 
