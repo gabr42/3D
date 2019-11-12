@@ -60,7 +60,7 @@ function reflow_mesh(mesh, source_path, target_path) =
          nearest_t = curve_find_offset(target_path, nearest_len/source_len),
          u = source_path[nearest_s[1]+1] - source_path[nearest_s[1]],
          v = target_path[nearest_t[1]+1] - target_path[nearest_t[1]],
-         pt_t = rotate_point(pt, angle(u, v), nearest_s[0], cross(u , v)))
+         pt_t = rotate_point(pt, angle(u, v), nearest_s[0], cross(v , u)))
     pt_t +  nearest_t[0] - nearest_s[0]];
 
 // Makes four copies of a list of points, offset in y, z, and y+z directions.

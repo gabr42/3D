@@ -3,7 +3,7 @@ use <lib/curves.scad>
 use <lib/mesh.scad>
 use <lib/mesh.solids.scad>
 
-$fn = 3;
+$fn = 30;
 
 b = make_segment_line([0,0,0], [0,0,30]);
 b1 = concat(b, 
