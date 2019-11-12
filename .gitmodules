@@ -10,3 +10,6 @@
 [submodule "external/Voronoi_generator"]
 	path = external/Voronoi_generator
 	url = https://github.com/felipesanches/OpenSCAD_Voronoi_Generator
+[submodule "external/scad_utils"]
+	path = external/scad_utils
+	url = https://github.com/OskarLinde/scad-utils
