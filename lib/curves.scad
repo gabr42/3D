@@ -39,17 +39,20 @@ function make_strip_points(curve, offset) =
 
 // Finds a closest point on a curve and returns point-on-curve and the segment index (starting from 0).
 
-function _curve_fcp(curve, pt, idx, best) = // [pt_on_curve, distance, segment_index]
+function _curve_fcp(curve, pt, idx, best) = // [pt_on_curve, segment_index, distance]
   let (pt1 = find_closest_point(curve[idx], curve[idx+1], pt),
        d1 =  distance(pt1, pt),
-       b1 = is_undef(best) ? [pt1, d1, idx]
-                           : d1 < best[1] ? [pt1, d1, idx] : best)
+       b1 = is_undef(best) 
+         ? [pt1, idx, d1]
+         : d1 < best[2] 
+           ? [pt1, idx, d1] 
+           : best)
   idx == 0 ? b1 : _curve_fcp(curve, pt, idx - 1, b1);
 
-function curve_find_closest_point(curve, pt) = // [pt_on_curve, segment_index]
+function curve_find_closest_point(curve, pt) = // [pt_on_curve, segment_index, distance]
   assert(len(curve) > 1, "Curve must have at least one segment")
   let (tmp = _curve_fcp(curve, pt, len(curve) - 2, undef))
-  [tmp[0], tmp[2]];
+  tmp;
 
 // curve = [[1,1], [2,3], [3, 5]];
 // echo(curve_find_closest_point(curve, [2,2]));
