@@ -7,11 +7,24 @@ use <geometry.manipulators.scad>
 
 function make_segment_line(from, to) =
   let (segments = $fn > 0 ? $fn : 50,
-      _from = make_3D(from),
-      _to = make_3D(to),
-      d = [(_to.x - _from.x)/segments, (_to.y - _from.y)/segments, (_to.z - _from.z)/segments])
+       _from = make_3D(from),
+       _to = make_3D(to),
+       d = [(_to.x - _from.x)/segments, (_to.y - _from.y)/segments, (_to.z - _from.z)/segments])
   [for (i = [0:segments]) [_from.x + i * d.x, _from.y + i * d.y, _from.z + i * d.z]];
     
+// Multi-segment 2D arc lying on the XY plane.
+
+function make_segment_arc(center, radius, from_angle, to_angle) = 
+  let (segments = is_undef($fa) 
+                    ? $fn > 0 ? $fn : 50
+                    : abs(round((to_angle - from_angle) / $fa)),
+        da = (to_angle - from_angle) / segments)
+  [for (i = [0:segments])
+    let (a = from_angle + i * da)
+    [center.x + cos(a) * radius, center.y + sin(a) * radius]];
+
+echo(make_segment_arc([2,0], 2, 180, 90)); // [0,0] .. [2,2]
+
 // Reqular polygon inscribed in a unit circle with one vertex at (1,0).
   
 function make_unit_polygon(numsides) =

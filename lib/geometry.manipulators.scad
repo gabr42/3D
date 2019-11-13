@@ -103,7 +103,7 @@ function g_twist(curve, angle, points, _full_len = undef) =
            pt_len = curve_partial_len(curve, find[1], find[0]))
       g_rotate(angle * pt_len/full_len, find[0], curve[find[1]+1] - curve[find[1]], pt);
 
- echo(g_twist([[0,0,0], [0,0,1]], 90, [[1,1,0], [1,1,1]])); // [1,1,0], [-1,1,0]
+ // echo(g_twist([[0,0,0], [0,0,1]], 90, [[1,1,0], [1,1,1]])); // [1,1,0], [-1,1,0]
 
 // Reflows 2D/3D point or points extending along `source_path` into new set of points extending along `target_path`.
 
@@ -119,5 +119,10 @@ function g_reflow(source_path, target_path, points, _source_len = undef) =
            nearest_t = curve_find_offset(target_path, nearest_len/source_len),
            u = source_path[nearest_s[1]+1] - source_path[nearest_s[1]],
            v = target_path[nearest_t[1]+1] - target_path[nearest_t[1]],
-           pt_t = g_rotate(angle(u, v), nearest_s[0], cross(v , u), pt))
+           vxu = cross(v, u),
+           pt_t = vxu == [0,0,0] 
+                    ? pt
+                    : g_rotate(angle(u, v), nearest_s[0], vxu, pt))
       pt_t + nearest_t[0] - nearest_s[0];
+
+// echo(g_reflow([[0,0,0], [0,0,1]], [[0,0,0], [1,0,2]], [[0,0,0], [1,0,1]]));
