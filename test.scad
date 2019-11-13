@@ -27,6 +27,6 @@ l2 = g_translate(-l1[0], l1);
 
 visualize_curve(l2);
 
-b2 = reflow_mesh(b1, b, l2);
+b2 = g_reflow(b, l2, b1);
 
 //mesh_polyhedron(b2);  g

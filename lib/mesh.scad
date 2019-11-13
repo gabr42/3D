@@ -14,30 +14,6 @@ function make_polyhedron_mesh(radius, numSides, ywidth, zwidth) =
          g_translate([0, 0, zwidth], p2),
          g_translate([0, 0, zwidth], p1));
 
-// Twist mesh along a curve.
-
-function twist_mesh(mesh, curve, angle) =
-  let (full_len = curve_len(curve))
-  [for (pt = mesh) 
-    let (find = curve_find_closest_point(curve, pt),
-         pt_len = curve_partial_len(curve, find[1], find[0]))
-    g_rotate(angle * pt_len/full_len, find[0], curve[find[1]+1] - curve[find[1]], pt)
-  ];
-
-// Reflows mesh extending along source_path into new mesh extending along target_path.
-
-function reflow_mesh(mesh, source_path, target_path) = 
-  let (source_len = curve_len(source_path),
-       target_len = curve_len(target_path))
-  [for (pt = mesh) 
-    let (nearest_s = curve_find_closest_point(source_path, pt),
-         nearest_len = curve_partial_len(source_path, nearest_s[1], nearest_s[0]),
-         nearest_t = curve_find_offset(target_path, nearest_len/source_len),
-         u = source_path[nearest_s[1]+1] - source_path[nearest_s[1]],
-         v = target_path[nearest_t[1]+1] - target_path[nearest_t[1]],
-         pt_t = g_rotate(angle(u, v), nearest_s[0], cross(v , u), pt))
-    pt_t +  nearest_t[0] - nearest_s[0]];
-
 // Makes four copies of a list of points, offset in y, z, and y+z directions.
 // Output can be plugged into polyhedron().    
 
