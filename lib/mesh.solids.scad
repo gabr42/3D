@@ -1,4 +1,5 @@
 use <geometry.scad>
+use <geometry.manipulators.scad>
 use <curves.scad>
 use <mesh.scad>
 

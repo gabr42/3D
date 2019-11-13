@@ -29,3 +29,10 @@ function sum_list(list, idx = 0) =
   len(list) == 0 ? 0
                  :  idx < len(list) - 1 ? list[idx] + sum_list(list, idx + 1)
                                         : list[idx];
+
+// Checks whether a list is a vector (must contain elements, first element must be a number).
+
+function is_vector(v) = 
+  is_list(v) 
+  && len(v) > 0 
+  && is_num(v[0]);

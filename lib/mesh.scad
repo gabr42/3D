@@ -1,5 +1,6 @@
 include <helpers.math.scad>
 use <geometry.scad>
+use <geometry.manipulators.scad>
 use <curves.scad>
 
 // Generates a regular polygon, offset in y and z direction.
@@ -12,20 +13,6 @@ function make_polyhedron_mesh(radius, numSides, ywidth, zwidth) =
          p1,
          translate(p2, [0, 0, zwidth]),
          translate(p1, [0, 0, zwidth]));
-
-// Wraps a mesh around the cylinder with radius r and axis [0, y, -r]. 
-
-function wrap_point(pt, r) =
-  let (alpha = 360 / (2 * pi * r) * pt.x)
-  [(r + pt.z) * sin(alpha), pt.y, -r + (r+pt.z) * cos(alpha)];  
-  
-function wrap_around_cylinder(mesh, r) = 
-  [for (pt = mesh) [each wrap_point(pt, r)]];
-
-// Rotates a mesh around `origin` by `alpha` degrees along rotation axis `v`. Positive angle rotates CCW. Rotation is limited to XY plane.
-
-function rotate_mesh(mesh, angle, origin = [0, 0, 0], v = [0, 0, 1]) = 
-  [for (pt = mesh) rotate_point(pt, angle, origin, v)];
 
 // Linear shear perpendicular to Z axis. `begin1/end1` segment is sheared to `begin2/end2` segment.
   
@@ -46,7 +33,7 @@ function twist_mesh(mesh, curve, angle) =
   [for (pt = mesh) 
     let (find = curve_find_closest_point(curve, pt),
          pt_len = curve_partial_len(curve, find[1], find[0]))
-    rotate_point(pt, angle * pt_len/full_len, find[0], curve[find[1]+1] - curve[find[1]])
+    rotate(pt, angle * pt_len/full_len, find[0], curve[find[1]+1] - curve[find[1]])
   ];
 
 // Reflows mesh extending along source_path into new mesh extending along target_path.
@@ -60,7 +47,7 @@ function reflow_mesh(mesh, source_path, target_path) =
          nearest_t = curve_find_offset(target_path, nearest_len/source_len),
          u = source_path[nearest_s[1]+1] - source_path[nearest_s[1]],
          v = target_path[nearest_t[1]+1] - target_path[nearest_t[1]],
-         pt_t = rotate_point(pt, angle(u, v), nearest_s[0], cross(v , u)))
+         pt_t = rotate(pt, angle(u, v), nearest_s[0], cross(v , u)))
     pt_t +  nearest_t[0] - nearest_s[0]];
 
 // Makes four copies of a list of points, offset in y, z, and y+z directions.

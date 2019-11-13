@@ -1,4 +1,5 @@
 use <../lib/geometry.scad>
+use <../lib/geometry.manipulators.scad>
 use <../lib/curves.scad>
 use <../lib/mesh.scad>
 use <../lib/mesh.solids.scad>
@@ -13,12 +14,12 @@ ywidth = 1;
 zwidth = 1;
 twist = 720;
 
-$fn = 50;
+$fn = 5;
 
 module rings (twist) {
   for (i = [0:step:ring_height]) {
     mesh_polyhedron(
-      rotate_mesh(
+      rotate(
         translate(
           make_polyhedron_mesh(radius * (height - i)/height, numsides, ywidth, zwidth),
           [0, 0, i]),

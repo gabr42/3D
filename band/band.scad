@@ -1,5 +1,6 @@
 include <../lib/helpers.math.scad>
 use <../lib/geometry.scad>
+use <../lib/geometry.manipulators.scad>
 use <../lib/curves.scad>
 use <../lib/mesh.scad>
 
@@ -32,22 +33,22 @@ letter_dy = 1;
 
 ///
  
-length = 2 * pi * r * 1.2;
+length = 2 * PI * r * 1.2;
 
-mesh1 = rotate_mesh(
+mesh1 = rotate(
           translate(
             make_band_points(
               make_wave(length, yheight, zheight, num_waves, 0, 90), ythick, zthick),
             [-length/2, -yheight, 0]),                                                                    
           angle);
 
-mesh2 = rotate_mesh(
+mesh2 = rotate(
           translate(
             make_band_points(make_wave(length, yheight, zheight, num_waves, 180, 270), ythick, zthick),
             [-length/2, -yheight, 0]),                                                                    
           angle);
         
-under = rotate_mesh(
+under = rotate(
           translate(
             make_band_points(make_segment_line([0, 0, -zthick/2], [length, 0, -zthick/2]), ythick, zthick),
             [-length/2, -yheight, 0]
