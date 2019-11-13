@@ -61,9 +61,10 @@ function g_rotate(angle, origin = [0, 0, 0], v = [0, 0, 1], points, _R = undef) 
                [u.y * u.x * (1 - c) + u.z * s,   c + u.y * u.y * (1 - c),        u.y * u.z * (1 - c) + u.x * s],
                [u.z * u.x * (1 - c) + u.y * s,   u.z * u.y * (1 - c) + u.x * s,  c + u.z * u.z * (1 - c)]])      
   ! is_vector(points)
-    ? [for (pt = points) g_rotate(angle, origin, v, pt, R)]
-    : let (pt = points)
-      g_translate(origin, R * g_translate(-origin, pt));
+    ? [for (pt = points) g_rotate(angle, origin, v, make_3D(pt), R)]
+    : let (pt = points,
+           o3 = make_3D(origin))
+      g_translate(o3, R * g_translate(-o3, pt));
 
 //  echo(g_rotate(90, points = [1, 1, 1])); // [-1, 1, 1]
 //  echo(g_rotate(90, [1, 0, 0], [0, 0, 1], [1, 1, 1])); // [0, 0, 1]

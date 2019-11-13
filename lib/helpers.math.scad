@@ -23,4 +23,7 @@ function normalize(v) = v / length(v);
 
 // Angle between two vectors.
 
-function angle(u, v) = atan2(norm(cross(u, v)), u*v);
+function angle(u, v) = 
+  let (u3 = make_3D(u),
+       v3 = make_3D(v))
+  atan2(norm(cross(u3, v3)), u3 * v3);
