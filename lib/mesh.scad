@@ -18,10 +18,7 @@ function make_polyhedron_mesh(radius, numSides, ywidth, zwidth) =
 // Output can be plugged into polyhedron().    
 
 function make_band_points(curve, dy, dz) = 
-  concat(                    curve, 
-    g_translate([0, dy, 0],  curve),
-    g_translate([0, 0, dz],  curve),
-    g_translate([0, dy, dz], curve));
+  make_curve_replicas([[0, 0, 0], [0, dy, 0], [0, 0, dz], [0, dy, dz]], curve);
   
 // Takes an output from make_band_points() and generates list of faces.
 // Output can be plugged into polyhedron().

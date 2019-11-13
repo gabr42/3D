@@ -43,12 +43,9 @@ module slab(length, dy, dz) {
 module visualize_curve (curve, width = 0.1) {
   if ($preview) {
     w2 = width/2;
-    mesh = concat(     
-             g_translate([-w2, -w2, -w2], curve),
-             g_translate([-w2,  w2,  w2], curve),
-             g_translate([ w2, -w2,  w2], curve),
-             g_translate([ w2,  w2, -w2], curve));
     color("red", alpha=0.2)
-    mesh_polyhedron(mesh); 
+    mesh_polyhedron(
+      make_curve_replicas([[-w2, -w2, -w2], [-w2, w2, w2], [w2, -w2, w2], [w2, w2, -w2]], 
+        curve));
   }
 }

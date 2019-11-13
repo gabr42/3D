@@ -20,7 +20,7 @@ module rings (twist) {
   for (i = [0:step:ring_height]) {
     mesh_polyhedron(
       g_rotate(twist * i/height, points = 
-      g_translate([0, 0, i],
+      g_translate([0, 0, i], points = 
         make_polyhedron_mesh(radius * (height - i) / height, numsides, ywidth, zwidth)))
     );
   }
@@ -28,18 +28,15 @@ module rings (twist) {
 
 
 module tent (twist) {
-  b = g_translate([-xwidth/2, -ywidth/2, 0],
-        make_segment_line([0,0,0], [0,0,height]));
-  b1 = concat(b, 
-              g_translate([xwidth, 0, 0], b),
-              g_translate([0, ywidth, 0], b),
-              g_translate([xwidth, ywidth, 0], b));
+  stick = make_curve_replicas([[0, 0, 0], [xwidth, 0, 0], [0, ywidth, 0], [xwidth, ywidth, 0]], 
+            g_translate([-xwidth/2, -ywidth/2, 0], points =
+              make_segment_line([0,0,0], [0,0,height])));
   for (pt = [0:1:numsides-1]) {
     v = point_on_unit_circle(360/numsides*pt) * (radius - xwidth/2);
     mesh_polyhedron(
-      g_twist([[0,0,0], [0,0,height]], twist, 
-      g_zshear([0, 0, height], [0, 0, 0], [0, 0, height], [v.x, v.y, 0], 
-        b1)));
+      g_twist([[0,0,0], [0,0,height]], twist, points = 
+      g_zshear([0, 0, height], [0, 0, 0], [0, 0, height], [v.x, v.y, 0], points = 
+        stick)));
   }
 }
 
