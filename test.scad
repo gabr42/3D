@@ -29,4 +29,4 @@ visualize_curve(l2);
 
 b2 = reflow_mesh(b1, b, l2);
 
-//mesh_polyhedron(b2); 
+//mesh_polyhedron(b2);  g

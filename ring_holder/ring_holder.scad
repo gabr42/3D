@@ -14,17 +14,18 @@ ywidth = 1;
 zwidth = 1;
 twist = 720;
 
-$fn = 17;
+$fn = 30;
 
 module rings (twist) {
   for (i = [0:step:ring_height]) {
     mesh_polyhedron(
-      g_rotate(twist * i/height,
+      g_rotate(twist * i/height, points = 
       g_translate([0, 0, i],
-        make_polyhedron_mesh(radius * (height - i)/   height, numsides, ywidth, zwidth)))
+        make_polyhedron_mesh(radius * (height - i) / height, numsides, ywidth, zwidth)))
     );
   }
 }
+
 
 module tent (twist) {
   b = g_translate([-xwidth/2, -ywidth/2, 0],
@@ -35,8 +36,10 @@ module tent (twist) {
               g_translate([xwidth, ywidth, 0], b));
   for (pt = [0:1:numsides-1]) {
     v = point_on_unit_circle(360/numsides*pt) * (radius - xwidth/2);
-    c = zshear_mesh(b1, [0, 0, height], [0, 0, 0], [0, 0, height], [v.x, v.y, 0]);
-    mesh_polyhedron(twist_mesh(c, [[0,0,0], [0,0,height]], twist));
+    mesh_polyhedron(
+      g_twist([[0,0,0], [0,0,height]], twist, 
+      g_zshear([0, 0, height], [0, 0, 0], [0, 0, height], [v.x, v.y, 0], 
+        b1)));
   }
 }
 

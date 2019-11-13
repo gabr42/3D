@@ -14,18 +14,6 @@ function make_polyhedron_mesh(radius, numSides, ywidth, zwidth) =
          g_translate([0, 0, zwidth], p2),
          g_translate([0, 0, zwidth], p1));
 
-// Linear shear perpendicular to Z axis. `begin1/end1` segment is sheared to `begin2/end2` segment.
-  
-function zshear_mesh(mesh, begin1, end1, begin2, end2) = 
-  let (dz1 = end1.z - begin1.z,
-       dz2 = end2.z - begin2.z)
-  [for (pt = mesh)
-    let (k = (pt.z - begin1.z) / dz1,
-         pt1 = interpolate(k, begin1, end1),
-         pt2 = interpolate(k, begin2, end2))
-    [pt2.x + (pt.x - pt1.x), pt2.y + (pt.y - pt1.y), pt.z]
-  ];
-
 // Twist mesh along a curve.
 
 function twist_mesh(mesh, curve, angle) =

@@ -63,7 +63,7 @@ union() {
 
 /**/
 module round_mesh(mesh) {
-  ring = wrap_around_cylinder(mesh, r); 
+  ring = g_wrap_around_cylinder(r, mesh); 
   polyhedron(ring, make_band_faces(ring, ! angle));
 }
 
