@@ -6,6 +6,9 @@ use <lib/mesh.solids.scad>
 $fn = 30;
 
 b = make_segment_line([0,0,0], [0,0,30]);
+
+visualize_curve(b, 0.3);
+
 b1 = concat(b, 
             translate(b, [3, 0, 0]),
             translate(b, [0, 3, 0]),
@@ -22,8 +25,8 @@ l1 =
 
 l2 = translate(l1, -l1[0]);
 
-mesh_polyhedron(make_band_points(l2, 3, 3));
+visualize_curve(l2);
 
 b2 = reflow_mesh(b1, b, l2);
 
-!mesh_polyhedron(b2);
+//mesh_polyhedron(b2); 

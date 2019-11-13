@@ -2,7 +2,7 @@
 
 pi = 3.14159;
 e = 2.71828;
-inf = 0.00001;
+inf = 1e-5;
 
 // Logistic function and its derivative.
 
