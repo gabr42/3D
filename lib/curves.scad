@@ -35,7 +35,7 @@ function make_logistic_curve(x1, x2, xscale, yscale) =
 // Offsets a curve and concats it to the original. Output can be plugged into a polygon().
 
 function make_strip_points(curve, offset) = 
-  concat(curve, reverse(translate(curve, offset)));
+  concat(curve, reverse(g_translate(curve, offset)));
 
 // Finds a closest point on a curve and returns point-on-curve and the segment index (starting from 0).
 

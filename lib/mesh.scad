@@ -8,11 +8,11 @@ use <curves.scad>
 function make_polyhedron_mesh(radius, numSides, ywidth, zwidth) =
   let (p1o = make_unit_polygon(numSides) * radius,
        p1 = concat(p1o, [p1o[0]]),
-       p2 = scale(p1, (radius - ywidth) / radius))
+       p2 = g_scale((radius - ywidth) / radius, points = p1))
   concat(p2,
          p1,
-         translate(p2, [0, 0, zwidth]),
-         translate(p1, [0, 0, zwidth]));
+         g_translate([0, 0, zwidth], p2),
+         g_translate([0, 0, zwidth], p1));
 
 // Linear shear perpendicular to Z axis. `begin1/end1` segment is sheared to `begin2/end2` segment.
   
@@ -33,7 +33,7 @@ function twist_mesh(mesh, curve, angle) =
   [for (pt = mesh) 
     let (find = curve_find_closest_point(curve, pt),
          pt_len = curve_partial_len(curve, find[1], find[0]))
-    rotate(pt, angle * pt_len/full_len, find[0], curve[find[1]+1] - curve[find[1]])
+    g_rotate(angle * pt_len/full_len, find[0], curve[find[1]+1] - curve[find[1]], pt)
   ];
 
 // Reflows mesh extending along source_path into new mesh extending along target_path.
@@ -47,17 +47,17 @@ function reflow_mesh(mesh, source_path, target_path) =
          nearest_t = curve_find_offset(target_path, nearest_len/source_len),
          u = source_path[nearest_s[1]+1] - source_path[nearest_s[1]],
          v = target_path[nearest_t[1]+1] - target_path[nearest_t[1]],
-         pt_t = rotate(pt, angle(u, v), nearest_s[0], cross(v , u)))
+         pt_t = g_rotate(angle(u, v), nearest_s[0], cross(v , u), pt))
     pt_t +  nearest_t[0] - nearest_s[0]];
 
 // Makes four copies of a list of points, offset in y, z, and y+z directions.
 // Output can be plugged into polyhedron().    
 
 function make_band_points(curve, dy, dz) = 
-  concat(     curve, 
-    translate(curve, [0, dy, 0]),
-    translate(curve, [0, 0, dz]),
-    translate(curve, [0, dy, dz]));
+  concat(                    curve, 
+    g_translate([0, dy, 0],  curve),
+    g_translate([0, 0, dz],  curve),
+    g_translate([0, dy, dz], curve));
   
 // Takes an output from make_band_points() and generates list of faces.
 // Output can be plugged into polyhedron().

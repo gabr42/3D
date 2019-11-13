@@ -9,7 +9,7 @@ module mesh_polyhedron(mesh, closed = false) {
   polyhedron(mesh, make_band_faces(mesh, closed));
 }   
    
-// mesh_polyhedron(make_polygon_mesh(20, 7, 5, 3));
+mesh_polyhedron(make_polygon_mesh(20, 7, 5, 3));
 
 // renders a band sinusoidally oscillating along y and z axes
 
@@ -44,10 +44,10 @@ module visualize_curve (curve, width = 0.1) {
   if ($preview) {
     w2 = width/2;
     mesh = concat(     
-             translate(curve, [-w2, -w2, -w2]),
-             translate(curve, [-w2,  w2,  w2]),
-             translate(curve, [ w2, -w2,  w2]),
-             translate(curve, [ w2,  w2, -w2]));
+             g_translate([-w2, -w2, -w2], curve),
+             g_translate([-w2,  w2,  w2], curve),
+             g_translate([ w2, -w2,  w2], curve),
+             g_translate([ w2,  w2, -w2], curve));
     color("red", alpha=0.2)
     mesh_polyhedron(mesh); 
   }

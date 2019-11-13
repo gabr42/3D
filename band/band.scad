@@ -35,25 +35,18 @@ letter_dy = 1;
  
 length = 2 * PI * r * 1.2;
 
-mesh1 = rotate(
-          translate(
-            make_band_points(
-              make_wave(length, yheight, zheight, num_waves, 0, 90), ythick, zthick),
-            [-length/2, -yheight, 0]),                                                                    
-          angle);
+mesh1 = g_rotate(angle, points = 
+        g_translate([-length/2, -yheight, 0],
+          make_band_points(
+            make_wave(length, yheight, zheight, num_waves, 0, 90), ythick, zthick)));
 
-mesh2 = rotate(
-          translate(
-            make_band_points(make_wave(length, yheight, zheight, num_waves, 180, 270), ythick, zthick),
-            [-length/2, -yheight, 0]),                                                                    
-          angle);
+mesh2 = g_rotate(angle, points = 
+        g_translate([-length/2, -yheight, 0],
+          make_band_points(make_wave(length, yheight, zheight, num_waves, 180, 270), ythick, zthick)));
         
-under = rotate(
-          translate(
-            make_band_points(make_segment_line([0, 0, -zthick/2], [length, 0, -zthick/2]), ythick, zthick),
-            [-length/2, -yheight, 0]
-          ),
-          angle);
+under = g_rotate(angle, points = 
+        g_translate([-length/2, -yheight, 0],
+          make_band_points(make_segment_line([0, 0, -zthick/2], [length, 0, -zthick/2]), ythick, zthick)));
 
 /** /
 union() {

@@ -11,20 +11,19 @@ b = make_segment_line([0,0,0], [0,0,30]);
 visualize_curve(b, 0.3);
 
 b1 = concat(b, 
-            translate(b, [3, 0, 0]),
-            translate(b, [0, 3, 0]),
-            translate(b, [3, 3, 0]));
+            g_translate([3, 0, 0], b),
+            g_translate([0, 3, 0], b),
+            g_translate([3, 3, 0], b));
 //mesh_polyhedron(b1);
 
 l = make_logistic_curve(-15, 15, 5, 20);
 
 l1 = 
-  mirror_X(
-    rotate(
-    rotate(l, 270, [0,0,0], [1,0,0]),
-    90, [0,0,0], [0,1,0]));
+  g_mirrorX(
+    g_rotate(90, [0,0,0], [0,1,0],
+    g_rotate(270, [0,0,0], [1,0,0], l)));
 
-l2 = translate(l1, -l1[0]);
+l2 = g_translate(-l1[0], l1);
 
 visualize_curve(l2);
 
