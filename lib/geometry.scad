@@ -16,9 +16,14 @@ function interpolate(t, pt1, pt2) =
 
 // Sets Z coordinate to 0 if it is not defined.
 
-function make_3D(pt) = 
-  is_undef(pt.z) ? concat(pt, 0) : pt;
+function make_3D(points) = 
+  ! is_vector(points)
+    ? [for (pt = points) make_3D(pt)]
+    : is_undef(points.z) ? concat(points, 0) : points;
   
+// echo(make_3D([1,1]));
+// echo(make_3D([[1,1], [2,2,2]]));
+    
 // Point on the unit circle on XY plane corresponding to `angle` (in degrees).
   
 function point_on_unit_circle(angle) = [cos(angle), sin(angle)];

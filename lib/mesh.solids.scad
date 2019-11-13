@@ -46,6 +46,6 @@ module visualize_curve (curve, width = 0.1) {
     color("red", alpha=0.2)
     mesh_polyhedron(
       make_curve_replicas([[-w2, -w2, -w2], [-w2, w2, w2], [w2, -w2, w2], [w2, w2, -w2]], 
-        curve));
+        make_3D(curve)));
   }
 }

@@ -12,7 +12,7 @@ numsides = 5;
 xwidth = 1;
 ywidth = 1;
 zwidth = 1;
-twist = 720;
+twist = 0; //720;
 
 $fn = 30;
 
@@ -25,7 +25,6 @@ module rings (twist) {
     );
   }
 }
-
 
 module tent (twist) {
   stick = make_curve_replicas([[0, 0, 0], [xwidth, 0, 0], [0, ywidth, 0], [xwidth, ywidth, 0]], 
@@ -40,6 +39,12 @@ module tent (twist) {
   }
 }
 
-rings(twist);
+function make_deform_path() = 
+  let (h1 = 20)
+  make_segment_line([0,0], [0,h1]);
+
+visualize_curve(make_deform_path(), 0.5);
+
+//rings(twist);
 tent(twist);
-tent(-twist);
+//tent(-twist);

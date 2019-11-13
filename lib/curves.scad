@@ -6,9 +6,11 @@ use <geometry.manipulators.scad>
 // Multi-segment straight line between two 3D points.
 
 function make_segment_line(from, to) =
-  let (segments = $fn > 0 ? $fn : 50)
-  let (d = [(to.x - from.x)/segments, (to.y - from.y)/segments, (to.z - from.z)/segments])
-  [for (i = [0:segments]) [from.x + i * d.x, from.y + i * d.y, from.z + i * d.z]];
+  let (segments = $fn > 0 ? $fn : 50,
+      _from = make_3D(from),
+      _to = make_3D(to),
+      d = [(_to.x - _from.x)/segments, (_to.y - _from.y)/segments, (_to.z - _from.z)/segments])
+  [for (i = [0:segments]) [_from.x + i * d.x, _from.y + i * d.y, _from.z + i * d.z]];
     
 // Reqular polygon inscribed in a unit circle with one vertex at (1,0).
   
