@@ -8,11 +8,11 @@ height = 70;
 radius = 20;
 step = 7;
 ring_height = height - 2*step;
-numsides = 5;
+numsides = 11;
 xwidth = 1;
 ywidth = 1;
 zwidth = 1;
-twist = 0; //720;
+twist = 360;
 
 $fn = 30;
 
@@ -54,4 +54,4 @@ module tent (twist) {
 
 //rings(twist);
 tent(twist);
-//tent(-twist);
+tent(-twist);
