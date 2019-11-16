@@ -9,7 +9,7 @@ connect = 0.5;
 
 $fn = 50;
 
-current_color = "white";
+current_color = "ALL";
 
 module multicolor(color) {
   if (current_color != "ALL" && current_color != color) {

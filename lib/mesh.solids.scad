@@ -9,7 +9,7 @@ module mesh_polyhedron(mesh, closed = false) {
   polyhedron(mesh, make_band_faces(mesh, closed));
 }   
    
-mesh_polyhedron(make_polygon_mesh(20, 7, 5, 3));
+//mesh_polyhedron(make_polygon_mesh(20, 7, 5, 3));
 
 // renders a band sinusoidally oscillating along y and z axes
 
