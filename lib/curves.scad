@@ -48,6 +48,12 @@ function make_logistic_curve(x1, x2, xscale, yscale) =
     let (x = x1 + (x2 - x1) / segments * i) 
     [x, yscale * (logistic_function(x / xscale) - 1/2)]];
 
+function make_teardrop(radius, angle, center_at_point = false) =
+  let(b = 90 - angle/2,
+      d = radius / sin (angle/2),
+      curve = concat([[d, 0]], make_segment_arc([0,0], radius, b, 360-b), [[d, 0]]))
+  center_at_point ? g_translate([-d, 0], curve) : curve;
+
 // Offsets a curve and concats it to the original. Output can be plugged into a polygon().
 
 function make_strip_points(offset, curve) = 
