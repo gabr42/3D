@@ -1,4 +1,3 @@
-use <../../lib/geometry.manipulators.scad>
 use <../../external/scad_utils/hull.scad>
 
 width = 50;
