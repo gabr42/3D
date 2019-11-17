@@ -2,14 +2,22 @@
 
 function range(r) = [for (x = r) x];
 
+// Slices a list.
+
+function slice(list, range) = [for (i = range) each list[i]];
+
 // Reverses a list.
     
-function reverse(list) = [for (i = [len(list)-1:-1:0]) list[i]];
-  
+function reverse(list) = slice(list, [len(list)-1:-1:0]);
+
 // Concatenates two lists. If either of them is `undef`, it is ignored.
 
-function concat_undef(list1, list2) =
-    concat(is_undef(list1) ? [] : list1, is_undef(list2) ? [] : list2);
+function concat_ifdef(list1, list2) =
+  is_undef(list1) 
+    ? list2
+    : is_undef(list2)
+        ? list1
+        : concat(list1, list2);
 
 // Quicksort
 // http://forum.openscad.org/OpenJSCAD-our-javascript-friends-td7835.html
