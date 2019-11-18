@@ -6,10 +6,10 @@ dbottom = 0.5;
 dtop = 2.5;
 height = 13;
 delta = 0.05;
-sizes = [[50, 10]];
+sizes = [[50, 15]];
 
 $fn = 50;
-$fa = 1;
+$fa = 2;
 
 module oval_2D (straight, radius) {
   polygon(
@@ -32,7 +32,9 @@ module oval (straight, radius) {
   hd = height / (dtop - dbottom) * delta;
   //echo(str("Rendering ", floor(height/hd) + 1, " layers"));
 
-  for (i = [0:height/hd]) {
+  translate([0, 0, height])
+  rotate(180, [1, 0, 0])
+  for (i = [0:floor(height/hd)-1]) {
     translate([0, 0, i*hd])
     linear_extrude(hd)
     oval_outline(straight, radius, dbottom + i * delta);
