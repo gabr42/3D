@@ -47,6 +47,8 @@ function make_logistic_curve(x1, x2, xscale, yscale) =
   [for (i = [0:segments])
     let (x = x1 + (x2 - x1) / segments * i) 
     [x, yscale * (logistic_function(x / xscale) - 1/2)]];
+    
+// Teardrop shape.
 
 function make_teardrop(radius, angle, center_at_point = false) =
   let(b = 90 - angle/2,

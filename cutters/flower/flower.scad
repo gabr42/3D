@@ -1,10 +1,9 @@
 use <../../lib/curves.scad>
 use <../../lib/mesh.solids.scad>
-
 use <../../lib/helpers.lists.scad>
 
 radius = 5;
-rcircle = 4;
+rcircle = 3;
 angle = 60;
 num_leaves = 5;
 dbottom = 0.5;
@@ -14,6 +13,7 @@ height = 13;
 sizes = [57, 42, 35];
 
 $fn = 50;
+$fa = 2;
 
 module flower_leaves (radius, angle, num_leaves) {
   for (i = [0:num_leaves - 1]) {
@@ -48,8 +48,6 @@ module flower (radius, angle, num_leaves, rcircle) {
     flower_2D(radius, angle, num_leaves, rcircle);
   }
 }
-
-echo((cos(360/num_leaves/2) + 1) *  (radius / sin (angle/2) + radius));
 
 // d = (cos(360/num_leaves/2) + 1) *  (radius / sin (angle/2) + radius);
 // D = C * (r/s + r)
