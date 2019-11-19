@@ -1,11 +1,11 @@
 use <../../external/scad_utils/hull.scad>
 
-width = 50;
-height = 100;
-holes = [[10,10], [10, 90], [40, 10], [40, 90]];
+width = 48;
+height = 103;
+holes = [[10,10], [10, 93], [38, 10], [38, 93]];
 screws = 3;
 thick = 3;
-delta = [35, -40, -15] + [0, thick, 0];
+delta = [35, -40, -20] + [0, thick, 0];
 connection = [6, 40];
 except_lr = [10, 70];
 except_tb = [25, 12.5];
