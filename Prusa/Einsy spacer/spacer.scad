@@ -1,14 +1,17 @@
 use <../../external/scad_utils/hull.scad>
 
-width = 48;
-height = 103;
-holes = [[10,10], [10, 93], [38, 10], [38, 93]];
+width = 52;
+height = 109;
+holes = [[6,8-0.8], [6, 101+0.8], [44, 8-0.8], [44, 101+0.8]];
 screws = 3;
 thick = 3;
 delta = [35, -40, -20] + [0, thick, 0];
 connection = [6, 40];
 except_lr = [10, 70];
 except_tb = [25, 12.5];
+
+assert(holes[1].y - holes[0].y == 93+1.6, "dY is wrong");
+assert(holes[2].x - holes[0].x == 38, "dX is wrong");
 
 inf = 0.01;
 
@@ -74,9 +77,25 @@ module connection () {
   make_hull(concat(r1, r2));
 }
 
+/*
+difference () {
+  intersection () {
+    cube([250, 250, 1], center = true);
+    
+    rotate(90, [1,0,0])
+    base_plate();
+  }
+  
+  translate([16, -88, -5])
+  #cube([20, 70, 10]);
+}
+*/
+
+/**/
 base_plate();
 
 translate(delta)
 base_plate();
 
 connection();
+/**/
