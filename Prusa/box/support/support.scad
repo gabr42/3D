@@ -8,13 +8,21 @@ thick_tab = 4;
 space = 0.1;
 hole = 3;
 
-num_support = 2;
+taper_len = 3;
+taper_d = 1;
+
+num_support = 1;
 
 module side () {
   cube([length, width, thick]);
 
   translate([length, 0, 0])
-  cube([length_tab, width, thick_tab]);
+  hull () {
+    cube([length_tab - taper_len, width, thick_tab]);
+    
+    translate([length_tab - taper_len, taper_d, 0])
+    cube([taper_len, width - 2 * taper_d, thick_tab - taper_d]);
+  }
 }
 
 module support () {
@@ -77,7 +85,9 @@ module make_supports () {
   }
 }
 
-if (true)
+for_real = false;
+
+if (for_real)
   make_supports();
 else {
   // test print
@@ -92,5 +102,3 @@ else {
 
   lock();
 }
-
-
