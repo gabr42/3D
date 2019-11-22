@@ -6,7 +6,7 @@ angle_len = 40;
 thick = 5;
 thick_tab = 3;
 thick_lock = 4;
-space = 0.1;
+space = 0.15;
 hole = 3;
 
 taper_len = 3;
@@ -71,12 +71,12 @@ module lock () {
     cube([length_tab, thick_lock, thick_lock + thick_tab + space]);
 
     translate([0, 0, thick_tab + space])
-    cube([length_tab, width + space, thick_lock]);
+    cube([length_tab, width + 2 * space, thick_lock]);
     
-    translate([0, width + space, 0])
+    translate([0, width + 2 * space, 0])
     cube([length_tab, thick_lock, thick_lock + thick_tab + space]);
 
-    translate([0, width + thick_lock + space, 0])
+    translate([0, width + thick_lock + 2 * space, 0])
     hole_tab();
   }
 }
