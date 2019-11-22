@@ -63,7 +63,6 @@ module hole_tab () {
 
 module lock () {
   translate([2 * thick_lock + space, 0, 0])
-  rotate(-90, [0, 1, 0])
   translate([0, -2 * width, 0]) {
     translate([0, - width_tab - thick_lock, 0])
     hole_tab();  
@@ -89,10 +88,10 @@ module make_supports () {
     support();
     
     if ($make_locks) {
-      translate([(i-1) * 8 * thick_tab, 0, 0]) {
+      translate([(i-1) * 2 * width, 0, 0]) {
         lock();
         
-        translate([4 * thick_tab, 0, 0])
+        translate([width, 0, 0])
         lock();
       }
     }
