@@ -57,7 +57,7 @@ module hole_tab () {
     circle(d = hole, $fn=50);
     
     translate([length_tab/2, width_tab/2, thick_lock - hole/3])
-    cylinder(hole/2, hole/2, hole*1.5, $fn=50);
+    cylinder(hole/2, hole/2, hole*1.3, $fn=50);
   }
 }
 
