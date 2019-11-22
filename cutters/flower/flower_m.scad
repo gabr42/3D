@@ -1,6 +1,7 @@
+include <../../lib/helpers.math.scad>
+use <../../lib/helpers.lists.scad>
 use <../../lib/curves.scad>
 use <../../lib/mesh.solids.scad>
-use <../../lib/helpers.lists.scad>
 
 radius = 5;
 rcircle_pct = 0.1;
@@ -12,10 +13,15 @@ dtop = 2.5;
 height = 13;
 extra = 1;
 
-sizes = [57, 42, 35];
+sizes = [35]; //[57, 42, 35];
 
 $fn = 50;
 $fa = 2;
+
+module around() {
+  rotate_extrude(angle=360)
+  polygon([[0,0], [0, 13], [0.05, 13], [0.05, 11], [1.25, 0]]);
+}
 
 module flower_leaves (radius, angle, num_leaves) {
   for (i = [0:num_leaves - 1]) {
@@ -43,6 +49,25 @@ module flower_2D (radius, angle, num_leaves, rcircle) {
 }
 
 module flower (radius, angle, num_leaves, rcircle) {
+ 
+  difference () {
+    render() minkowski () {
+      linear_extrude(10)
+      flower_2D(radius, angle, num_leaves, rcircle);
+     
+      around();
+    }
+    
+    translate([0, 0, -1])
+    linear_extrude(height + extra + 1)
+    union () {
+      flower_leaves(radius - 0.1, angle, num_leaves);
+      circle(rcircle - 0.1);
+    }
+  }
+}
+
+/* module flower (radius, angle, num_leaves, rcircle) {
   translate([0, 0, height])
   rotate(180, [1,0,0])
   union () {
@@ -55,7 +80,7 @@ module flower (radius, angle, num_leaves, rcircle) {
     linear_extrude(extra)
     flower_2D(radius, angle, num_leaves, rcircle);
   }
-}
+} */
 
 // d = (cos(360/num_leaves/2) + 1) *  (radius / sin (angle/2) + radius);
 // D = C * (r/s + r)
@@ -71,7 +96,7 @@ for (i = [0:len(sizes)-1]) {
   union () {
     flower(r, angle, num_leaves, rcircle_pct * sizes[i]);
     
-    linear_extrude(2)
-    circle(tcircle_pct * sizes[i]);  
+ //   linear_extrude(2)
+ //   circle(tcircle_pct * sizes[i]);  
   }
 }
