@@ -13,6 +13,11 @@ sizes = [[20, 15]];
 $fn = 50;
 $fa = 2;
 
+module around() {
+  rotate_extrude(angle=360)
+  polygon([[0,0], [0, 13], [0.05, 13], [0.05, 11], [1.25, 0]]);
+}
+
 module oval_2D (straight, radius) {
   polygon(
     concat(
@@ -24,31 +29,29 @@ module oval_2D (straight, radius) {
 module oval_outline (straight, radius, offset) {
   difference () {
     offset(delta=offset)
-    oval_2D (straight, radius);
+    oval_2D(straight, radius);
 
-    oval_2D (straight, radius);
+    oval_2D(straight, radius);
   }
 }
 
 module oval (straight, radius) {
-  steps = floor((dtop - dbottom) / delta);
-  hd = height/steps;
-
-  translate([0, 0, height])
-  rotate(180, [1, 0, 0])
-  union () {
-    for (i = [0:1:steps-1]) {
-      translate([0, 0, i*hd])
-      linear_extrude(hd)
-      oval_outline(straight, radius, dbottom + i * (dtop - dbottom) / (steps - 1));
+ 
+  difference () {
+    render() minkowski () {
+      linear_extrude(inf)
+      oval_outline(straight, radius, 0.1);
+     
+      around();
     }
     
-    translate([0, 0, -extra])
-    linear_extrude(extra)
-    oval_outline(straight, radius, dbottom);  
+    translate([0, 0, -1])
+    linear_extrude(height + extra + 1)
+    oval_2D(straight, radius-0.1);
   }
+}
  
- /* 
+module criss_cross(straight, radius) {
   t = straight/3;
   linear_extrude(2)
   union () {
@@ -60,7 +63,6 @@ module oval (straight, radius) {
         [i*t/4 - 1, - j*(radius + inf)]
       ]);
   }
-  */
 }
 
 for (xy = sizes) {
