@@ -2,7 +2,7 @@ width = 20;
 length = 80;
 length_tab = 15;
 width_tab = 10;
-angle_len = 40;
+angle_len = 70;
 thick = 5;
 thick_tab = 3;
 thick_lock = 4;
@@ -12,7 +12,8 @@ hole = 3;
 taper_len = 3;
 taper_d = 1;
 
-num_support = 2;
+num_support = 3;
+num_lock = 2 * num_support;
 
 $for_real = true;
 $make_angles = true;
@@ -82,22 +83,19 @@ module lock () {
 }
 
 module make_supports () {
+  if ($make_angles) 
   for (i = [1:num_support]) {
-    if ($make_angles) 
-    translate([(i-1) * (length + length_tab) / 1.41 * 0.5, 0, 0])
+    translate([(i-1) * (length + length_tab) * 0.7, 0, 0])
     translate([(length + length_tab) / 1.41, 0, 0])
     rotate(90+45)
     rotate(90, [1,0,0])
     support();
-    
-    if ($make_locks) {
-      translate([(i-1) * 2 * width, 0, 0]) {
-        lock();
-        
-        translate([width, 0, 0])
-        lock();
-      }
-    }
+  }
+
+  if ($make_locks) 
+  for (i = [1: num_lock]) {
+    translate([(i-1) * width, 0, 0])
+    lock();
   }
 }
 
