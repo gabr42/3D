@@ -39,7 +39,6 @@ module support () {
     mirror([1,0,0])
     side();
 
-    #
     translate([-1, thick + (width-thick)/2, -1])
     rotate(90, [1,0,0])
     linear_extrude(thick)
@@ -57,8 +56,8 @@ module hole_tab () {
     linear_extrude(thick_lock * 2)
     circle(d = hole, $fn=50);
     
-    translate([length_tab/2, width_tab/2, thick_lock - hole/4])
-    cylinder(hole/2, hole/2, hole, $fn=50);
+    translate([length_tab/2, width_tab/2, thick_lock - hole/3])
+    cylinder(hole/2, hole/2, hole*1.5, $fn=50);
   }
 }
 
