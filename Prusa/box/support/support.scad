@@ -39,7 +39,7 @@ module support () {
     mirror([1,0,0])
     side();
 
-    translate([-1, thick + (width-thick)/2, -1])
+    translate([0, thick + (width-thick)/2, 0])
     rotate(90, [1,0,0])
     linear_extrude(thick)
     polygon([
@@ -84,7 +84,10 @@ module lock () {
 module make_supports () {
   for (i = [1:num_support]) {
     if ($make_angles) 
-    translate([0, (i-1) * width * 1.5, 0])
+    translate([(i-1) * (length + length_tab) / 1.41 * 0.5, 0, 0])
+    translate([(length + length_tab) / 1.41, 0, 0])
+    rotate(90+45)
+    rotate(90, [1,0,0])
     support();
     
     if ($make_locks) {
