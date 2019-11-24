@@ -1,14 +1,10 @@
-include <../../lib/helpers.math.scad>
-use <../../lib/helpers.lists.scad>
 use <../../lib/curves.scad>
-use <../../lib/mesh.solids.scad>
+include <../cutters.scad>
 
-dbottom = 0.4;
-dtop = 2;
-height = 13;
-extra = 1;
-delta = 0.1;
 sizes = [[20, 15]];
+
+// cutter_release = true;
+// cutter_verbose = true;
 
 $fn = 50;
 $fa = 2;
@@ -31,22 +27,8 @@ module oval_outline (straight, radius, offset) {
 }
 
 module oval (straight, radius) {
-  steps = floor((dtop - dbottom) / delta);
-  hd = height/steps;
-
-  translate([0, 0, height])
-  rotate(180, [1, 0, 0])
-  union () {
-    for (i = [0:1:steps-1]) {
-      translate([0, 0, i*hd])
-      linear_extrude(hd)
-      oval_outline(straight, radius, dbottom + i * (dtop - dbottom) / (steps - 1));
-    }
-    
-    translate([0, 0, -extra])
-    linear_extrude(extra)
-    oval_outline(straight, radius, dbottom);  
-  }
+  cutter_render () 
+  oval_outline(straight, radius, $cutter_layer_thickness);
  
  /* 
   t = straight/3;

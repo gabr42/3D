@@ -42,21 +42,6 @@ module flower_2D (radius, angle, num_leaves, rcircle, delta) {
   }
 }
 
-// module flower (radius, angle, num_leaves, rcircle) {
-//   translate([0, 0, height])
-//   rotate(180, [1,0,0])
-//   union () {
-//     for (s = [100:105]) {
-//       linear_extrude(height, scale = s/100)
-//       flower_2D(radius, angle, num_leaves, rcircle);
-//     }
-    
-//     translate([0, 0, -extra])
-//     linear_extrude(extra)
-//     flower_2D(radius, angle, num_leaves, rcircle);
-//   }
-// }
-
 module flower_rays (radius, num_leaves, rcircle, d) {
   for (i = [0:num_leaves]) {
     rotate(360 / num_leaves * i)
