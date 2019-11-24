@@ -2,17 +2,17 @@ use <../../lib/curves.scad>
 use <../../lib/mesh.solids.scad>
 use <../../lib/helpers.lists.scad>
 
-rcircle_pct = 0.13;
+radius = 5;
+rcircle_pct = 0.1;
 tcircle_pct = 0.2;
 angle = 60;
 num_leaves = 5;
-dbottom = 0.4;
-dtop = 2;
+dbottom = 0.3;
+dtop = 2.5;
 height = 13;
 extra = 1;
-delta = 0.05;
 
-sizes = [35]; // [56, 49, 42, 35];
+sizes = [57, 42, 35];
 
 $fn = 50;
 $fa = 2;
@@ -24,9 +24,9 @@ module flower_leaves (radius, angle, num_leaves) {
   }
 }
 
-module flower_2D (radius, angle, num_leaves, rcircle, delta) {
+module flower_2D (radius, angle, num_leaves, rcircle) {
   difference () {
-    offset(delta=delta)
+    offset(delta=dbottom)
     flower_leaves(radius, angle, num_leaves);
     
     flower_leaves(radius, angle, num_leaves);
@@ -34,42 +34,28 @@ module flower_2D (radius, angle, num_leaves, rcircle, delta) {
   }
 
   difference () {
-    offset(delta=delta)
+    offset(delta=dbottom)
     circle(rcircle);
     
     circle(rcircle);
     flower_leaves(radius, angle, num_leaves);
-  }
-}
-
-module flower_rays (radius, num_leaves, rcircle, d) {
-  for (i = [0:num_leaves]) {
-    rotate(360 / num_leaves * i)
-    translate([rcircle + d, -d/2, -1])
-    cube([radius, d, height + 2]);
   }
 }
 
 module flower (radius, angle, num_leaves, rcircle) {
-  steps = floor((dtop - dbottom) / delta);
-  hd = height/steps;
-
   translate([0, 0, height])
-  rotate(180, [1, 0, 0])
-  difference () {
-    union () {
-      for (i = [0:1:steps-1]) {
-        translate([0, 0, i*hd])
-        linear_extrude(hd)
-        flower_2D(radius, angle, num_leaves, rcircle, dbottom + i * (dtop - dbottom) / (steps - 1));
-      }
+  rotate(180, [1,0,0])
+  union () {
+    for (s = [100:105]) {
+      linear_extrude(height, scale = s/100)
+      flower_2D(radius, angle, num_leaves, rcircle);
     }
-
-    flower_rays(radius * 4, num_leaves, rcircle, 1.5 * dbottom);
+    
+    translate([0, 0, -extra])
+    linear_extrude(extra)
+    flower_2D(radius, angle, num_leaves, rcircle);
   }
 }
-
-echo(str("Layer height: ", height/(floor((dtop - dbottom) / delta))));
 
 // d = (cos(360/num_leaves/2) + 1) *  (radius / sin (angle/2) + radius);
 // D = C * (r/s + r)

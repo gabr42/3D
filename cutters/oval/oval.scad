@@ -17,18 +17,9 @@ module oval_2D (straight, radius) {
   );
 }
 
-module oval_outline (straight, radius, offset) {
-  difference () {
-    offset(delta=offset)
-    oval_2D (straight, radius);
-
-    oval_2D (straight, radius);
-  }
-}
-
 module oval (straight, radius) {
-  cutter_render () 
-  oval_outline(straight, radius, $cutter_layer_thickness);
+  cutter_render_wall() 
+  oval_2D(straight, radius);
  
  /* 
   t = straight/3;

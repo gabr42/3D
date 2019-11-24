@@ -47,3 +47,35 @@ module cutter_wall (thickness) {
     children();
   }
 }
+
+module cutter_render_wall () {
+  cutter_render()
+  cutter_wall($cutter_layer_thickness)
+  children();
+}
+
+module cutter_wall_difference (thickness) {
+  assert($children == 2, str("cutter_wall_xor expected two children, got ", $children));
+
+  difference () {
+    cutter_wall(thickness)
+    children(0);
+
+    children(1);
+  }
+
+  difference () {
+    cutter_wall(thickness)
+    children(1);
+
+    children(0);
+  }
+}
+
+module cutter_render_wall_difference () {
+  cutter_render()
+  cutter_wall_difference($cutter_layer_thickness) {
+    children(0);
+    children(1);
+  }
+}
