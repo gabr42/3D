@@ -1,6 +1,6 @@
 include <../../../lib/helpers.math.scad>
 
-dim = [40, 6, 39];
+dim = [40, 6, 40];
 offset = 6; 
 offset_z = 4;
 thick_connector = 5;
