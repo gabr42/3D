@@ -27,3 +27,11 @@ function angle(u, v) =
   let (u3 = make_3D(u),
        v3 = make_3D(v))
   atan2(norm(cross(u3, v3)), u3 * v3);
+
+// Given a 2D directional vector aligned along X or Y, turns 90 deg CW and returns new vector.
+
+function turn_right(xy) = [xy.y, -xy.x];
+
+// Given a 2D directional vector aligned along X or Y, turns 90 deg CCW and returns new vector.
+
+function turn_left(xy) = [-xy.x, xy.y];
