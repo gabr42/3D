@@ -38,6 +38,11 @@ function sum_list(list, idx = 0) =
                  :  idx < len(list) - 1 ? list[idx] + sum_list(list, idx + 1)
                                         : list[idx];
 
+// Multiply lists element-wise.
+
+function mul_lists(list1, list2) =
+  [for (idx = [0:1:len(list1)-1]) list1[idx] * list2[idx]];
+
 // Checks whether a list is a vector (must contain elements, first element must be a number).
 
 function is_vector(v) = 
