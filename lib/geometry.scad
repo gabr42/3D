@@ -41,3 +41,32 @@ function find_closest_point(from, to, pt) =
     : let (dF = distance(pt, from),
            dT = distance(pt, to))
       dF < dT ? from : to;
+
+// Bounding box.
+
+function __bb_create(__left, __top, __right, __bottom) =
+  [__left, __top, __right, __bottom];
+
+function __bb_left(bb, __left = undef) =
+  is_undef(__left)
+    ? bb[0]
+    : concat(__left, bb[1], bb[2], bb[3]);
+
+function __bb_top(bb, _top = undef) =
+  is_undef(_top)
+    ? bb[1]
+    : concat(bb[0], _top, bb[2], bb[3]);
+
+function __bb_right(bb, _right = undef) =
+  is_undef(_right)
+    ? bb[2]
+    : concat(bb[0], bb[1], _right, bb[3]);
+
+function __bb_bottom(bb, _bottom = undef) =
+  is_undef(_bottom)
+    ? bb[3]
+    : concat(bb[0], bb[1], bb[2], _bottom);
+
+function __bb_width(bb) = __bb_right(bb) - __bb_left(bb);
+
+function __bb_height(bb) = __bb_top(bb) - __bb_bottom(bb);
