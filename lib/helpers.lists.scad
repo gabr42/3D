@@ -4,7 +4,7 @@ function range(r) = [for (x = r) x];
 
 // Slices a list.
 
-function slice(list, range) = [for (i = range) each list[i]];
+function slice(list, range) = [for (i = range) list[i]];
 
 // Reverses a list.
     
