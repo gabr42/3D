@@ -25,7 +25,7 @@ module u_tube_holder (length, cross, thick) {
       #translate([ofsl + i * (dist + 4), 0, 1.6 * cross.y + thick/2])
       rotate(-60, [1,0,0])
       translate([0, 0, -cross.x/2])
-      cylinder(cross.x * 3, 2, 2, $fn = 50);
+      cylinder(cross.x * 3, 2.5, 2.5, $fn = 50);
     }
   }
 }
