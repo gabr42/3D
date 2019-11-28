@@ -15,7 +15,7 @@ module mesh_polyhedron(mesh, closed = false) {
 
 module sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, offset = 0) {
   wsin = make_band_points(
-           wave_points(length, yheight, zheight, num_waves, offset, offset + 90),
+           make_wave(length, yheight, zheight, num_waves, offset, offset + 90),
            ythick, zthick);
   mesh_polyhedron(wsin);  
 }    
@@ -30,7 +30,9 @@ module test_sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, of
   sinus_spiral(length, yheight, zheight, ythick, zthick, num_waves, offset + 180);
 }
 
-//test_sinus_spiral(80, 10, 5, 5, 5, 2, $fn=50);
+//test_sinus_spiral(80, 5, 1, 10, 3, 2, $fn=50);
+//translate([40, 5, 0])
+//cube([80, 20, 2], center = true);
 
 // renders a band based on segment_line()
 
