@@ -138,3 +138,13 @@ function curve_find_offset(curve, t) = // [pt_on_curve, segment_index]
 // echo(curve_find_offset([[0,0], [1,1], [2,2], [3,3]], 0));
 // echo(curve_find_offset([[0,0], [1,1], [2,2], [3,3]], 0.5));
 // echo(curve_find_offset([[0,0], [1,1], [2,2], [3,3]], 1));
+
+
+// Closes a curve if it is not closed.
+
+function curve_close(curve) =
+  len(curve) < 2
+    ? curve
+    : curve[0] == curve[len(curve)-1]
+      ? curve
+      : concat(curve, [curve[0]]);
