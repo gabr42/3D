@@ -7,19 +7,28 @@ tcircle_pct = 0.2;
 angle = 60;
 num_leaves = 5;
 
-
 // cutter_release = true;
 // cutter_verbose = true;
 
+angled_cutters = false;
+angled_scale = 0.85;
+
 sizes = [35]; // [56, 49, 42, 35];
 
-$fn = 50;
-$fa = 2;
+$fn = angled_cutters ? 5 : 50;
+$fa = angled_cutters ? 100 : 2;
 
 module flower_leaves (radius, angle, num_leaves) {
   for (i = [0:num_leaves - 1]) {
+    teardrop = make_teardrop(radius, angle, center_at_point = true);
     rotate(360/num_leaves * i)
-    polygon(make_teardrop(radius, angle, center_at_point = true));
+    if (!angled_cutters)
+      polygon(teardrop);
+    else
+      polygon(concat(
+        slice(teardrop, [0:1]),
+        [[teardrop[2].x * angled_scale, teardrop[2].y]],
+        slice(teardrop, [3:4])));
   }
 }
 
@@ -53,7 +62,7 @@ module flower (radius, angle, num_leaves, rcircle, tcircle) {
 // D/C*s/(1+s) = r
 
 for (i = [0:len(sizes)-1]) {
-  r = sizes[i] / (cos(360/num_leaves/2) + 1) * sin(angle/2) / (sin(angle/2) + 1);  
+  r = sizes[i] / (cos(360/num_leaves/2) + 1) * sin(angle/2) / (sin(angle/2) + 1);
   
   translate([1.1 * sum_list(slice(sizes, [0:1:i-1])), 0, 0])
   flower(r, angle, num_leaves, rcircle_pct * sizes[i], tcircle_pct * sizes[i]);
