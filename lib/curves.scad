@@ -25,6 +25,22 @@ function make_segment_arc(center, radius, from_angle, to_angle) =
 
 echo(make_segment_arc([2,0], 2, 180, 90)); // [0,0] .. [2,2]
 
+// Multi-segment 2D ellipse segment lying on the XY plane.
+
+function make_segment_ellipse(center, radius, eccentricity = 0 /* circle */, from_angle = 0, to_angle = 360) = 
+  let (segments = is_undef($fa) 
+                    ? $fn > 0 ? $fn : 50
+                    : abs(round((to_angle - from_angle) / $fa)),
+        da = (to_angle - from_angle) / segments)
+  [for (i = [0:segments])
+    let (a = from_angle + i * da,
+         r = radius / sqrt(1 - pow(eccentricity * cos(a), 2)))
+//         r = r2 * radius / sqrt(pow(radius * cos(a), 2) + pow(r2 * sin(a), 2)))
+    [center.x + cos(a) * r, center.y + sin(a) * r]];
+  
+
+polygon(make_segment_ellipse([0,0], 10, 0));
+
 // Reqular polygon inscribed in a unit circle with one vertex at (1,0).
   
 function make_unit_polygon(numsides) =
