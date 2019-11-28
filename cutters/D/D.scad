@@ -1,10 +1,12 @@
 use <../../lib/curves.scad>
+use <../../lib/layout.scad>
+use <../../lib/geometry.scad>
 include <../cutters.scad>
 
 sizes = [10, 15, 20];
 eccentricity = 0.65;
 
-cutter_release = true;
+// cutter_release = true;
 // cutter_verbose = true;
 
 $fn = 50;
@@ -19,8 +21,19 @@ module D_wall(radius, eccentricity) {
   cutter_render_wall()
   D_outline(radius, eccentricity);
 }
+
+module make_D(sizes, pos, layout) {  
+  pos = is_undef(pos) ? 0 : pos;
+  if (pos < len(sizes)) {
+    size = sizes[pos];  
   
-for (i = [0:len(sizes)-1]) {
-  translate([i * (sizes[len(sizes)-1] + 10), 0, 0])
-  D_wall(sizes[i], eccentricity);
+    new_layout = layout_right(layout, 10, __bb_create(0, size/2, size*1.5, -size/2));
+    
+    translate(new_layout[0])
+    D_wall(size, eccentricity);
+    
+    make_D(sizes, pos + 1, new_layout);
+  }
 }
+
+make_D(sizes);
