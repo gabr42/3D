@@ -4,9 +4,9 @@ use <../../lib/geometry.scad>
 include <../cutters.scad>
 
 sizes = [10, 15, 20];
-eccentricity = 0.65;
+eccentricity = 0.7;
 
-// cutter_release = true;
+cutter_release = true;
 // cutter_verbose = true;
 
 $fn = 50;
