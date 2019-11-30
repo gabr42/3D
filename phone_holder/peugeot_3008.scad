@@ -5,11 +5,12 @@ use <../lib/geometry.manipulators.scad>
 use <../lib/mesh.scad>
 use <../lib/mesh.solids.scad>
 use <../lib/solids.scad>
+use <magnet_holder.scad>
 
 length = 26;
 length_u = 40;
 yscale = 1.5;
-zscale = 2;
+zscale = 1.5;
 width = 3;
 height = 5;
 spacing = 8.3;
@@ -67,7 +68,7 @@ cube([8, 2*h, height]);
 
 color("lime")
 difference () {
-  l = make_logistic_curve(-length_u/2, length_u/2, zscale, yscale, $fn=50);
+  l = make_logistic_curve(-length_u/2, length_u/2, zscale*2, yscale, $fn=50);
   l1 = g_translate([0, - l[0].y, 0], l);
 
   color("lime")
@@ -111,3 +112,7 @@ hull () {
   translate([shift_out, shift, - spacing_v/2])
   cross_sec();
 }
+
+color("magenta")
+translate([length/2 + shift_out + 0.5, 0, - spacing_v/2])
+magnet_holder();

@@ -24,6 +24,9 @@ module funnel () {
     translate([0, 0, -inf])
     cylinder(dh + 2*inf, r1, r2);
   }
+
+  translate([0, 0, dh])
+  cylinder(wall, r2 + wall, r2 + wall);
 }
 
 module ball () {
@@ -35,17 +38,24 @@ module ball () {
   }
 }
 
-difference () {
-  union () {
-    funnel();
-    ball();
+module magnet_holder () {
+  translate([-wall, 0, 0])
+  rotate(-90, [0,1,0])
+  translate([-over_x, 0, - dh - wall])
+  difference () {
+    union () {
+        funnel();
+        ball();
+    }
+
+    translate([over_x, -dball, -dball])
+    cube([2*dball, 2*dball, 2*dball]);
+
+    cylinder(dh + 2*inf, r1, r2);
+
+    translate([-dball, -dball, -2*dball - ball_out - over_z])
+    cube([2*dball, 2*dball, 2*dball]);
   }
-
-  translate([over_x, -dball, -dball])
-  cube([2*dball, 2*dball, 2*dball]);
-
-  cylinder(dh + 2*inf, r1, r2);
-
-  translate([-dball, -dball, -2*dball - ball_out - over_z])
-  cube([2*dball, 2*dball, 2*dball]);
 }
+
+magnet_holder();
