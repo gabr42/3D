@@ -114,5 +114,5 @@ hull () {
 }
 
 color("magenta")
-translate([length/2 + shift_out + 0.5, 0, - spacing_v/2])
+translate([length/2 + shift_out + 0.5, 0, - spacing_v/2 + height - 1])
 magnet_holder();
