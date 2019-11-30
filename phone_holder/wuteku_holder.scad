@@ -3,12 +3,12 @@ use <../external/fibsphere/files/fibonacci_sphere.scad>
 d1 = 19;
 d2 = 26.6;
 d = 6;
-dh = 7;
+dh = 8;
 wall = 2;
 dball = 25;
 ball_out = 8.5;
 over_x = 2;
-over_z = 1;
+over_z = 2;
 
 $fn = 50;
 inf = 0.1;
@@ -19,14 +19,14 @@ rh = (r2 - r1) / d * dh + r1;
 
 module funnel () {
   difference () {
-    cylinder(dh, r1 + wall, r2 + wall);
+    cylinder(dh, r1 + wall, rh + wall);
 
     translate([0, 0, -inf])
-    cylinder(dh + 2*inf, r1, r2);
+    cylinder(dh + 2*inf, r1, rh);
   }
 
   translate([0, 0, dh])
-  cylinder(wall, r2 + wall, r2 + wall);
+  cylinder(wall, rh + wall, rh + wall);
 }
 
 module ball () {
@@ -51,7 +51,7 @@ module magnet_holder () {
     translate([over_x, -dball, -dball])
     cube([2*dball, 2*dball, 2*dball]);
 
-    cylinder(dh + 2*inf, r1, r2);
+    cylinder(dh + 2*inf, r1, rh);
 
     translate([-dball, -dball, -2*dball - ball_out - over_z])
     cube([2*dball, 2*dball, 2*dball]);
