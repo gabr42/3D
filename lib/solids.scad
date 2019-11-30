@@ -76,3 +76,13 @@ module test_wrap_solid_around_cylinder_inner() {
 //test_wrap_solid_around_cylinder_outer();
 //test_wrap_solid_around_cylinder_inner();
 
+// Creates a series of two-surface hulls.
+
+module hull_chain () {
+  for (i = [0:1:$children - 2])
+    hull () {
+      children(i);
+
+      children(i+1);
+    }
+}
