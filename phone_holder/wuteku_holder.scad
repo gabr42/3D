@@ -3,12 +3,12 @@ use <../external/fibsphere/files/fibonacci_sphere.scad>
 d1 = 19;
 d2 = 26.6;
 d = 6;
-dh = 8;
+dh = 7.5;
 wall = 2;
 dball = 25;
 ball_out = 8.5;
-over_x = 2;
-over_z = 2;
+over_x = 3;
+over_z = 3;
 
 $fn = 50;
 inf = 0.1;
@@ -48,7 +48,7 @@ module magnet_holder () {
         ball();
     }
 
-    translate([over_x, -dball, -dball])
+    translate([over_x, - dball, - 2*dball + dh])
     cube([2*dball, 2*dball, 2*dball]);
 
     cylinder(dh + 2*inf, r1, rh);
