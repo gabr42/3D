@@ -5,7 +5,7 @@ use <../lib/geometry.manipulators.scad>
 use <../lib/mesh.scad>
 use <../lib/mesh.solids.scad>
 use <../lib/solids.scad>
-use <magnet_holder.scad>
+use <wuteku_holder.scad>
 
 length = 26;
 length_u = 40;
