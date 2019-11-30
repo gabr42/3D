@@ -23,7 +23,7 @@ function make_segment_arc(center, radius, from_angle, to_angle) =
     let (a = from_angle + i * da)
     [center.x + cos(a) * radius, center.y + sin(a) * radius]];
 
-echo(make_segment_arc([2,0], 2, 180, 90)); // [0,0] .. [2,2]
+// echo(make_segment_arc([2,0], 2, 180, 90)); // [0,0] .. [2,2]
 
 // Multi-segment 2D ellipse segment lying on the XY plane.
 
@@ -39,7 +39,7 @@ function make_segment_ellipse(center, radius, eccentricity = 0 /* circle */, fro
     [center.x + cos(a) * r, center.y + sin(a) * r]];
   
 
-polygon(make_segment_ellipse([0,0], 10, 0));
+// polygon(make_segment_ellipse([0,0], 10, 0));
 
 // Reqular polygon inscribed in a unit circle with one vertex at (1,0).
   
@@ -71,6 +71,18 @@ function make_teardrop(radius, angle, center_at_point = false) =
       d = radius / sin (angle/2),
       curve = concat([[d, 0]], make_segment_arc([0,0], radius, b, 360-b), [[d, 0]]))
   center_at_point ? g_translate([-d, 0], curve) : curve;
+
+// Rounded rectangle.
+
+function make_rounded_rect(width, height, radius) =
+  concat(
+    make_segment_arc([radius, radius], radius, 180, 270),
+    make_segment_arc([width - radius, radius], radius, -90, 0),
+    make_segment_arc([width - radius, height - radius], radius, 0, 90),
+    make_segment_arc([radius, height - radius], radius, 90, 180)
+  );
+
+polygon(make_rounded_rect(30, 20, 3));
 
 // Offsets a curve and concats it to the original. Output can be plugged into a polygon().
 
