@@ -7,6 +7,7 @@ include <../cutters.scad>
 ratio = 1.5;
 sizes = [40, 31, 34/ratio, 15];
 x_r_corner_ratio = 3 / sizes[0];
+support_size = 2;
 
 // cutter_release = true;
 // cutter_verbose = true;
@@ -20,19 +21,19 @@ module roundrect_2D (width, height, radius) {
   );
 }
 
-module supports (straight, height, radius) {
-  t = straight/3;
-//  w2 = straight/20;p
-  w2 = sqrt(pow(2*radius,2) + pow(3/2*t, 2))/(2*radius) * 0.7;
+module supports (width, height) {
+  t2 = height/2;
+  t6 = height/6;
+  s2 = support_size / 2;
   
   linear_extrude(2)
   union () {
-    for (i = [-1:2:1], j = [-1:2:1]) {
+    for (i = [-1:1:1]) {
       polygon([
-        [i*-5*t/4 - w2, j*(radius + inf)], 
-        [i*-5*t/4 + w2, j*(radius + inf)],
-        [i*t/4 + w2,  - j*(radius + inf)],
-        [i*t/4 - w2,  - j*(radius + inf)]
+        [0,     t2 + i * t6 + s2],
+        [width, t2 + i * t6 + s2],
+        [width, t2 + i * t6 - s2],
+        [0,     t2 + i * t6 - s2]
       ]);
     }
   }
@@ -42,7 +43,7 @@ module roundrect_wall (width, height, radius) {
   cutter_render_wall() 
   roundrect_2D(width, height, radius);
 
-  supports(width, height, radius); 
+  supports(width, height); 
 }
 
 module make_roundrect(sizes, pos, layout) {  
