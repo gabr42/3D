@@ -24,6 +24,13 @@ function make_3D(points) =
 // echo(make_3D([1,1]));
 // echo(make_3D([[1,1], [2,2,2]]));
     
+// Removes Z coordinate.
+
+function make_2D(points) = 
+  ! is_vector(points)
+    ? [for (pt = points) make_2D(pt)]
+    : slice(points, [0:1]);
+  
 // Point on the unit circle on XY plane corresponding to `angle` (in degrees).
   
 function point_on_unit_circle(angle) = [cos(angle), sin(angle)];
