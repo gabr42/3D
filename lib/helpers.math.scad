@@ -1,7 +1,8 @@
 // Constants
 
 e = 2.71828;
-inf = 1e-5;
+tau = (1 + sqrt(5)) / 2;
+inf = 1e-3;
 
 // Logistic function and its derivative.
 
