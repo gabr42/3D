@@ -72,7 +72,7 @@ difference () {
   l1 = g_translate([0, - l[0].y, 0], l);
 
   color("lime")
-  translate([length/2 + shift_out, - height/2 + shift, - spacing_v])
+  translate([length/2 + shift_out, - height/2 /*+ shift*/, - spacing_v])
   rotate(- angle_v, [0,1,0])
   translate([0, 0, - width])
   rotate(180, [0,0,1])
@@ -80,13 +80,14 @@ difference () {
   translate([length_u/2, 0, 0])
   mesh_polyhedron(make_band_points(l1, width, height));
 
-  translate([length/2 + shift_out, - height/2 - 1 + shift, - spacing_v - width - 1])
+  translate([length/2 + shift_out, - height/2 - 1 /*+ shift*/, - spacing_v - width - 1])
   cube([width, height + 2, width + 2]);
 }
 
-module cross_sec () {
+module cross_sec (rotate_x) {
   translate([length/2 - height/2, 0, 0])
   scale(height/2 * sqrt(2))
+  rotate(is_undef(rotate_x) ? 0 : rotate_x, [1,0,0])
   rotate(45)
   linear_extrude(inf)
   polygon(make_unit_polygon(4));
@@ -97,22 +98,25 @@ hull_chain () {
   translate([0, -h + height/2, 0])
   cross_sec();
 
-  translate([shift_out, shift, - spacing_v/2])
-  cross_sec();
+  translate([shift_out, 0, - spacing_v/2])
+  cross_sec(-10);
 
-  translate([shift_out, shift, - 2 * spacing_v/2 - width])
-  cross_sec();
-}
-
-color("orange")
-hull () {
   translate([0, h - height/2, 0])
   cross_sec();
 
-  translate([shift_out, shift, - spacing_v/2])
+}
+
+color("darkorange")
+hull () {
+  translate([shift_out, 0, - spacing_v/2])
+  cross_sec(0);
+
+  translate([shift_out, 0, - 2 * spacing_v/2 - width])
   cross_sec();
 }
 
+/*
 color("magenta")
 translate([length/2 + shift_out + 0.5, 0, - spacing_v/2 + height - 1])
 magnet_holder();
+*/
