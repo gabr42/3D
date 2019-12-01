@@ -3,7 +3,7 @@ use <../external/fibsphere/files/fibonacci_sphere.scad>
 d1 = 19;
 d2 = 26.6;
 d = 6;
-dh = 7.5;
+dh = 7.25;
 wall = 3;
 dball = 25;
 ball_out = 8.5;
