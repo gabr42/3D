@@ -78,11 +78,13 @@ module test_wrap_solid_around_cylinder_inner() {
 
 // Creates a series of two-surface hulls.
 
-module hull_chain () {
-  for (i = [0:1:$children - 2])
+module hull_chain (segment_colors) {
+  for (i = [0:1:$children - 2]) {
+    color(is_undef(segment_colors) ? undef : i < len(segment_colors) ? segment_colors[i] : segment_colors[len(segment_colors)-1])
     hull () {
       children(i);
 
       children(i+1);
     }
+  }
 }
