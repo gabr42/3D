@@ -68,7 +68,6 @@ module make (sizes, layout, pos) {
     size = sizes[pos];
 
     new_layout = layout_advance(layout, bb_create([-size/2, -size/2], [size/2, size/2]));
-    //echo(l_str(new_layout));
 
     translate(new_layout[0])
     cube([size, size, size], center = true);
@@ -77,5 +76,5 @@ module make (sizes, layout, pos) {
   }
 }
 
-make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(spacing = 2, max_width = 25));
-//make([for (i=[1:3]) each [2,4,6,4,2]], make_up_layout(spacing = 2, max_height = 25));
+//make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(spacing = 2, max_width = 25));
+make([for (i=[1:3]) each [2,4,6,4,2]], make_up_layout(spacing = 2, max_height = 25));
