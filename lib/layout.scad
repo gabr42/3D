@@ -67,14 +67,14 @@ module make (sizes, layout, pos) {
   if (pos < len(sizes)) {
     size = sizes[pos];
 
-    new_layout = layout_advance(layout, bb_create([-size/2, -size/2], [size/2, size/2]));
+    new_layout = layout_advance(layout, bb_create([-size, -size/2], [size, size/2]));
 
     translate(new_layout[0])
-    cube([size, size, size], center = true);
+    cube([size*2, size, size], center = true);
         
     make(sizes, new_layout, pos+1);
   }
 }
 
-//make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(spacing = 2, max_width = 25));
+//make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(spacing = 2, max_width = 45));
 make([for (i=[1:3]) each [2,4,6,4,2]], make_up_layout(spacing = 2, max_height = 25));
