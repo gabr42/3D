@@ -51,29 +51,36 @@ function find_closest_point(from, to, pt) =
 
 // Bounding box.
 
-function __bb_create(__left, __top, __right, __bottom) =
-  [__left, __top, __right, __bottom];
+function bb_create(p1, p2, p3, p4) = 
+  // parameters: left, top, right, bottom
+  //         or: [left bottom x, left bottom y], [right top x, right top y], undef, undef
+  //         or: bb object, undef, undef, undef
+  is_undef(p2)
+    ? p1
+    : is_undef(p3) && is_undef(p4)
+        ? [p1.x, p2.y, p2.x, p1.y]
+        : [p1, p2, p3, p4];
 
-function __bb_left(bb, __left = undef) =
+function bb_left(bb, __left = undef) =
   is_undef(__left)
     ? bb[0]
     : concat(__left, bb[1], bb[2], bb[3]);
 
-function __bb_top(bb, _top = undef) =
+function bb_top(bb, _top = undef) =
   is_undef(_top)
     ? bb[1]
     : concat(bb[0], _top, bb[2], bb[3]);
 
-function __bb_right(bb, _right = undef) =
+function bb_right(bb, _right = undef) =
   is_undef(_right)
     ? bb[2]
     : concat(bb[0], bb[1], _right, bb[3]);
 
-function __bb_bottom(bb, _bottom = undef) =
+function bb_bottom(bb, _bottom = undef) =
   is_undef(_bottom)
     ? bb[3]
     : concat(bb[0], bb[1], bb[2], _bottom);
 
-function __bb_width(bb) = __bb_right(bb) - __bb_left(bb);
+function bb_width(bb) = bb_right(bb) - bb_left(bb);
 
-function __bb_height(bb) = __bb_top(bb) - __bb_bottom(bb);
+function bb_height(bb) = bb_top(bb) - bb_bottom(bb);
