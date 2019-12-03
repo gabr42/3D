@@ -84,3 +84,19 @@ function bb_bottom(bb, _bottom = undef) =
 function bb_width(bb) = bb_right(bb) - bb_left(bb);
 
 function bb_height(bb) = bb_top(bb) - bb_bottom(bb);
+
+function bb_move_to(bb, left, top, right, bottom) =
+  let(dx = is_undef(left) 
+             ? is_undef(right)
+                 ? undef
+                 : right - bb_right(bb)
+             : left - bb_left(bb),
+      dy = is_undef(bottom)
+             ? is_undef(top)
+                 ? undef
+                 : top - bb_top(bb)
+             : bottom - bb_bottom(bb))
+  bb_create(is_undef(dx) ? bb_left(bb) : bb_left(bb) + dx, 
+            is_undef(dy) ? bb_top(bb) : bb_top(bb) + dy, 
+            is_undef(dx) ? bb_right(bb) : bb_right(bb) + dx,
+            is_undef(dy) ? bb_bottom(bb) : bb_bottom(bb) + dy);
