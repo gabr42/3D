@@ -36,7 +36,6 @@ function make_up_layout(spacing, max_height) =
 function wrap(layout, stretch, new_baseline) = // [new_baseline, new_cur_stretch, new_next]
   let (maxs = l_max_stretch(layout),
        do_wrap = !is_undef(maxs) && stretch >= maxs)
-//  echo(maxs, stretch, do_wrap)
   [ do_wrap ? new_baseline + l_spacing(layout)
             : l_baseline(layout),
     do_wrap ? [0,0]
@@ -44,6 +43,10 @@ function wrap(layout, stretch, new_baseline) = // [new_baseline, new_cur_stretch
     do_wrap ? select_replace(l_next(layout), make_3D(l_dir(layout)), [0,0,0])
             : l_next(layout)
   ];
+
+function layout_wraparound(layout, new_baseline) = 
+  let(w = wrap(layout, select(l_cur_stretch(layout), l_dir(layout)), new_baseline))
+  l_next(l_cur_stretch(l_baseline(layout, w[0]), w[1]), w[2]);
 
 function layout_advance(layout, bb) =
   let(l_spc = l_spacing(layout),
@@ -56,23 +59,16 @@ function layout_advance(layout, bb) =
       new_pos = l_pos(layout, l_next(layout) +  reposition),
       new_next = l_next(new_pos, next),
       stretch = dir.x == 1 ? max(l_cur_stretch(new_next).y, base + bb_height(bb)) : max(l_cur_stretch(new_next).x, base + bb_width(bb)),
-      l3 = l_cur_stretch(new_next, dir.x == 1 ? [next.x, stretch]: [stretch, next.y]),
-      w = wrap(l3, select(l_cur_stretch(l3), dir), stretch),
-      new_base = l_baseline(l3, w[0]),
-      l5 = l_cur_stretch(new_base, w[1]),
-      l6 = l_next(l5, w[2]))
-  echo("Base", base, "Reposition", reposition)
-  l6;
+      new_stretch = l_cur_stretch(new_next, dir.x == 1 ? [next.x, stretch] : [stretch, next.y]))
+  layout_wraparound(new_stretch, stretch);
 
 module make (sizes, layout, pos) {
   pos = is_undef(pos) ? 0 : pos;
   if (pos < len(sizes)) {
     size = sizes[pos];
 
-    echo("Size", size);
-    
     new_layout = layout_advance(layout, bb_create([-size/2, -size/2], [size/2, size/2]));
-    echo(l_str(new_layout));
+    //echo(l_str(new_layout));
 
     translate(new_layout[0])
     cube([size, size, size], center = true);
@@ -81,5 +77,5 @@ module make (sizes, layout, pos) {
   }
 }
 
-//make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(spacing = 2, max_width = 25));
+make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(spacing = 2, max_width = 25));
 //make([for (i=[1:3]) each [2,4,6,4,2]], make_up_layout(spacing = 2, max_height = 25));
