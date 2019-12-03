@@ -63,7 +63,7 @@ function layout_advance(layout, bb) =
   layout_wraparound(new_stretch, stretch);
 
 module make (sizes, layout, pos) {
-  pos = is_undef(pos) ? 0 : pos;
+  pos = initialize(pos, 0);
   if (pos < len(sizes)) {
     size = sizes[pos];
 
@@ -76,5 +76,5 @@ module make (sizes, layout, pos) {
   }
 }
 
-//make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(spacing = 2, max_width = 45));
-make([for (i=[1:3]) each [2,4,6,4,2]], make_up_layout(spacing = 2, max_height = 25));
+make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(spacing = 2, max_width = 45));
+//make([for (i=[1:3]) each [2,4,6,4,2]], make_up_layout(spacing = 2, max_height = 25));

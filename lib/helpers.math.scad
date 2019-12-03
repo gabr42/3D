@@ -36,3 +36,8 @@ function turn_right(xy) = [xy.y, -xy.x];
 // Given a 2D directional vector aligned along X or Y, turns 90 deg CCW and returns new vector.
 
 function turn_left(xy) = [-xy.x, xy.y];
+
+// Returns original value (if not undef) or provided default (if the value is undef).
+
+function initialize(value, default) =
+  is_undef(value) ? default : value;
