@@ -55,7 +55,7 @@ function layout_advance(layout, bb) =
       next = l_next(layout) + offset,
       new_pos = l_pos(layout, l_next(layout) +  reposition),
       new_next = l_next(new_pos, next),
-      stretch = dir.x == 1 ? max(l_cur_stretch(new_next).y, base + bb_height(bb)) : max(l_cur_stretch(new_next).x, base_bb_width(bb)),
+      stretch = dir.x == 1 ? max(l_cur_stretch(new_next).y, base + bb_height(bb)) : max(l_cur_stretch(new_next).x, base + bb_width(bb)),
       l3 = l_cur_stretch(new_next, dir.x == 1 ? [next.x, stretch]: [stretch, next.y]),
       w = wrap(l3, select(l_cur_stretch(l3), dir), stretch),
       new_base = l_baseline(l3, w[0]),
@@ -72,16 +72,14 @@ module make (sizes, layout, pos) {
     echo("Size", size);
     
     new_layout = layout_advance(layout, bb_create([-size/2, -size/2], [size/2, size/2]));
-//    new_layout = layout_advance(layout, bb_create([0, 0], [size, size]));
     echo(l_str(new_layout));
 
     translate(new_layout[0])
     cube([size, size, size], center = true);
-//    cube([size, size, size]);
         
     make(sizes, new_layout, pos+1);
   }
 }
 
-make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(2, max_width = 25));
-//make([2,4,6,4,2], make_up_layout(2));
+//make([for (i=[1:3]) each [2,4,6,4,2]], make_right_layout(spacing = 2, max_width = 25));
+//make([for (i=[1:3]) each [2,4,6,4,2]], make_up_layout(spacing = 2, max_height = 25));
