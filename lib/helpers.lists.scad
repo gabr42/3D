@@ -10,6 +10,30 @@ function slice(list, range) = [for (i = range) list[i]];
     
 function reverse(list) = slice(list, [len(list)-1:-1:0]);
 
+// Replaces one element in a list.
+
+function replace(list, index, value) = 
+  index == 0
+    ? concat([value], slice(list, [1:len(list)-1]))
+    : index == len(list)-1
+      ? concat(slice(list, [0:len(list)-2]), [value])
+      : concat(slice(list, [0:index-1]), [value], slice(list, [index+1:len(list)-1]));
+
+// From the first lists selects the first element where the corresponding
+// element in the second list is not zero.
+
+function select(values, selector, pos) = 
+  let(pos = is_undef(pos) ? 0 : pos)
+  selector[pos] != 0 
+    ? values[pos]
+    : select(values, selector, pos+1);
+
+// Keep all values from the values list where corresponding selector is 0
+// and replace all other values with the values from the new_values list.
+
+function select_replace(values, selector, new_values) = 
+  [for (i = [0:len(values)-1]) selector[i] == 0 ? values[i] : new_values[i]];
+
 // Concatenates two lists. If either of them is `undef`, it is ignored.
 
 function concat_ifdef(list1, list2) =

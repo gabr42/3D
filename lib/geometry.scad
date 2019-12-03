@@ -3,6 +3,7 @@
 
 use <helpers.lists.scad>
 use <helpers.math.scad>
+use <helpers.objects.scad>
 
 // Calculates distance between two points.
 
@@ -51,29 +52,37 @@ function find_closest_point(from, to, pt) =
 
 // Bounding box.
 
-function __bb_create(__left, __top, __right, __bottom) =
-  [__left, __top, __right, __bottom];
+function bb_create(p1, p2, p3, p4) = 
+  // parameters: left, top, right, bottom
+  //         or: [left bottom x, left bottom y], [right top x, right top y], undef, undef
+  //         or: bb object, undef, undef, undef
+  is_undef(p2)
+    ? p1
+    : is_undef(p3) && is_undef(p4)
+        ? [p1.x, p2.y, p2.x, p1.y]
+        : [p1, p2, p3, p4];
 
-function __bb_left(bb, __left = undef) =
-  is_undef(__left)
-    ? bb[0]
-    : concat(__left, bb[1], bb[2], bb[3]);
+function bb_left(bb, __left) = __getset(bb, 0, __left);
+function bb_top(bb, __top) = __getset(bb, 1, __top);
+function bb_right(bb, __right) = __getset(bb, 2, __right);
+function bb_bottom(bb, __bottom) = __getset(bb, 3, __bottom);
 
-function __bb_top(bb, _top = undef) =
-  is_undef(_top)
-    ? bb[1]
-    : concat(bb[0], _top, bb[2], bb[3]);
+function bb_width(bb) = bb_right(bb) - bb_left(bb);
 
-function __bb_right(bb, _right = undef) =
-  is_undef(_right)
-    ? bb[2]
-    : concat(bb[0], bb[1], _right, bb[3]);
+function bb_height(bb) = bb_top(bb) - bb_bottom(bb);
 
-function __bb_bottom(bb, _bottom = undef) =
-  is_undef(_bottom)
-    ? bb[3]
-    : concat(bb[0], bb[1], bb[2], _bottom);
-
-function __bb_width(bb) = __bb_right(bb) - __bb_left(bb);
-
-function __bb_height(bb) = __bb_top(bb) - __bb_bottom(bb);
+function bb_move_to(bb, left, top, right, bottom) =
+  let(dx = is_undef(left) 
+             ? is_undef(right)
+                 ? undef
+                 : right - bb_right(bb)
+             : left - bb_left(bb),
+      dy = is_undef(bottom)
+             ? is_undef(top)
+                 ? undef
+                 : top - bb_top(bb)
+             : bottom - bb_bottom(bb))
+  bb_create(is_undef(dx) ? bb_left(bb) : bb_left(bb) + dx, 
+            is_undef(dy) ? bb_top(bb) : bb_top(bb) + dy, 
+            is_undef(dx) ? bb_right(bb) : bb_right(bb) + dx,
+            is_undef(dy) ? bb_bottom(bb) : bb_bottom(bb) + dy);
