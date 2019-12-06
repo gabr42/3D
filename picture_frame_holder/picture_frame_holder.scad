@@ -2,7 +2,7 @@ width = 15;
 base = [10, 100];
 support = 100;
 thick = 2.5;
-angle = 80;
+angle = 75;
 
 offset = sin(90-angle)/sin(angle) * support;
 
