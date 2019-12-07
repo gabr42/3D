@@ -55,16 +55,24 @@ module wheel () {
   );
 }
 
-module axled_wheel () {
-  union () {
+module axle () {
+  cylinder(20, 1.5, 1.5, $fn=21);
+}
+
+module pierced_wheel () {
+  difference () {
     wheel();
 
     translate([0, 0, -10])
-    cylinder(20, 1.5, 1.5, $fn=21);
+    axle();
   }
 }
 
 clip();
 
-translate([-61.5, 6, 0])
-axled_wheel();
+translate([20, 0, 0])
+pierced_wheel();
+
+scale(0.97)
+translate([40, 0, 0])
+axle();
