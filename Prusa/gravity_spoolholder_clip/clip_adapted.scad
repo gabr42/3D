@@ -38,14 +38,14 @@ module wheel () {
             [[-3, -h, 0]],
             
             g_translate([-2, 0, 0],
-              g_rotate(90, points =
-                make_segment_ellipse([0,0], 1, 0.7, 90, -90))),
+            g_rotate(90, points =
+            make_segment_ellipse([0,0], 1, 0.7, 90, -90))),
 
             make_segment_arc([0,0], 1, -180, 0),
             
             g_translate([2, 0, 0],
-              g_rotate(90, points =
-                make_segment_ellipse([0,0], 1, 0.7, 90, -90))),
+            g_rotate(90, points =
+            make_segment_ellipse([0,0], 1, 0.7, 90, -90))),
                 
             [[3, -h, 0]]
           )
