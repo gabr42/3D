@@ -1,40 +1,31 @@
 // Source: https://www.prusaprinters.org/prints/10370-gravity-spoolholder-for-mmu2s
 
 module clip () {
-  render () {
-    difference () {
-      union () {     
-        difference () {
-          import  ("gravity_spoolholder_clip_1x.stl");
-          
-          translate([-70, 0, -15])
-          cube([30, 30, 30]);
-        }
+  difference () {
+    union () {
+      import("gravity_spoolholder_clip_1x.stl");
 
-        translate([0, -8, 0])
-        difference () {
-          intersection () {
-            import  ("gravity_spoolholder_clip_1x.stl");
-            
-            translate([-70, 0, -15])
-            cube([30, 30, 30]);
-          }
-          
-          translate([-61.5, 15, -15])
-          cylinder(30, 2, 2, $fn=21);
-        }
+      translate([0, -8, 0])
+      intersection () {
+        import  ("gravity_spoolholder_clip_1x.stl");
+              
+        translate([-70, 0, -15])
+        cube([30, 30, 30]);
       }
-      
-      translate([-70, -5, -4])
-      cube([30, 30, 8]);
     }
+    
+    translate([-61.5, 6, -15])
+    cylinder(30, 2, 2, $fn=21);
+    
+    translate([-70, -4, -3.5])
+    cube([20, 20, 7]);
   }
 }
 
-use <../lib/geometry.scad>
-use <../lib/curves.scad>
-use <../lib/mesh.solids.scad>
-use <../lib/geometry.manipulators.scad>
+use <../../lib/geometry.scad>
+use <../../lib/curves.scad>
+use <../../lib/mesh.solids.scad>
+use <../../lib/geometry.manipulators.scad>
 
 module wheel () {
   h = 8;
@@ -64,23 +55,16 @@ module wheel () {
   );
 }
 
-module axle () {
-  cylinder(20, 1.5, 1.5, $fn=21);
-}
-
 module axled_wheel () {
-  difference () {
+  union () {
     wheel();
 
     translate([0, 0, -10])
-    axle();
+    cylinder(20, 1.5, 1.5, $fn=21);
   }
 }
 
 clip();
 
-translate([20, 0, 0])
+translate([-61.5, 6, 0])
 axled_wheel();
-
-translate([40, 0, 0])
-axle();
