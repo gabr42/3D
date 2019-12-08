@@ -17,8 +17,8 @@ module clip () {
     translate([-61.5, 6, -15])
     cylinder(30, 2, 2, $fn=21);
     
-    translate([-70, -4, -3.5])
-    cube([20, 20, 7]);
+    translate([-70, -4, -4])
+    cube([20, 20, 8]);
   }
 }
 
