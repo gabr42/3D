@@ -1,12 +1,14 @@
-heart(20+2, 10, 2);
+heart(40, 20, 1.5, curvature = 1.3);
 
 // based on https://www.revk.uk/2017/02/opnescad-with-some-heart.html
 
-module heart(width, H, wall = 0, half = false) {
+module heart(width, height, wall = 0, half = false, curvature = 1) {
   W = width / 65.23 * 40;
   L = width / 65.23 * 80;
+  H = width / 40 * 15 * curvature;
   A = atan2(W, L - W);
 
+  scale([1, 1, height/(H - 4*wall)])
   if (wall == 0)
     solid_heart(W, L, A, H, 0, 0, half);
   else {
