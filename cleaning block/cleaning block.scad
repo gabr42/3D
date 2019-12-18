@@ -1,6 +1,17 @@
+size = 17.5;
+height = 3;
+wall = 1.2;
+air = 0.6;
+
+
+rotate(180, [1, 0, 0])
 difference () {
-  cube([20, 20, 3]);
+  cube([size, size, height]);
  
-  translate([1.6/2, 1.6/2, -0.01])
-  cube([18.4, 18.4, 0.5]); 
+  size_cut = (size - 3*wall) / 2;
+  
+  for (i = [0:1])
+  for (j = [0:1])
+    translate([wall + (size_cut + wall) * i, wall + (size_cut + wall) * j, height - air + 0.01])
+    cube([size_cut, size_cut, air + 0.01]);
 }
