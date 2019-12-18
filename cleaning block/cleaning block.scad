@@ -1,5 +1,5 @@
 size = 17.5;
-height = 3;
+height = 1.5;
 wall = 1.2;
 air = 0.6;
 
