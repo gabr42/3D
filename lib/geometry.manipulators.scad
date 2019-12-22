@@ -32,22 +32,29 @@ function g_scale(factor, origin = [0,0,0], points) =
 // echo(g_scale(2, [0,0,0], [1,1])); // [2,2]
 // echo(g_scale(2, [1,1,0], [[1,1], [2,2,2]])); // [1,1], [3,3,4]
 
-// Mirrors x => -x. Supports 2D and 3D points.
+// Mirrors x => -x. Supports 2D and 3D points and lists of points.
 
 function g_mirrorX(points) = 
-  [for (pt = points) 
-     is_undef(pt.z) ? [-pt.x, pt.y] : [-pt.x, pt.y, pt.z]];
+  ! is_vector(points)
+    ? [for (pt = points) g_mirrorX(pt)]
+    : let(pt = points)
+      is_undef(pt.z) ? [-pt.x, pt.y] : [-pt.x, pt.y, pt.z];
 
-// Mirrors y => -y. Supports 2D and 3D points.
+// Mirrors y => -y. Supports 2D and 3D points and lists of points.
 
 function g_mirrorY(points) = 
-  [for (pt = points) 
-     is_undef(pt.z) ? [pt.x, -pt.y] : [pt.x, -pt.y, pt.z]];
+  ! is_vector(points)
+    ? [for (pt = points) g_mirrorY(pt)]
+    : let(pt = points)
+      is_undef(pt.z) ? [pt.x, -pt.y] : [pt.x, -pt.y, pt.z];
 
-// Mirrors z => -z. Supports 3D points.
+// Mirrors z => -z. Supports 3D points and lists of points.
 
 function g_mirrorZ(points) = 
-  [for (pt = points) [pt.x, pt.y, -pt.z]];
+  ! is_vector(points)
+    ? [for (pt = points) g_mirrorZ(pt)]
+    : let(pt = points)
+      [pt.x, pt.y, -pt.z];
 
 // Rotates 2D/3D point or points around `origin` by `alpha` degrees along rotation axis `v`.
 
