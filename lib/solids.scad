@@ -11,6 +11,28 @@ module rotate_around(pt, angle, v) {
   children();   
 }
 
+// Removes all parts of children geometry lying below the `limit`.
+
+module remove_under_z (limit) {
+  intersection () {
+    children();
+    
+    translate([0, 0, 500 + limit])
+    cube([1000, 1000, 1000], center = true);
+  }
+}
+
+// Removes all parts of children geometry lying above the `limit`.
+
+module remove_above_z (limit) {
+  intersection () {
+    children();
+    
+    translate([0, 0, -500 + limit])
+    cube([1000, 1000, 1000], center = true);
+  }
+}
+
 // Renders a torus segment.
 
 module torus_segment(r1, r2, angle_from=0, angle_to=360) {
@@ -76,7 +98,7 @@ module test_wrap_solid_around_cylinder_inner() {
 //test_wrap_solid_around_cylinder_outer();
 //test_wrap_solid_around_cylinder_inner();
 
-// Creates a series of two-surface hulls.
+// Creates a series of two-surface hulls. Each can be painted in a different color.
 
 module hull_chain (segment_colors) {
   for (i = [0:1:$children - 2]) {
@@ -88,3 +110,56 @@ module hull_chain (segment_colors) {
     }
   }
 }
+
+// Creates a thin slab (typically, size.z = small). Can optionally hollow it out and geenerate sparse support.
+// hollow: anyting = remove insides, keep `wall_thick` thick wall (defaults to `size.z`)
+//         D = remove insides, add diagonal supports `support_thick` thick, spaced at `support_space` or a bit less, angled at `support_angle` (default 45)
+
+module slab (size, hollow, wall_thick, support_thick, support_space, support_angle) {
+  wall = is_undef(wall_thick) ? size.z : wall_thick;
+  angle = is_undef(support_angle) ? 45 : support_angle;
+
+  // echo("size = ", size, ", hollow = ", hollow, ", wall_thick = ", wall_thick, ", support_thick = ", support_thick, ", support_angle = ", support_angle);
+
+  difference () {
+    linear_extrude(size.z)
+    square([size.x, size.y]);
+
+    
+    if (hollow != undef) {
+      translate([0, 0, -inf])
+      linear_extrude(size.z + 2*inf)
+      translate([wall, wall, 0])
+      square([size.x - 2*wall, size.y - 2*wall]);
+    }
+  }
+  
+  if (hollow == "D") {
+    assert(support_space != undef, "Parameter support_space is not defined!");
+    assert(support_thick != undef, "Parameter support_thick is not defined!");
+
+    diag = sqrt(pow(size.x - 2 * wall, 2) + pow(size.y - 2 * wall, 2));
+    steps = ceil(diag/support_space);
+    step = diag/steps;
+    a = atan2(size.y - 2*wall, size.x -2*wall);
+    
+    intersection () {
+      for (d = [step:step:diag-step+inf]) {
+        translate([wall + d * cos(a), wall + d * sin(a), 0])
+        rotate(-angle)
+        translate([-5*size.x, -support_thick/2, 0])
+        slab ([10*size.x, support_thick, size.z]);
+
+        translate([size.x - wall - d * cos(a), wall + d * sin(a), 0])
+        rotate(angle)
+        translate([-5*size.x, -support_thick/2, 0])
+        slab ([10*size.x, support_thick, size.z]);
+      }
+
+      linear_extrude(size.z)
+      translate([wall, wall, 0])
+      square([size.x - 2*wall, size.y - 2*wall]);
+    }
+  }
+}
+

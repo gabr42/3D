@@ -2,7 +2,7 @@
 
 e = 2.71828;
 tau = (1 + sqrt(5)) / 2;
-inf = 1e-3;
+inf = 0.01;
 
 // Logistic function and its derivative.
 

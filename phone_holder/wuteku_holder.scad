@@ -17,6 +17,13 @@ r1 = d1/2;
 r2 = d2/2;
 rh = (r2 - r1) / d * dh + r1;
 
+function wuteku_dimensions () = 
+  [wall + dball/2 + over_x + wall, 2 * (rh + wall), 2 * (rh + wall)];
+function wuteku_offset () =
+  [-wall, - rh - wall, - wall - rh - wall];
+  
+#translate(wuteku_offset()) cube(wuteku_dimensions());
+
 module funnel () {
   difference () {
     cylinder(dh, r1 + wall, rh + wall);
