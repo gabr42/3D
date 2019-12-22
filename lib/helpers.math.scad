@@ -22,6 +22,10 @@ function length(v) = norm(v);
 
 function normalize(v) = v / length(v);
 
+// Calculates hypothenuse of right triangle from its sides.
+
+function hypoth(a, b) = sqrt(pow(a, 2) + pow(b, 2));
+
 // Angle between two vectors.
 
 function angle(u, v) = 
