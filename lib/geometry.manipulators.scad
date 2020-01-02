@@ -135,13 +135,29 @@ function g_reflow(source_path, target_path, points, _source_len = undef) =
 
 // echo(g_reflow([[0,0,0], [0,0,1]], [[0,0,0], [1,0,2]], [[0,0,0], [1,0,1]]));
 
-// Fillets a path.
-
+// Fillets a path. `select` can contins indices of corners (points) where filletting occurs.
+// If `select` is not specified, all corners are filletted.
+// 'r' can be a real number (applied to all corners) or can contain a list of [r, [corner list]] pairs.
+// In the latter case, specified radius will only be applied to specified corners.
 function g_fillet(r, points, _idx = undef) =  
   is_undef(_idx) 
-    ? concat([points[0]], g_fillet(r, points, 0))
+    ? concat([points[0]], g_fillet(r, points, _idx = 0))
     : _idx >= len(points) - 2
       ? [last(points)]
-      : let(f = fillet_lines(points[_idx], points[_idx+1], points[_idx+1], points[_idx+2], r))
-        concat(make_segment_arc(f[2], r, f[3], f[3] + f[4]),
-               g_fillet(r, points, _idx + 1));
+      : let(rc = get_radius(r, _idx+1))
+        is_undef(rc)
+          ? concat([points[_idx+1]],
+                  g_fillet(r, points, _idx = _idx + 1))
+          : let(f = fillet_lines(points[_idx], points[_idx+1], points[_idx+1], points[_idx+2], rc))
+            concat(make_segment_arc(f[2], rc, f[3], f[3] + f[4]),
+                  g_fillet(r, points, _idx = _idx + 1));
+
+function get_radius(r, idx, _pos = undef) = 
+  ! is_list(r)
+    ? r
+    : let(_pos = is_undef(_pos) ? 0 : _pos)
+      _pos >= len(r)
+        ? undef
+        : contains(idx, r[_pos][1])
+          ? r[_pos][0]
+          : get_radius(r, idx, _pos + 1);

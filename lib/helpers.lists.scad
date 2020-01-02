@@ -10,6 +10,10 @@ function slice(list, range) = [for (i = range) list[i]];
 
 function last(list) = list[len(list)-1];
 
+// Checks whether a list contains an element.
+
+function contains(el, list) = len(search(el, list)) > 0;
+
 // Reverses a list.
     
 function reverse(list) = slice(list, [len(list)-1:-1:0]);

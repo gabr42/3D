@@ -4,6 +4,10 @@ e = 2.71828;
 tau = (1 + sqrt(5)) / 2;
 inf = 0.01;
 
+// is_defined
+
+function is_defined(value) = !is_undef(value);
+
 // Logistic function and its derivative.
 
 function logistic_function(x) = 
