@@ -134,3 +134,14 @@ function g_reflow(source_path, target_path, points, _source_len = undef) =
       pt_t + nearest_t[0] - nearest_s[0];
 
 // echo(g_reflow([[0,0,0], [0,0,1]], [[0,0,0], [1,0,2]], [[0,0,0], [1,0,1]]));
+
+// Fillets a path.
+
+function g_fillet(r, points, _idx = undef) =  
+  is_undef(_idx) 
+    ? concat([points[0]], g_fillet(r, points, 0))
+    : _idx >= len(points) - 2
+      ? [last(points)]
+      : let(f = fillet_lines(points[_idx], points[_idx+1], points[_idx+1], points[_idx+2], r))
+        concat(make_segment_arc(f[2], r, f[3], f[3] + f[4]),
+               g_fillet(r, points, _idx + 1));

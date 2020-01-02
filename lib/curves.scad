@@ -11,7 +11,18 @@ function make_segment_line(from, to) =
        _to = make_3D(to),
        d = [(_to.x - _from.x)/segments, (_to.y - _from.y)/segments, (_to.z - _from.z)/segments])
   [for (i = [0:segments]) [_from.x + i * d.x, _from.y + i * d.y, _from.z + i * d.z]];
-    
+
+// Converts a starting point and a lists of offsets into an abosolute path (2D or 3D).
+function make_absolute_path(pt0, offsets, _idx) = 
+  is_undef(_idx)
+    ? concat([pt0], 
+             make_absolute_path(pt0, offsets, 0))
+    : _idx >= len(offsets)
+      ? []
+      : let(pt = pt0 + offsets[_idx])
+        concat([pt],
+               make_absolute_path(pt, offsets, _idx+1));    
+
 // Multi-segment 2D arc lying on the XY plane.
 
 function make_segment_arc(center, radius, from_angle, to_angle) = 
@@ -38,7 +49,6 @@ function make_segment_ellipse(center, radius, eccentricity = 0 /* circle */, fro
 //         r = r2 * radius / sqrt(pow(radius * cos(a), 2) + pow(r2 * sin(a), 2)))
     [center.x + cos(a) * r, center.y + sin(a) * r]];
   
-
 // polygon(make_segment_ellipse([0,0], 10, 0));
 
 // Reqular polygon inscribed in a unit circle with one vertex at (1,0).

@@ -6,6 +6,10 @@ function range(r) = [for (x = r) x];
 
 function slice(list, range) = [for (i = range) list[i]];
 
+// Returns last element in a list.
+
+function last(list) = list[len(list)-1];
+
 // Reverses a list.
     
 function reverse(list) = slice(list, [len(list)-1:-1:0]);

@@ -86,3 +86,74 @@ function bb_move_to(bb, left, top, right, bottom) =
             is_undef(dy) ? bb_top(bb) : bb_top(bb) + dy, 
             is_undef(dx) ? bb_right(bb) : bb_right(bb) + dx,
             is_undef(dy) ? bb_bottom(bb) : bb_bottom(bb) + dy);
+
+function dot2(v1, v2) = 
+  let (d = sqrt((pow(v1.x, 2) + pow(v1.y, 2))*(pow(v2.x, 2) + pow(v2.y, 22))))
+  d == 0 
+    ? 0
+    : acos((v1.x * v2.x + v1.y * v2.y)/d);
+
+function cross2(v1, v2) = 
+  v1.x * v2.y - v2.x * v1.y;
+
+// Returns a, b, c in ax + by + c = 0 for line going through (p1, p2). Assumes 2D points.
+// Graphics Gems III/IV.5
+function line_coef(p1, p2) = [
+  p2.y - p1.y,
+  p1.x - p2.x,
+  p2.x * p1.y - p1.x * p2.y
+];
+
+// Returns signed distance from line l = ax + by + c = 0 to point p. Assumes 2D geometry.
+// Graphics Gems III/IV.5
+function dist_from_line(l, p) =
+  let(d = hypoth(l[0], l[1]))
+  d == 0
+    ? 0
+    : (l[0] * p.x + l[1] * p.y + l[2])/d;
+    
+// Given line l = ax + by + c = 0 and point p1, compute p2 so (p1, p2) is ⊥ to l.
+// Graphics Gems III/IV.5
+function point_perp(l, p1) = 
+  let(d = pow(l[0], 2) + pow(l[1], 2),
+      cp = l[0] * p1.y - l[1] * p1.x)
+  d == 0
+    ? [0, 0]
+    : [(-l[0] * l[2] - l[1] * cp)/d,
+       (l[0] * cp - l[1] * l[2])/d];
+
+// Joins lines (p1, p2) and (p3, p4) with arc fillet of radius r.
+// Returns [p2n, p3n, pc, sa, a] where
+//  - p2n = new point p2
+//  - p3n = new point p3
+//  - pc = center of the arc
+//  - sa = starting angle of the arc
+//  - a = angle of the arc
+// Graphics Gems III/IV.5
+function fillet_lines (p1, p2, p3, p4, r) = 
+  let(l1 = line_coef(p1, p2),
+      l2 = line_coef(p3, p4))
+  (l1[0] * l2[1]) == (l2[0] * l1[1])
+    ? // Parallel lines
+      [p2, p3, [undef, undef], undef, undef]
+    : let (d1 = dist_from_line(l1, interpolate(0.5, p3, p4)), // Find d1 = distance (p1, p2) to midpoint (p3, p4).
+           d2 = dist_from_line(l2, interpolate(0.5, p1, p2))) // Find d2 = instance (p3, p4) to midpoint (p1, p2).
+      ((d1 == 0) || (d2 == 0))
+        ? // Abnormal case
+          [p2, p3, [undef, undef], undef, undef]
+        : let(rr1 = d1 <= 0 ? -r : r, // Construct line ∏ to l at d.
+              c1p = l1[2] - rr1 * hypoth(l1[0], l1[1]),  
+              rr2 = d2 <= 0 ? -r : r,
+              c2p = l2[2] - rr2 * hypoth(l2[0], l2[1]),
+              d = l1[0] * l2[1] - l2[0] * l1[1], // Intersect constructed lines to find center of circular arc.
+              pc = [(c2p * l1[1] - c1p * l2[1])/d,
+                    (c1p * l2[0] - c2p * l1[0])/d],
+              pta = point_perp(l1, pc), // Clip l1 at (xa, ya) if needed.
+              ptb = point_perp(l2, pc), // Clip l2 at (xb, yb) if needed.
+              v1 = pta - pc, // Find angle wrt. x-axis from arc center, (xc, yc).
+              v2 = ptb - pc,
+              pa = atan2(v1.y, v1.x),
+              aa = cross2(v1, v2) >= 0 // Find angle arc subtends.
+                     ? dot2(v1, v2)
+                     : - dot2(v1, v2))
+          [pta, ptb, pc, pa, aa];
