@@ -14,6 +14,20 @@ function distance(pt1, pt2) =
 
 function interpolate(t, pt1, pt2) = 
   (1 - t) * pt1 + t * pt2;
+  
+// Angle (0-180) between two (2D or 3D) vectors.
+
+function angle(u, v) =
+  let (u3 = make_3D(u),
+       v3 = make_3D(v))
+  angle3(u3, v3); 
+  
+// Angle (0-360) of a 2D vector.
+
+function angle2(v1) = 
+  let(side = dist_from_line(line_coef([0, 0], [1, 0]), v1),
+      a = angle3(concat(v1, [0])))
+  side <= 0 ? a : 360 - a; 
 
 // Sets Z coordinate to 0 if it is not defined.
 
@@ -35,6 +49,16 @@ function make_2D(points) =
 // Point on the unit circle on XY plane corresponding to `angle` (in degrees).
   
 function point_on_unit_circle(angle) = [cos(angle), sin(angle)];
+
+// Calculates center point for circle with radius `r` running through points `pt1` and `pt2`.
+// The `side` parameter (1 or -1) determines on which side of the (pt1, pt2) line the center should lie.
+
+function circle_center(pt1, pt2, r, side = 1) =
+  let (mp = interpolate(0.5, pt1, pt2),
+       mv = side == 1 ? turn_left(pt2 - mp) : turn_right(pt2 - mp),
+       cp = mp + [mv.x, mv.y],
+       td = sqrt(pow(r, 2) - pow(distance(pt2, pt1)/2, 2)))
+  interpolate(td/distance(cp, mp), mp, cp);
 
 // Finds closest point on a segment.
 
@@ -98,6 +122,7 @@ function cross2(v1, v2) =
 
 // Returns a, b, c in ax + by + c = 0 for line going through (p1, p2). Assumes 2D points.
 // Graphics Gems III/IV.5
+
 function line_coef(p1, p2) = [
   p2.y - p1.y,
   p1.x - p2.x,
@@ -106,6 +131,7 @@ function line_coef(p1, p2) = [
 
 // Returns signed distance from line l = ax + by + c = 0 to point p. Assumes 2D geometry.
 // Graphics Gems III/IV.5
+
 function dist_from_line(l, p) =
   let(d = hypoth(l[0], l[1]))
   d == 0
@@ -114,6 +140,7 @@ function dist_from_line(l, p) =
     
 // Given line l = ax + by + c = 0 and point p1, compute p2 so (p1, p2) is ⊥ to l.
 // Graphics Gems III/IV.5
+
 function point_perp(l, p1) = 
   let(d = pow(l[0], 2) + pow(l[1], 2),
       cp = l[0] * p1.y - l[1] * p1.x)
@@ -130,6 +157,7 @@ function point_perp(l, p1) =
 //  - sa = starting angle of the arc
 //  - a = angle of the arc
 // Graphics Gems III/IV.5
+
 function fillet_lines (p1, p2, p3, p4, r) = 
   let(l1 = line_coef(p1, p2),
       l2 = line_coef(p3, p4))

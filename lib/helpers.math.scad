@@ -32,10 +32,8 @@ function hypoth(a, b) = sqrt(pow(a, 2) + pow(b, 2));
 
 // Angle between two vectors.
 
-function angle(u, v = [1,0]) = 
-  let (u3 = make_3D(u),
-       v3 = make_3D(v))
-  atan2(norm(cross(u3, v3)), u3 * v3);
+function angle3(u, v = [1,0,0]) = 
+  atan2(norm(cross(u, v)), u * v);
 
 // Given a 2D directional vector, turns 90 deg CW and returns new vector.
 
