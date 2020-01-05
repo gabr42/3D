@@ -32,18 +32,18 @@ function hypoth(a, b) = sqrt(pow(a, 2) + pow(b, 2));
 
 // Angle between two vectors.
 
-function angle(u, v) = 
+function angle(u, v = [1,0]) = 
   let (u3 = make_3D(u),
        v3 = make_3D(v))
   atan2(norm(cross(u3, v3)), u3 * v3);
 
-// Given a 2D directional vector aligned along X or Y, turns 90 deg CW and returns new vector.
+// Given a 2D directional vector, turns 90 deg CW and returns new vector.
 
 function turn_right(xy) = [xy.y, -xy.x];
 
-// Given a 2D directional vector aligned along X or Y, turns 90 deg CCW and returns new vector.
+// Given a 2D directional vector, turns 90 deg CCW and returns new vector.
 
-function turn_left(xy) = [-xy.x, xy.y];
+function turn_left(xy) = [-xy.y, xy.x];
 
 // Returns original value (if not undef) or provided default (if the value is undef).
 
