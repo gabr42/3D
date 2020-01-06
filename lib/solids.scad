@@ -163,16 +163,16 @@ module slab (size, hollow, wall_thick, support_thick, support_space, support_ang
   }
 }
 
-// Renders a rounded cube with:
-//   `size` = cube size
+// Renders a cylinder-rounded cube with:
+//   `size` = cube size, all dimensions must be >= 1
 //   `radius` = 
 //      1 value: used on all corners
 //      2 values: first value for front, second for back corners
-//      4 values: specific value for each corner [FL, FR, BR, BL]
+//      4 values: specific value for each corner [FrontLeft, FR, BR, BL]
 // https://blog.prusaprinters.org/parametric-design-in-openscad/
 
 module rcube(size, radius) {
-    if(len(radius) == undef) {
+    if(is_num(radius)) {
         // The same radius on all corners
         rcube(size, [radius, radius, radius, radius]);
     } else if(len(radius) == 2) {
@@ -200,4 +200,55 @@ module rcube(size, radius) {
 }
 
 
-rcube([50, 30, 10], [10,10,10,10]);
+// rcube([50, 30, 10], 1);
+// rcube([20, 20, 10], [0, 0, 5, 5], $fn=50);
+
+// Renders a sphere-rounded cube with:
+//   `size` = cube size, all dimensions must be >= 1
+//   `radius` = 
+//      1 value: used on all corners
+//      4 values: [FrontLeftBottom/FLT, FRB/FRT, BRB/BRT, BLB/BLT]
+//      8 values: specific value for each corner [FLB, FRB, BRB, BLB, FLT, FRT, BRT, BLT]
+
+module scube(size, radius) {
+    if(is_num(radius)) {
+        // The same radius on all corners
+        scube(size, [radius, radius, radius, radius, radius, radius, radius, radius]);
+    } else if(len(radius) == 4) {
+        // Different radii on each vertical
+        scube(size, [radius[0], radius[1], radius[2], radius[3], radius[0], radius[1], radius[2], radius[3]]);
+    } else if(len(radius) == 8) {
+        // Different radius on different corners
+        hull() {
+            // FLB
+            if(radius[0] == 0) cube([1, 1, 1]);
+            else translate([radius[0], radius[0], radius[0]]) sphere(r = radius[0]);
+            // FRB
+            if(radius[1] == 0) translate([size[0] - 1, 0]) cube([1, 1, 1]);
+            else translate([size[0] - radius[1], radius[1], radius[1]]) sphere(r = radius[1]);
+            // BRB
+            if(radius[2] == 0) translate([size[0] - 1, size[1] - 1]) cube([1, 1, 1]);
+            else translate([size[0] - radius[2], size[1] - radius[2], radius[2]]) sphere(r = radius[2]);
+            // BLB
+            if(radius[3] == 0) translate([0, size[1] - 1]) cube([1, 1, 1]);
+            else translate([radius[3], size[1] - radius[3], radius[3]]) sphere(r = radius[3]);
+            // FLT
+            if(radius[4] == 0) translate([0, 0, size[2] - 1]) cube([1, 1, 1]);
+            else translate([radius[4], radius[4], size[2] - radius[4]]) sphere(r = radius[4]);
+            // FRT
+            if(radius[5] == 0) translate([size[0] - 1, 0, size[2] - 1]) cube([1, 1, 1]);
+            else translate([size[0] - radius[5], radius[5], size[2] - radius[5]]) sphere(r = radius[5]);
+            // BRT
+            if(radius[6] == 0) translate([size[0] - 1, size[1] - 1, size[2] - 1]) cube([1, 1, 1]);
+            else translate([size[0] - radius[6], size[1] - radius[6], size[2] - radius[6]]) sphere(r = radius[6]);
+            // BLT
+            if(radius[7] == 0) translate([0, size[1] - 1, size[2] - 1]) cube([1, 1, 1]);
+            else translate([radius[7], size[1] - radius[7], size[2] - radius[7]]) sphere(r = radius[7]);
+        }
+    } else {
+        echo("ERROR: Incorrect length of 'radius' parameter. Expecting integer or vector with length 4 or 8.");
+    }
+}
+
+//scube([20, 20, 10], 5, $fn=50);
+//scube([20, 20, 10], [0,0,5,5], $fn=50);
