@@ -5,25 +5,26 @@ use <geometry.scad>
 
 module dovetail_2D(size, male, slack=0.5, connect_y = undef) {
   let (diag = sqrt(2) * size.y)
-  if (male) {
-    offset(slack)
-    offset(-slack)
-    translate([-size.x/2 + slack, -size.y + slack])
-    difference () {
-      square(make_2D(size) - [2*slack, slack]);
-      
-      rotate(45)
-      square([2*size.y, 2*size.y]);
+  if (male) 
+    union () {
+      offset(slack)
+      offset(-slack)
+      translate([-size.x/2 + slack, -size.y + slack])
+      difference () {
+        square(make_2D(size) - [2*slack, slack]);
+        
+        rotate(45)
+        square([2*size.y, 2*size.y]);
 
-      translate([size.x - 2*slack, 0, 0])
-      rotate(45)
-      square([2*size.y, 2*size.y]);
+        translate([size.x - 2*slack, 0, 0])
+        rotate(45)
+        square([2*size.y, 2*size.y]);
+      }
+      
+      if (connect_y > 0)
+        translate([-size.x/2+size.y, 0])
+        square([size.x - 2*size.y, connect_y]);
     }
-    
-    if (connect_y > 0)
-      translate([-size.y, 0])
-      square([size.x - 2*size.y, connect_y]);
-  }
   else
     difference () {
       union () {
@@ -56,6 +57,8 @@ module dovetail(size, male, slack=0.5, connect_y = undef) {
   dovetail_2D(size, male, slack, connect_y = connect_y);
 }
 
+
+translate([0, -10, 0])
 dovetail([20, 5, 3], true, connect_y = 2);
 
 // Applies dovetail part to the children geometry. 
@@ -66,7 +69,7 @@ module apply_dovetail(size, pos, angle, male, slack=0.5, connect_y = undef) {
     union () {
       children();
 
-      translate(pos)
+      #translate(pos)
       rotate(angle)
       dovetail(size, true, slack, connect_y = connect_y);      
     }
@@ -86,3 +89,6 @@ module apply_dovetail(size, pos, angle, male, slack=0.5, connect_y = undef) {
       dovetail(size, false, slack);
     }
 }
+
+apply_dovetail([20, 3, 3], [40, 30], 90, true, connect_y = 2)
+cube([40, 40, 3]);
