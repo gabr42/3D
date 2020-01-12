@@ -69,7 +69,7 @@ module apply_dovetail(size, pos, angle, male, slack=0.5, connect_y = undef) {
     union () {
       children();
 
-      #translate(pos)
+      translate(pos)
       rotate(angle)
       dovetail(size, true, slack, connect_y = connect_y);      
     }
