@@ -12,6 +12,27 @@ diag_support_offs = [15, 20];
 
 $fn = 50;
 
+module horz_x1_grip () {
+  horz_x1_base();
+
+  translate([(- grip_profile.x - grip_dist)/2, -grip_profile.y/2, 0])
+  grip();
+}
+
+//horz_x1_grip();
+
+module vert_x1_perp () {
+  vert_x1_base();
+
+  rotate(90, [0,0,1])
+  translate([-grip_profile.x/2, -grip_profile.y/2 + 0.5, 0])
+  perp_support();
+}
+
+//vert_x1_perp();
+
+////////////////////////////////////////////////////////////
+
 module lock () {
   color("red")
   rcube(rect_big, 1);
@@ -79,15 +100,6 @@ module grip () {
 
 //grip();
 
-module horz_x1_grip () {
-  horz_x1_base();
-
-  translate([(- grip_profile.x - grip_dist)/2, -grip_profile.y/2, 0])
-  grip();
-}
-
-//horz_x1_grip();
-
 module perp_support () {
   hull_chain() {
     rcube(grip_profile - [0, 1, 0], 0.5);
@@ -109,13 +121,3 @@ module perp_support () {
 }
 
 //perp_support();
-
-module vert_x1_perp () {
-  vert_x1_base();
-
-  rotate(90, [0,0,1])
-  translate([-grip_profile.x/2, -grip_profile.y/2 + 0.5, 0])
-  perp_support();
-}
-
-vert_x1_perp();
