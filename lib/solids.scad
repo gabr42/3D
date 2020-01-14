@@ -207,6 +207,7 @@ module rcube(size, radius) {
 //   `size` = cube size, all dimensions must be >= 1
 //   `radius` = 
 //      1 value: used on all corners
+//      2 values: [bottom corners, top corners]
 //      4 values: [FrontLeftBottom/FLT, FRB/FRT, BRB/BRT, BLB/BLT]
 //      8 values: specific value for each corner [FLB, FRB, BRB, BLB, FLT, FRT, BRT, BLT]
 
@@ -214,6 +215,9 @@ module scube(size, radius) {
     if(is_num(radius)) {
         // The same radius on all corners
         scube(size, [radius, radius, radius, radius, radius, radius, radius, radius]);
+    } else if(len(radius) == 2) {
+        // Different radii on each layer
+        scube(size, [radius[0], radius[0], radius[0], radius[0], radius[1], radius[1], radius[1], radius[1]]);
     } else if(len(radius) == 4) {
         // Different radii on each vertical
         scube(size, [radius[0], radius[1], radius[2], radius[3], radius[0], radius[1], radius[2], radius[3]]);
@@ -246,7 +250,7 @@ module scube(size, radius) {
             else translate([radius[7], size[1] - radius[7], size[2] - radius[7]]) sphere(r = radius[7]);
         }
     } else {
-        echo("ERROR: Incorrect length of 'radius' parameter. Expecting integer or vector with length 4 or 8.");
+        echo("ERROR: Incorrect length of 'radius' parameter. Expecting integer or vector with length 2, 4 or 8.");
     }
 }
 
