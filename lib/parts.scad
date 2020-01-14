@@ -1,10 +1,13 @@
 include <helpers.math.scad>
 use <geometry.scad>
 
+function dovetail_default_slack() = 0.5;
+
 // Draws 2D male/female dovetail, suitable for extrusion.
 
-module dovetail_2D(size, male, slack=0.5, connect_y = undef) {
-  let (diag = sqrt(2) * size.y)
+module dovetail_2D(size, male, slack=undef, connect_y = undef) {
+  slack = is_undef(slack) ? dovetail_default_slack() : slack;
+  diag = sqrt(2) * size.y;
   if (male) 
     union () {
       offset(slack)
@@ -36,10 +39,10 @@ module dovetail_2D(size, male, slack=0.5, connect_y = undef) {
           square([size.x - diag, 4*slack]);
         }
         
-        translate([- (size.x/2  - diag/2 + 0.5*slack), -1.2*slack])
+        translate([- (size.x/2  - diag/2 + 1/2*slack), -1.2*slack])
         circle(sqrt(2) * slack);
         
-        translate([size.x/2  - diag/2 + 0.5*slack, -1.2*slack])
+        translate([size.x/2  - diag/2 + 1/2*slack, -1.2*slack])
         circle(sqrt(2) * slack);
       }
       
@@ -52,7 +55,8 @@ module dovetail_2D(size, male, slack=0.5, connect_y = undef) {
 
 // Draws 3D male/female dovetail.
 
-module dovetail(size, male, slack=0.5, connect_y = undef) {
+module dovetail(size, male, slack=undef, connect_y = undef) {
+  slack = is_undef(slack) ? dovetail_default_slack() : slack;
   linear_extrude(size.z)
   dovetail_2D(size, male, slack, connect_y = connect_y);
 }
@@ -64,7 +68,8 @@ dovetail([20, 5, 3], true, connect_y = 2);
 // Applies dovetail part to the children geometry. 
 // Cuts outs appropriate place for the "female" version.
 
-module apply_dovetail(size, pos, angle, male, slack=0.5, connect_y = undef) {
+module apply_dovetail(size, pos, angle, male, slack=undef, connect_y = undef) {
+  slack = is_undef(slack) ? dovetail_default_slack() : slack;
   if (male)
     union () {
       children();
