@@ -11,9 +11,27 @@ module rotate_around(pt, angle, v) {
   children();   
 }
 
-// Removes all parts of children geometry lying below the `limit`.
+// Removes all parts of children geometry lying before/below the `limit`.
 
-module remove_under_z (limit) {
+module remove_under_x(limit) {
+  intersection () {
+    children();
+    
+    translate([500 + limit, 0, 0])
+    cube([1000, 1000, 1000], center = true);
+  }
+}
+
+module remove_under_y(limit) {
+  intersection () {
+    children();
+    
+    translate([0, 500 + limit, 0])
+    cube([1000, 1000, 1000], center = true);
+  }
+}
+
+module remove_under_z(limit) {
   intersection () {
     children();
     
@@ -22,9 +40,27 @@ module remove_under_z (limit) {
   }
 }
 
-// Removes all parts of children geometry lying above the `limit`.
+// Removes all parts of children geometry lying after/above the `limit`.
 
-module remove_above_z (limit) {
+module remove_above_x(limit) {
+  intersection () {
+    children();
+    
+    translate([-500 + limit, 0, 0])
+    cube([1000, 1000, 1000], center = true);
+  }
+}
+
+module remove_above_y(limit) {
+  intersection () {
+    children();
+    
+    translate([0, -500 + limit, 0])
+    cube([1000, 1000, 1000], center = true);
+  }
+}
+
+module remove_above_z(limit) {
   intersection () {
     children();
     
