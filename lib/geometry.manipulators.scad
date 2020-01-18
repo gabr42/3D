@@ -27,7 +27,9 @@ function g_scale(factor, origin = [0,0,0], points) =
   ! is_vector(points)
     ? [for (pt = points) g_scale(factor, origin, pt)]
     : let (pt = points)
-      (pt - origin) * factor + origin;
+      is_list(factor)
+        ? mul_lists(pt - origin, factor) + origin
+        : (pt - origin) * factor + origin;
     
 // echo(g_scale(2, [0,0,0], [1,1])); // [2,2]
 // echo(g_scale(2, [1,1,0], [[1,1], [2,2,2]])); // [1,1], [3,3,4]
