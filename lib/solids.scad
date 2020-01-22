@@ -1,14 +1,27 @@
 include <helpers.math.scad>
 use <geometry.scad>
 
-// Rotates geometry for angle `a`, around vector `v`, origin in point `pt`.
+// Rotates geometry for angle `a`, around vector `v`, origin in point `origin`.
 // https://stackoverflow.com/a/45826244/4997
 
-module rotate_around(pt, angle, v) {
-  translate(pt)
+module rotate_around(origin, angle, v) {
+  translate(origin)
   rotate(angle, v)
-  translate(-pt)
+  translate(-origin)
   children();   
+}
+
+// Rotates geometry by multiple angles around multiple origins and multiple vectors.
+
+module multi_rotate_around(origins, angles, vs, idx = undef) {
+  idx = initialize(idx, len(origins)-1);
+  if (idx < 0)
+    children();
+  else
+//    echo(origins[idx], angles[idx], vs[idx])
+    rotate_around(origins[idx], angles[idx], vs[idx])
+    multi_rotate_around(origins, angles, vs, idx-1)
+    children();
 }
 
 // Removes all parts of children geometry lying before/below the `limit`.
@@ -292,3 +305,72 @@ module scube(size, radius) {
 
 //scube([20, 20, 10], 5, $fn=50);
 //scube([20, 20, 10], [0,0,5,5], $fn=50);
+
+// Twists a 2D polygon around origin and at the same time translates and scales it.
+
+module twister (num_steps, translate, angle, origin = [0, 0], v = [0, 0, 1], scale = 1) {
+  ones = is_num(scale) ? 1 : [for (i = [1:1:len(scale)]) 1];
+  angle_step = angle/num_steps;
+  translate_step = translate/num_steps;
+  scale_step = (scale - ones)/num_steps;
+
+  for (i = [0:1:num_steps-2])
+  hull () {
+    translate(translate_step * i)
+    rotate_around(origin, angle_step * i, v)
+    scale(ones + scale_step * i)
+    linear_extrude(0.01)
+    children();
+
+    translate(translate_step * (i+1))
+    rotate_around(origin, angle_step * (i+1), v)
+    scale(ones + scale_step * (i+1))
+    linear_extrude(0.01)
+    children();
+  }
+}
+
+// twister($fn = 50, $fa = 3,
+//   num_steps = 30,
+//   translate = [0, 0, 20],
+//   angle = 60,
+//   scale = [0.5, 0.25] // or just a number, for example: 0.75
+//)
+// scale([1, 0.5])
+// circle(5);
+
+// Twists a 2D polygon around multiple origins and at the same time translates and scales it.
+
+module multi_twister (num_steps, translate, angles, initial_angles = undef, origins = [[0, 0]], vs = undef /*[0, 0, 1]*/, scale = 1) {
+  ones = is_num(scale) ? 1 : [for (i = [1:1:len(scale)]) 1];
+  vs = initialize(vs, [for (i = [1:1:len(angles)]) [0,0,1]]);
+  angles_steps = angles/(num_steps-1);
+  initial_angles = initialize(initial_angles, [for (i = [1:1:len(angles)]) 0]);
+  translate_step = translate/(num_steps-1);
+  scale_step = (scale - ones)/(num_steps-1);
+
+  for (i = [0:1:num_steps-2]) 
+  hull () {
+    translate(translate_step * i)
+    multi_rotate_around(origins, initial_angles + angles_steps * i, vs)
+    scale(ones + scale_step * i)
+    linear_extrude(0.01)
+    children();
+
+    translate(translate_step * (i+1))
+    multi_rotate_around(origins, initial_angles + angles_steps * (i+1), vs)
+    scale(ones + scale_step * (i+1))
+    linear_extrude(0.01)
+    children();
+  }
+}
+
+//multi_twister(
+//  num_steps = 20,
+//  translate = [0, 0, 20],
+//  angles = [0, 120],
+//  origins = [[0,0], [0, 10]],
+//  scale = [0.75, 0.5]
+//)
+//scale([1, 0.5])
+//circle(5);
