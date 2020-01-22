@@ -340,8 +340,15 @@ module twister (num_steps, translate, angle, origin = [0, 0], v = [0, 0, 1], sca
 // circle(5);
 
 // Twists a 2D polygon around multiple origins and at the same time translates and scales it.
+// Order is: scale, rotate (from first rotation to last), translate
 
 module multi_twister (num_steps, translate, angles, initial_angles = undef, origins = [[0, 0]], vs = undef /*[0, 0, 1]*/, scale = 1) {
+  assert(!is_undef(num_steps), "num_steps is not defined");
+  assert(!is_undef(translate), "translate is not defined");
+  assert(is_list(translate), "translate is not a list");
+  assert(!is_undef(angles), "angles is not defined");
+  assert(is_list(angles), "angles is not a  list");
+
   ones = is_num(scale) ? 1 : [for (i = [1:1:len(scale)]) 1];
   vs = initialize(vs, [for (i = [1:1:len(angles)]) [0,0,1]]);
   angles_steps = angles/(num_steps-1);
