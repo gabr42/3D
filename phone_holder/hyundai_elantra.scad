@@ -3,7 +3,7 @@ use <../lib/solids.scad>
 use <wuteku_holder.scad>
 
 thick = 3;
-support_block = [50, 30, 27];
+support_block = [30, 50, 27];
 connect_block = [33, 27];
 connect_overhang = 10;
 connect_vert = [18, 100];
@@ -15,14 +15,21 @@ module plate (x, y, support_space = 10, thickness) {
 }
 
 module inset () {
-  plate(support_block.x, support_block.y);
+  M = [ [ 1  , -0.04  , 0  , 0   ],
+        [ 0  , 1  , 0  , 0   ], 
+        [ 0  , 0  , 1  , 0   ],
+        [ 0  , 0  , 0  , 1   ] ] ;
+  multmatrix(M) 
+  union () {
+    plate(support_block.x, support_block.y);
 
-  translate([0, 0, support_block.z - thick])
-  plate(support_block.x, support_block.y);
+    translate([0, 0, support_block.z - thick])
+    plate(support_block.x, support_block.y);
 
-  translate([support_block.x, 0, 0])
-  rotate(-90, [0,1,0])
-  plate(support_block.z, support_block.y);
+    translate([support_block.x, 0, 0])
+    rotate(-90, [0,1,0])
+    plate(support_block.z, support_block.y);
+  }
 }
 
 module connect () {
@@ -51,6 +58,12 @@ module holder_adapter () {
   }
 }
 
+module screw_hole () {
+  translate([support_block.x + connect_block.x - connect_overhang - connect_vert.x, thick, connect_vert.y + connect_block.y - 2 * connect_vert.x])
+  rotate(90, [1, 0, 0])
+  plate(connect_vert.x, connect_vert.x, support_space = undef);
+}
+
 module part1 () {
   color("red")
   inset();
@@ -63,6 +76,9 @@ module part1 () {
 
   color("magenta")
   holder_adapter();
+  
+  color("gold")
+  screw_hole();
 }
 
 slack = 0.1;
