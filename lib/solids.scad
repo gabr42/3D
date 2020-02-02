@@ -308,26 +308,34 @@ module scube(size, radius) {
 
 // Twists a 2D polygon around origin and at the same time translates and scales it.
 
-module twister (num_steps, translate, angle, origin = [0, 0], v = [0, 0, 1], scale = 1) {
+module twister (num_steps, translate, angle, origin = [0, 0], v = [0, 0, 1], scale = 1, convex = true) {
   ones = is_num(scale) ? 1 : [for (i = [1:1:len(scale)]) 1];
   angle_step = angle/num_steps;
   translate_step = translate/num_steps;
   scale_step = (scale - ones)/num_steps;
 
-  for (i = [0:1:num_steps-2])
-  hull () {
-    translate(translate_step * i)
-    rotate_around(origin, angle_step * i, v)
-    scale(ones + scale_step * i)
-    linear_extrude(0.01)
-    children();
+  if (convex)
+    for (i = [0:1:num_steps-2])
+    hull () {
+      translate(translate_step * i)
+      rotate_around(origin, angle_step * i, v)
+      scale(ones + scale_step * i)
+      linear_extrude(0.01)
+      children();
 
-    translate(translate_step * (i+1))
-    rotate_around(origin, angle_step * (i+1), v)
-    scale(ones + scale_step * (i+1))
-    linear_extrude(0.01)
-    children();
-  }
+      translate(translate_step * (i+1))
+      rotate_around(origin, angle_step * (i+1), v)
+      scale(ones + scale_step * (i+1))
+      linear_extrude(0.01)
+      children();
+    }
+  else
+    for (i = [0:1:num_steps-1])
+      translate(translate_step * i)
+      rotate_around(origin, angle_step * i, v)
+      scale(ones + scale_step * i)
+      linear_extrude(translate_step.z)
+      children();
 }
 
 // twister($fn = 50, $fa = 3,
@@ -342,7 +350,7 @@ module twister (num_steps, translate, angle, origin = [0, 0], v = [0, 0, 1], sca
 // Twists a 2D polygon around multiple origins and at the same time translates and scales it.
 // Order is: scale, rotate (from first rotation to last), translate
 
-module multi_twister (num_steps, translate, angles, initial_angles = undef, origins = [[0, 0]], vs = undef /*[0, 0, 1]*/, scale = 1) {
+module multi_twister (num_steps, translate, angles, initial_angles = undef, origins = [[0, 0]], vs = undef /*[0, 0, 1]*/, scale = 1, convex = true) {
   assert(!is_undef(num_steps), "num_steps is not defined");
   assert(!is_undef(translate), "translate is not defined");
   assert(is_list(translate), "translate is not a list");
@@ -356,20 +364,29 @@ module multi_twister (num_steps, translate, angles, initial_angles = undef, orig
   translate_step = translate/(num_steps-1);
   scale_step = (scale - ones)/(num_steps-1);
 
-  for (i = [0:1:num_steps-2]) 
-  hull () {
-    translate(translate_step * i)
-    multi_rotate_around(origins, initial_angles + angles_steps * i, vs)
-    scale(ones + scale_step * i)
-    linear_extrude(0.01)
-    children();
+  if (convex)
+    for (i = [0:1:num_steps-2]) 
+    hull () {
+      translate(translate_step * i)
+      multi_rotate_around(origins, initial_angles + angles_steps * i, vs)
+      scale(ones + scale_step * i)
+      linear_extrude(0.01)
+      children();
 
-    translate(translate_step * (i+1))
-    multi_rotate_around(origins, initial_angles + angles_steps * (i+1), vs)
-    scale(ones + scale_step * (i+1))
-    linear_extrude(0.01)
-    children();
-  }
+      translate(translate_step * (i+1))
+      multi_rotate_around(origins, initial_angles + angles_steps * (i+1), vs)
+      scale(ones + scale_step * (i+1))
+      linear_extrude(0.01)
+      children();
+    }
+  else
+    for (i = [0:1:num_steps-2]) {
+      translate(translate_step * i)
+      multi_rotate_around(origins, initial_angles + angles_steps * i, vs)
+      scale(ones + scale_step * i)
+      linear_extrude(translate_step.z)
+      children();
+    }
 }
 
 //multi_twister(
