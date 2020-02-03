@@ -4,8 +4,8 @@ use <../lib/solids.scad>
 
 // global configuration
 
-num_nozzles = 4;
-nozzle_names = ["0.25", "0.4", "0.6", "0.6S"];
+num_nozzles = 1;
+nozzle_names = ["TEST"]; //["0.25", "0.4", "0.6", "0.6S"];
 spacing = 3; // mm
 nozzle_hole_d = 6; // mm
 mount_screw_d = 3; // mm
@@ -24,7 +24,8 @@ box_round = 1; // mm
 nozzle_hole_slack = 0.5; // mm
 mount_screw_slack = 0.2; // mm
 mount_hole_slack = 0.0; // mm
-nut_slack = 0.8; // mm
+nut_slack_top = 0.8; // mm
+nut_slack_bottom = 0.4; // mm
 
 // precision
 
@@ -33,7 +34,7 @@ $fn = $preview ? 10 : 50;
 // pre-calc some globals
 
 $nut_r = hypoth(nut_d/2, nut_d/4);
-$nozzle_r = max($nut_r + nut_slack/2, nozzle_hole_d/2 + nozzle_hole_slack/2);
+$nozzle_r = max($nut_r + max(nut_slack_top, nut_slack_bottom)/2, nozzle_hole_d/2 + nozzle_hole_slack/2);
 $box_h = $nozzle_r * 2 + spacing * 2;
 $box_w = ($nozzle_r * 2 + spacing) * num_nozzles - spacing + 2 * (2 * spacing + mount_screw_head_d + mount_hole_slack);
 $first_center = [2 * spacing + mount_screw_head_d + mount_hole_slack + $nozzle_r, $box_h/2, 0];
@@ -118,7 +119,7 @@ module make_nut_holes_top () {
   for (i = [1:num_nozzles]) {
     translate([0, 0, - nut_h + top_plate_h - top_cover_h])
     translate($first_center + $center_dist * (i-1))
-    cylinder(r = $nut_r + nut_slack/2, h = nut_h + inf, $fn = 6);
+    cylinder(r = $nut_r + nut_slack_top/2, h = nut_h + inf, $fn = 6);
   }
 }
 
@@ -129,7 +130,7 @@ module make_nut_holes_bottom () {
     for (i = [1:num_nozzles]) {
       translate([0, 0, bot_h])
       translate($first_center + $center_dist * (i-1))
-      cylinder(r = $nut_r + nut_slack/2, h = - bot_h + inf, $fn = 6);
+      cylinder(r = $nut_r + nut_slack_bottom/2, h = - bot_h + inf, $fn = 6);
     }
 }
 
