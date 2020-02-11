@@ -4,8 +4,8 @@ use <../lib/solids.scad>
 
 // global configuration
 
-num_nozzles = 1;
-nozzle_names = ["TEST"]; //["0.25", "0.4", "0.6", "0.6S"];
+num_nozzles = 5;
+nozzle_names = ["0.25", "0.4", "0.6", "0.4S", "0.6S"];
 spacing = 3; // mm
 nozzle_hole_d = 6; // mm
 mount_screw_d = 3; // mm
@@ -22,14 +22,19 @@ box_round = 1; // mm
 // fine-tuning parameters to make the designed holes slightly bigger than required
 
 nozzle_hole_slack = 0.5; // mm
-mount_screw_slack = 0.2; // mm
 mount_hole_slack = 0.0; // mm
-nut_slack_top = 0.8; // mm
+mount_screw_slack_top = 0.0; // mm
+mount_screw_slack_bottom = -0.1; // mm
+nut_slack_top = 0.6; // mm
 nut_slack_bottom = 0.4; // mm
+
+// printing parameters
+
+layer_height = 0.2; // mm
 
 // precision
 
-$fn = $preview ? 10 : 50;
+$fn = $preview ? 20 : 50;
 
 // pre-calc some globals
 
@@ -67,14 +72,13 @@ module bottom () {
 }
 
 module top () {
+  make_screw_holes_top()
   difference () {
     make_box([$box_w, $box_h, top_plate_h], true);
 
     make_nozzle_holes();
 
     make_nut_holes_top();
-
-    make_screw_holes_top();
   }
 }
 
@@ -135,19 +139,29 @@ module make_nut_holes_bottom () {
 }
 
 module make_screw_holes_top () {
-  translate([spacing + mount_screw_head_d/2, $box_h/2, 0])
-  make_screw_hole_top();
-
-  translate([$box_w - (spacing + mount_screw_head_d/2), $box_h/2, 0])
-  make_screw_hole_top();
+  make_screw_hole_top([spacing + mount_screw_head_d/2, $box_h/2, 0])
+  make_screw_hole_top([$box_w - (spacing + mount_screw_head_d/2), $box_h/2, 0])
+  children();
 }
 
-module make_screw_hole_top() {
-  translate([0, 0, top_plate_h - mount_screw_head_h])
-  cylinder(d = mount_screw_head_d, h = mount_screw_head_h + inf);
+module make_screw_hole_top(position) {
+  difference () {
+    children();
 
-  translate([0, 0, -mount_screw_head_h])
-  cylinder(d = mount_screw_d + mount_hole_slack, h = top_plate_h + inf);
+    translate(position) {
+      translate([0, 0, top_plate_h - mount_screw_head_h])
+      cylinder(d = mount_screw_head_d, h = mount_screw_head_h + inf);
+
+      translate([0, 0, top_plate_h - mount_screw_head_h + layer_height/2])  
+      cube([mount_screw_head_d, mount_screw_d, 2*layer_height], center = true);
+
+      translate([0, 0, top_plate_h - mount_screw_head_h + layer_height/2])  
+      cube([mount_screw_d, mount_screw_d, 4*layer_height], center = true);
+
+      translate([0, 0, - mount_screw_head_h])
+      cylinder(d = mount_screw_d + mount_screw_slack_top, h = top_plate_h + inf);
+    }
+  }
 }
 
 module make_screw_holes_bottom () {
@@ -160,5 +174,5 @@ module make_screw_holes_bottom () {
 
 module make_screw_hole_bottom () {
   translate([0, 0, mount_screw_hole_bot_plate_h])
-  cylinder(d = mount_screw_d, h = bot_plate_h + 2 * inf);
+  cylinder(d = mount_screw_d + mount_screw_slack_bottom, h = bot_plate_h + 2 * inf);
 }
