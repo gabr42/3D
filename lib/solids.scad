@@ -398,3 +398,43 @@ module multi_twister (num_steps, translate, angles, initial_angles = undef, orig
 //)
 //scale([1, 0.5])
 //circle(5);
+
+// Renders cylinder crossections. Cylinder must be of a constant width.
+// Visible in preview only.
+
+module cylinder_cross(r, d, h, thickness = 0.1) {
+  d = is_undef(d) ? 2 * r : d;
+  if ($preview)
+  color("grey")
+  translate([0, 0, h/2]) {
+    cube([d, thickness, h], center = true);
+
+    cube([thickness, d, h], center = true);
+
+    translate([0, 0, -thickness/2])
+    linear_extrude(thickness)
+    circle(d = d);
+  }
+}
+
+// Renders sphere crosssections. Visible in preview only.
+
+module sphere_cross(r, d, thickness = 0.1) {
+  if ($preview)
+  color("grey")
+  {
+    translate([0, 0, -thickness/2])
+    linear_extrude(thickness)
+    circle(r = r, d = d);
+
+    rotate(90, [0, 1, 0])
+    translate([0, 0, -thickness/2])
+    linear_extrude(thickness)
+    circle(r = r, d = d);
+
+    rotate(90, [1, 0, 0])
+    translate([0, 0, -thickness/2])
+    linear_extrude(thickness)
+    circle(r = r, d = d);
+  }
+}
