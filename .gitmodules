@@ -13,3 +13,6 @@
 [submodule "external/scad_utils"]
 	path = external/scad_utils
 	url = https://github.com/gabr42/scad-utils
+[submodule "external/dotSCAD"]
+	path = external/dotSCAD
+	url = https://github.com/JustinSDK/dotSCAD
