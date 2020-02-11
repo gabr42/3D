@@ -11,9 +11,13 @@ function distance(pt1, pt2) =
   length(pt2 - pt1);
   
 // Linear interpolation between two points.
+// t = number => result = point between pt1 and pt2
+// t = range => result = list of points between pt1 and pt2
 
 function interpolate(t, pt1, pt2) = 
-  (1 - t) * pt1 + t * pt2;
+  is_num(t) 
+    ? (1 - t) * pt1 + t * pt2
+    : [for (x=t) interpolate(x, pt1, pt2)];
   
 // Angle (0-180) between two (2D or 3D) vectors.
 
@@ -185,3 +189,11 @@ function fillet_lines (p1, p2, p3, p4, r) =
                      ? dot2(v1, v2)
                      : - dot2(v1, v2))
           [pta, ptb, pc, pa, aa];
+
+// Calculates control points for bezier surface defined by two lines, l1 and l2.
+// l1 = [pt1_start, pt1_end], l2 = [pt2_start, pt2_end]
+
+function bezier_patch_controls(l1, l2) =
+  let (x0 = interpolate([0:1/3:1], l1[0], l1[1]),
+       x3 = interpolate([0:1/3:1], l2[0], l2[1]))
+  [ for (i=[0:3]) interpolate([0:1/3:1], x0[i], x3[i]) ];
