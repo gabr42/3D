@@ -82,6 +82,26 @@ module remove_above_z(limit) {
   }
 }
 
+// Optionally mirrors its children.
+
+module opt_mirror(do_mirror, v) {
+  if (do_mirror)
+    mirror(v)
+    children();
+  else
+    children();
+}
+
+// Optionally translates its children.
+
+module opt_translate(do_translate, v) {
+  if (do_translate)
+    translate(v)
+    children();
+  else
+    children();
+}
+
 // Renders a torus segment.
 
 module torus_segment(r1, r2, angle_from=0, angle_to=360) {
