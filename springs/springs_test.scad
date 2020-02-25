@@ -1,4 +1,5 @@
 use <arc.scad>;
+use <line2d.scad>;
 use <polyline2d.scad>;
 use <hull_polyline2d.scad>;
 use <archimedean_spiral.scad>;
@@ -9,10 +10,14 @@ $fa = 1;
 //translate([20, 0, 0])
 //spring1();
 
-translate([-20, -20, 0])
-spring2();
+//translate([-20, -20, 0])
+//spring2();
 
-spring3();
+for (i = [1:6]) 
+  translate([10*(i-1), -10*(i-1), 0])
+  spring4(0.4 * i);
+
+//spring3();
 
 ///////////////
 
@@ -105,5 +110,22 @@ module spring3 () {
     if (i % 4 == 2) s2_left_conn();
     s3_arc((i == 0) || (i == 38) ? -1 : i % 2);
     if (i % 4 == 0) s2_top_conn();
+  }
+}
+
+module spring4 (width = 0.8) {
+  linear_extrude(4) {
+    arc(radius = 3, angle = 270, width = width);
+    
+    translate([3*3/2, 0, 0])
+    rotate(180)
+    arc(radius = 3/2, angle = 90, width = width);
+    
+    translate([0, - 3*3/2, 0])
+    arc(radius = 3/2, angle = 90, width = width);
+    
+    line2d([3*3/2, -3/2], [3*3/2, -3/2] + [20, 0], width);  
+    
+    line2d([3/2, - 3*3/2], [3/2, - 3*3/2] - [0, 20], width);    
   }
 }
