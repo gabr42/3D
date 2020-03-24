@@ -8,3 +8,7 @@ air_hockey/puck.stl
 air_hockey/stick.stl
 
 *.FCStd1
+
+*.FCStd2
+
+*.FCStd3
