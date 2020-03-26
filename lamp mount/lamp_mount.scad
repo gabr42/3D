@@ -1,8 +1,8 @@
 use <../lib/solids.scad>
 
 base = [60, 60, 10];
-hole_1 = [25, 60, 20];
-hole_2 = [25, 40, 40];
+hole_1 = [27, 60, 20];
+hole_2 = [27, 40, 40];
 screws = [37.5, 37.5, 8];
 d_hole = 13.5;
 d_screw = 4.5;
