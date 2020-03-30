@@ -419,6 +419,33 @@ module multi_twister (num_steps, translate, angles, initial_angles = undef, orig
 //scale([1, 0.5])
 //circle(5);
 
+// Renders cube, angle-trimmed on start/end.
+
+module angle_trim_cube(size, angle_start = 90, angle_end = 90) {
+  assert(angle_start >= -90 && angle_start <= 90);
+  assert(angle_end >= -90 && angle_end <= 90);
+  rot_start = 
+    angle_start == 0 
+      ? 90
+      : angle_start > 0
+        ? - angle_start + 90
+        : - angle_start - 90;
+  rot_end = 
+    angle_end == 0
+      ? 90
+      : angle_end > 0
+        ? angle_end - 90
+        : angle_end + 90;
+  
+  rotate_around([0, angle_start < 0 ? size.y : 0, 0], - rot_start, [0, 0, 1])
+  remove_under_x(0)
+  rotate_around([0, angle_start < 0 ? size.y : 0, 0], rot_start, [0, 0, 1])
+  rotate_around([size.x, angle_end < 0 ? size.y : 0, 0], -rot_end, [0, 0, 1])
+  remove_above_x(size.x)
+  rotate_around([size.x, angle_end < 0 ? size.y : 0, 0], rot_end, [0, 0, 1])
+  cube(size);
+}
+
 // Renders cylinder crossections. Cylinder must be of a constant width.
 // Visible in preview only.
 
