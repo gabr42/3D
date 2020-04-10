@@ -47,3 +47,9 @@ function turn_left(xy) = [-xy.y, xy.x];
 
 function initialize(value, default) =
   is_undef(value) ? default : value;
+
+// Returns even/odd status of a number.
+
+function even(num) = num % 2 == 0;
+
+function odd(num) = num % 2 == 1;
