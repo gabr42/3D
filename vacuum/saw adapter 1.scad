@@ -1,39 +1,36 @@
-use <shear.scad>
+use <solids.scad>
 
 //d 35 x 40
 //d 32 x 20 - 60 st.C
 
 d1 = 35; h1 = 40;
 d2 = 32; h2 = 20;
-a2 = 60;
-wall = 5;
+h2d = 10; r2c = 10;
+wall = 3;
 
 $fn = $preview ? 50 : 100;
 
-difference () {
-  union () {
-    cylinder(d = d1 + wall, h = h1);
-   
-    translate([0, 0, h1])
-    cylinder(d = d2 + wall, h = h2);
-    
-    translate([0, 0, h1])
-    cylinder(d1 = d1 + wall, d2 = d2 + wall, h = h2/4);    
-  }
+module render_pipe(offset, extra_h = 0) {
+  cylinder(d = d1 + 2*offset, h = h1 + extra_h);
   
-  union () {
-    translate([0, 0, -0.01])
-    cylinder(d = d1, h = h1 + 0.02);
-   
-    translate([0, 0, h1 - 0.01])
-    cylinder(d = d2, h = h2 + 0.02);
+  translate([0, 0, -h2d/2]) {
+    cylinder(d1 = d2 + 2*offset, d2 = d1 + 2*offset, h = h2d/2);
 
-    translate([0, 0, h1])
-    cylinder(d1 = d1, d2 = d2, h = h2/4);
+    rotate(-90, [1, 0, 0])
+    translate([0, r2c + d2/2, -r2c - d2/2]) {
+      translate([0, - r2c - d2/2, 0])
+      rotate(-90, [0, 1, 0])
+      torus_segment(r1 = d2/2 + r2c, r2 = d2/2 + offset, angle_from = 0, angle_to = 90);
+
+      translate([0, 0, - h2 - extra_h])
+      cylinder(d = d2 + 2*offset, h = h2 + extra_h);
+    }
   }
-
-  translate([0, 0, h1 + h2/4])
-  shear(sx = [cos(a2),0])  
-  cube(h2); 
 }
 
+
+difference () {
+  render_pipe(wall);
+  
+  render_pipe(0, extra_h = 0.01);
+}
