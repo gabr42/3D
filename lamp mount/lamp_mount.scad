@@ -1,4 +1,4 @@
-use <../lib/solids.scad>
+use <../lib/solids.scad> // https://github.com/gabr42/3D/blob/master/lib/solids.scad
 
 base = [60, 60, 10];
 hole_1 = [27, 60, 20];
