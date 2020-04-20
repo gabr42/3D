@@ -1,5 +1,5 @@
-use <solids.scad>
-use <line2d.scad>
+use <solids.scad> //  https://github.com/gabr42/3D/blob/master/lib/solids.scad
+use <line2d.scad> // https://github.com/JustinSDK/dotSCAD/blob/master/src/line2d.scad
 
 d_out = 50;
 d_in = 40;
