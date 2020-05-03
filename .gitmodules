@@ -16,3 +16,6 @@
 [submodule "external/dotSCAD"]
 	path = external/dotSCAD
 	url = https://github.com/JustinSDK/dotSCAD
+[submodule "external/gears"]
+	path = external/gears
+	url = https://github.com/chrisspen/gears
