@@ -26,7 +26,7 @@ module multi_rotate_around(origins, angles, vs, idx = undef) {
 
 // Removes all parts of children geometry lying before/below the `limit`.
 
-module remove_under_x(limit) {
+module remove_under_x (limit) {
   intersection () {
     children();
     
@@ -35,7 +35,7 @@ module remove_under_x(limit) {
   }
 }
 
-module remove_under_y(limit) {
+module remove_under_y (limit) {
   intersection () {
     children();
     
@@ -44,7 +44,7 @@ module remove_under_y(limit) {
   }
 }
 
-module remove_under_z(limit) {
+module remove_under_z (limit) {
   intersection () {
     children();
     
@@ -55,7 +55,7 @@ module remove_under_z(limit) {
 
 // Removes all parts of children geometry lying after/above the `limit`.
 
-module remove_above_x(limit) {
+module remove_above_x (limit) {
   intersection () {
     children();
     
@@ -64,7 +64,7 @@ module remove_above_x(limit) {
   }
 }
 
-module remove_above_y(limit) {
+module remove_above_y (limit) {
   intersection () {
     children();
     
@@ -73,12 +73,41 @@ module remove_above_y(limit) {
   }
 }
 
-module remove_above_z(limit) {
+module remove_above_z (limit) {
   intersection () {
     children();
     
     translate([0, 0, -500 + limit])
     cube([1000, 1000, 1000], center = true);
+  }
+}
+
+// Removes all parts of children geometry not lying in a specific interval.
+
+module keep_band_x (from, to) {
+  intersection () {
+    children();
+
+    translate([from, -500, -500])
+    cube([to - from, 1000, 1000]);
+  }
+}
+
+module keep_band_y (from, to) {
+  intersection () {
+    children();
+
+    translate([-500, from, -500])
+    cube([1000, to - from, 1000]);
+  }
+}
+
+module keep_band_z (from, to) {
+  intersection () {
+    children();
+
+    translate([-500, -500, from])
+    cube([1000, 1000, to - from]);
   }
 }
 
