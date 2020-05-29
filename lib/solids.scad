@@ -84,7 +84,7 @@ module remove_above_z (limit) {
 
 // Removes all parts of children geometry not lying in a specific interval.
 
-module keep_band_x (from, to) {
+module keep_between_x (from, to) {
   intersection () {
     children();
 
@@ -93,7 +93,7 @@ module keep_band_x (from, to) {
   }
 }
 
-module keep_band_y (from, to) {
+module keep_between_y (from, to) {
   intersection () {
     children();
 
@@ -102,7 +102,7 @@ module keep_band_y (from, to) {
   }
 }
 
-module keep_band_z (from, to) {
+module keep_between_z (from, to) {
   intersection () {
     children();
 
