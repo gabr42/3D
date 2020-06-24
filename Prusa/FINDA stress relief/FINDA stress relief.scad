@@ -26,10 +26,10 @@ difference () {
   translate([0, 0, 10.9])
   cylinder(d=4, h=5.2);
   
-  for (i = [0:0.5:5])
+  for (i = [0:0.2:5])
     translate([0, 0, 11 + i])
     scale([1, 1 + i/10, 1])
-    wedge(0.51);
+    wedge(0.21);
 }
 
 dh = 0.02;
