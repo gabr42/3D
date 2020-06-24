@@ -32,8 +32,8 @@ difference () {
     wedge(0.21);
 }
 
-dh = 0.02;
-s = 2;
+dh = 0.04;
+s = 4;
 a = 780;
 
 translate([0, 0, 16]) {
