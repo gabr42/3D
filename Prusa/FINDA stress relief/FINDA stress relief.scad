@@ -1,4 +1,4 @@
-$fn = 20;
+$fn = 50;
 
 difference () {
   union () {
@@ -21,7 +21,7 @@ difference () {
 
 difference () {
   translate([0, 0, 11])
-  cylinder(d=5.5, h=5);
+  cylinder(d1=5.5, d2=5.0, h=5);
 
   translate([0, 0, 10.9])
   cylinder(d=4, h=5.2);
@@ -33,13 +33,13 @@ difference () {
 }
 
 dh = 0.02;
-s = 10;
+s = 2;
 a = 780;
 
 translate([0, 0, 16]) {
   difference () {
     difference () {
-      cylinder(d=5.5, h=a*dh);
+      cylinder(d=5, h=a*dh);
       
       translate([0, 0, -1])
       cylinder(d=4, h=a*dh + 2);
