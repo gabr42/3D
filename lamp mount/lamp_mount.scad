@@ -1,4 +1,5 @@
-use <../lib/solids.scad> // https://github.com/gabr42/3D/blob/master/lib/solids.scad
+use <solids.scad> // https://github.com/gabr42/3D/blob/master/lib/solids.scad
+use <helpers.lists.scad> // https://github.com/gabr42/3D/blob/master/lib/helpers.lists.scad
 
 base = [60, 60, 10];
 hole_1 = [27, 60, 20];
@@ -15,10 +16,10 @@ module base_mount () {
   hull_chain () {
     rcube(base, 1);
 
-    translate([(base.x - hole_1.x)/2, 0, 0])
-    rcube(hole_1, 1);
+    translate([base.x/2 - hole_1.x/2*1.5, 0, 0])
+    rcube(mul_lists(hole_1, [1.5, 1, 1]), 1);
 
-    translate([(base.x - hole_2.x)/2, (base.y - hole_2.y)/2, 0])
+    translate([(base.x - hole_2.x)/2, (base.y - hole_2.y)/2, d_hole/4])
     rcube(hole_2, 1);
   }
 }
