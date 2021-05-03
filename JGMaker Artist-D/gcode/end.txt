@@ -1,0 +1,6 @@
+M104 S0 T0; turn off temperature
+M104 S0 T1; turn off temperature
+
+T0; Select E1
+G28 X0  ; home X axis 
+M84     ; disable motors

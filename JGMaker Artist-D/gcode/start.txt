@@ -1,0 +1,33 @@
+M412 S0
+G28 ; home all axes
+T0
+G1 Z5 F5000 ; lift nozzle
+
+M190 S40; 
+M140 S[first_layer_bed_temperature]; Start the bed warming
+M104 S[first_layer_temperature] T1; set nozzle temp for Extruder 2
+M109 S[first_layer_temperature] T0; set nozzle temp and wait for temp to be reached
+M190 S[first_layer_bed_temperature]; set bed temp and wait for temp to be reached
+
+
+T0;
+;;M28 ;Relative Mode
+T0 G90
+G1 Z2.0 F3000 ;Move Z Axis up
+G1 X5 Y10 Z0.28 F5000.0 ;Move to start position
+G1 X5 Y200.0 Z0.28 F1500.0 E15 ;Draw the first line
+G1 X5.4 Y200.0 Z0.28 F5000.0 ;Move to side a little
+G1 X5.4 Y10 Z0.28 F1500.0 E30 ;Draw the second line
+;T0 G92 E0; reset extruder0
+
+T1;
+T1 G90
+;T1 G92 E0; reset extruder0
+G1 Z2.0 F3000 ;Move Z Axis up
+G1 X305 Y10 Z0.28 F5000.0 ;Move to start position
+G1 X305 Y200.0 Z0.28 F1500.0 E45 ;Draw the first line
+G1 X305.4 Y200.0 Z0.28 F5000.0 ;Move to side a little
+G1 X305.4 Y10 Z0.28 F1500.0 E60 ;Draw the second line
+T1 G92 E0; reset extruder1
+T0 G92 E0; reset extruder0
+M117 Printing...; put message on display
