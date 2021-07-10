@@ -16,3 +16,19 @@ air_hockey/stick.stl
 vacuum/saw adapter 1.stl
 
 Prusa/heatbed cable cover extended/heatbed-cable-cover.scad
+
+utilities/combiner/__history/
+
+*.local
+
+*.dsk
+
+*.identcache
+
+utilities/combiner/Win32/Debug/
+
+utilities/mirror/__history/
+
+*.~dsk
+
+utilities/mirror/Win32/Debug/
