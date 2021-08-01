@@ -4,7 +4,7 @@
 /*[ Telescope Geometry ]*/
 
 // (mm) focal length of telescope or camera
-focalLength = 180;
+focalLength = 70;
 
 // (mm) inner diameter of the hole the cap sits inside
 aperture = 70;
