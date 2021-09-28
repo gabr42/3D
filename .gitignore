@@ -32,3 +32,7 @@ utilities/mirror/__history/
 *.~dsk
 
 utilities/mirror/Win32/Debug/
+
+utilities/sequential/__history/
+
+utilities/sequential/Win32/Debug/

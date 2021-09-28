@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, System.Generics.Collections,
   GpStuff,
-  Combiner.Engine;
+  Combine.Engine;
 
 type
   TCombinerEngine = class(TInterfacedObject, ICombinerEngine)
