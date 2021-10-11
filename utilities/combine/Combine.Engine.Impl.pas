@@ -5,10 +5,11 @@ interface
 uses
   System.SysUtils, System.Classes, System.Generics.Collections,
   GpStuff,
+  GCode.Processor.Impl,
   Combine.Engine;
 
 type
-  TCombinerEngine = class(TInterfacedObject, ICombinerEngine)
+  TCombinerEngine = class(TGCodeProcessor, ICombinerEngine)
   strict private type
     TLayerChange = record
     private
@@ -22,19 +23,15 @@ type
   var
     FBaseGcode       : IGpBuffer;
     FCurrentLayer    : integer;
-    FErrorMessage    : string;
     FFloatFormat     : TFormatSettings;
     FLayerChanges    : TList<TLayerChange>;
     FLayerChangeAt   : real;
-    FOutputGcode     : IGpBuffer;
     FPotentialTrigger: boolean;
   strict protected
     function  ActiveLayerGcode: TStream; inline;
     function  FastForwardGcode(layer: real): boolean;
     function  GetBaseGcode: IGpBuffer;
-    function  GetErrorMessage: string;
     function  GetNextLine(var line: AnsiString): boolean;
-    function  GetOutputGcode: IGpBuffer;
     function  ReadLine(const gcode: TStream): AnsiString;
     procedure SetBaseGcode(const value: IGpBuffer);
   public
@@ -42,10 +39,8 @@ type
     destructor  Destroy; override;
     class function Make: ICombinerEngine;
     procedure ChangeAtLayer(layer: real; const gcode: IGpBuffer);
-    function  Process: boolean;
+    function  Process: boolean; override;
     property BaseGcode: IGpBuffer read GetBaseGcode write SetBaseGcode;
-    property ErrorMessage: string read GetErrorMessage;
-    property OutputGcode: IGpBuffer read GetOutputGcode;
   end;
 
 implementation
@@ -110,11 +105,6 @@ begin
   Result := FBaseGcode;
 end;
 
-function TCombinerEngine.GetErrorMessage: string;
-begin
-  Result := FErrorMessage;
-end;
-
 function TCombinerEngine.GetNextLine(var line: AnsiString): boolean;
 begin
   var gcode := ActiveLayerGcode;
@@ -151,11 +141,6 @@ Writeln('Switched to file ', FCurrentLayer, '/', FLayerChanges.Count - 1, ' at '
   Result := true;
 end;
 
-function TCombinerEngine.GetOutputGcode: IGpBuffer;
-begin
-  Result := FOutputGcode;
-end;
-
 class function TCombinerEngine.Make: ICombinerEngine;
 begin
   Result := TCombinerEngine.Create;
@@ -163,8 +148,8 @@ end;
 
 function TCombinerEngine.Process: boolean;
 begin
-  FErrorMessage := '';
-  FOutputGcode := TGpBuffer.Make;
+  inherited Process;
+
   FPotentialTrigger := false;
 
   FLayerChanges.Insert(0, TLayerChange.Create(0, BaseGcode));
@@ -180,11 +165,11 @@ begin
 
     var line: AnsiString;
     while GetNextLine(line) do begin
-      FOutputGcode.AsStream.WriteAnsiStr(line);
-      FOutputGcode.AsStream.WriteAnsiStr(#$0A);
+      OutputGcode.AsStream.WriteAnsiStr(line);
+      OutputGcode.AsStream.WriteAnsiStr(#$0A);
     end;
 
-    Result := FErrorMessage = '';
+    Result := ErrorMessage = '';
   finally FLayerChanges.Delete(0); end;
 end;
 

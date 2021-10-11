@@ -86,6 +86,10 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <Debugger_RunParams>twisty1-a.gcode twisty1-20.gcode 60 twisty1-15.gcode 67 twisty1-10.gcode 72 twisty1-7_5.gcode 80 twisty1-5.gcode</Debugger_RunParams>
         <Debugger_CWD>h:\RAZVOJ\3D\earrings</Debugger_CWD>
+        <DCC_ExeOutput>..\</DCC_ExeOutput>
+        <DCC_UnitSearchPath>..\common;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>(None)</Manifest_File>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -119,6 +123,10 @@
                 <Source>
                     <Source Name="MainSource">Combine.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="Win32\Debug\Combine.exe" Configuration="Debug" Class="ProjectOutput">

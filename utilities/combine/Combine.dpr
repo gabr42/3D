@@ -13,7 +13,7 @@ uses
 
 procedure Usage;
 begin
-  Writeln('Usage: combiner gcode_out gcode_fileA layerA gcode_fileB layerB ... gcode_fileY layerY gcode_fileZ');
+  Writeln('Usage: combine gcode_out gcode_fileA layerA gcode_fileB layerB ... gcode_fileY layerY gcode_fileZ');
 end;
 
 begin

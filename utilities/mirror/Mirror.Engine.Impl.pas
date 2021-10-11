@@ -5,25 +5,22 @@ interface
 uses
   System.SysUtils, System.Classes,
   GpStuff,
+  GCode.Processor.Impl,
   Mirror.Engine;
 
 type
-  TMirrorEngine = class(TInterfacedObject, IMirrorEngine)
+  TMirrorEngine = class(TGCodeProcessor, IMirrorEngine)
   strict private
     FAbsolute    : boolean;
     FBaseGcode   : IGpBuffer;
-    FErrorMessage: string;
     FFloatFormat : TFormatSettings;
     FMirrorX     : real;
     FMirrorY     : real;
-    FOutputGcode : IGpBuffer;
   strict protected
     function  ReadLine(const gcode: TStream): AnsiString;
     function  GetBaseGcode: IGpBuffer;
-    function  GetErrorMessage: string;
     function  GetMirrorX: real;
     function  GetMirrorY: real;
-    function  GetOutputGcode: IGpBuffer;
     function  MirrorLine(line: AnsiString): AnsiString;
     function  MirrorPart(part: AnsiString): AnsiString;
     procedure SetBaseGcode(const value: IGpBuffer);
@@ -32,12 +29,10 @@ type
   public
     constructor Create;
     class function Make: IMirrorEngine;
-    function Process: boolean;
+    function Process: boolean; override;
     property BaseGcode: IGpBuffer read GetBaseGcode write SetBaseGcode;
-    property ErrorMessage: string read GetErrorMessage;
     property MirrorX: real read GetMirrorX write SetMirrorX;
     property MirrorY: real read GetMirrorY write SetMirrorY;
-    property OutputGcode: IGpBuffer read GetOutputGcode;
   end;
 
 implementation
@@ -61,11 +56,6 @@ begin
   Result := FBaseGcode;
 end;
 
-function TMirrorEngine.GetErrorMessage: string;
-begin
-  Result := FErrorMessage;
-end;
-
 function TMirrorEngine.GetMirrorX: real;
 begin
   Result := FMirrorX;
@@ -74,11 +64,6 @@ end;
 function TMirrorEngine.GetMirrorY: real;
 begin
   Result := FMirrorY;
-end;
-
-function TMirrorEngine.GetOutputGcode: IGpBuffer;
-begin
-  Result := FOutputGcode;
 end;
 
 class function TMirrorEngine.Make: IMirrorEngine;
@@ -147,8 +132,7 @@ end;
 
 function TMirrorEngine.Process: boolean;
 begin
-  FErrorMessage := '';
-  FOutputGcode := TGpBuffer.Make;
+  inherited Process;
 
   var input := FBaseGcode.AsStream;
   input.GoToStart;
@@ -156,11 +140,11 @@ begin
   while not input.AtEnd do begin
     var line := ReadLine(input);
     line := MirrorLine(line);
-    FOutputGcode.AsStream.WriteAnsiStr(line);
-    FOutputGcode.AsStream.WriteAnsiStr(#$0A);
+    OutputGcode.AsStream.WriteAnsiStr(line);
+    OutputGcode.AsStream.WriteAnsiStr(#$0A);
   end;
 
-  Result := FErrorMessage = '';
+  Result := ErrorMessage = '';
 end;
 
 function TMirrorEngine.ReadLine(const gcode: TStream): AnsiString;

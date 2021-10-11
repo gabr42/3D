@@ -1,0 +1,72 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{E3FAB162-736D-4FA0-AEF5-77FD2AE05C5E}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="interleave\Interleave.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="combine\Combine.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="mirror\Mirror.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="sequential\Sequential.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Interleave">
+        <MSBuild Projects="interleave\Interleave.dproj"/>
+    </Target>
+    <Target Name="Interleave:Clean">
+        <MSBuild Projects="interleave\Interleave.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Interleave:Make">
+        <MSBuild Projects="interleave\Interleave.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Combine">
+        <MSBuild Projects="combine\Combine.dproj"/>
+    </Target>
+    <Target Name="Combine:Clean">
+        <MSBuild Projects="combine\Combine.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Combine:Make">
+        <MSBuild Projects="combine\Combine.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Mirror">
+        <MSBuild Projects="mirror\Mirror.dproj"/>
+    </Target>
+    <Target Name="Mirror:Clean">
+        <MSBuild Projects="mirror\Mirror.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Mirror:Make">
+        <MSBuild Projects="mirror\Mirror.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Sequential">
+        <MSBuild Projects="sequential\Sequential.dproj"/>
+    </Target>
+    <Target Name="Sequential:Clean">
+        <MSBuild Projects="sequential\Sequential.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Sequential:Make">
+        <MSBuild Projects="sequential\Sequential.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Interleave;Combine;Mirror;Sequential"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Interleave:Clean;Combine:Clean;Mirror:Clean;Sequential:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Interleave:Make;Combine:Make;Mirror:Make;Sequential:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
