@@ -13,13 +13,14 @@ uses
 
 procedure Usage;
 begin
-  Writeln('Usage: interleave gcode_out gcode_fileA gcode_fileB ... gcode_fileZ');
+  Writeln('Usage: interleave gcode_out [+]gcode_fileA [+]gcode_fileB ... [+]gcode_fileZ');
+  Writeln('       Mark the "master" file (containing preamble and endcode) with a "+"');
 end;
 
 begin
   try
     var engine := TInterleaveEngine.Make;
-    // commandline: output-file file file file ... file
+    // commandline: output-file file file file ... +file
     if ParamCount < 3 then begin
       Usage;
       Exit;
@@ -27,11 +28,17 @@ begin
 
     for var i := 2 to ParamCount do begin
       var buffer: IGpBuffer;
-      if not ReadFromFile(ParamStr(i), buffer) then begin
-        Writeln('File does not exist: ', ParamStr(i));
+      var fName := ParamStr(i);
+      var isMaster := false;
+      if fName.StartsWith('+') then begin
+        isMaster := true;
+        Delete(fName, 1, 1);
+      end;
+      if not ReadFromFile(fName, buffer) then begin
+        Writeln('File does not exist: ', fName);
         Exit;
       end;
-      engine.AddObject(buffer);
+      engine.AddObject(buffer, isMaster);
     end;
 
     if not engine.Process then begin

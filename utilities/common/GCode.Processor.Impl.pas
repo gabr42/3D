@@ -17,6 +17,8 @@ type
     function  GetErrorMessage: string; virtual;
     function  GetGCodeList: TList<IGCode>; virtual;
     function  GetOutputGCode: IGpBuffer; virtual;
+  protected
+    function  SetError(const errorMsg: string): boolean;
   public
     constructor Create;
     destructor  Destroy; override;
@@ -65,6 +67,12 @@ begin
   FErrorMessage := '';
   FOutputGcode := TGpBuffer.Make;
   Result := true;
+end;
+
+function TGCodeProcessor.SetError(const errorMsg: string): boolean;
+begin
+  FErrorMessage := errorMsg;
+  Result := false;
 end;
 
 end.
