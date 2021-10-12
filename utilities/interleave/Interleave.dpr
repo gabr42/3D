@@ -9,11 +9,7 @@ uses
   GpStuff,
   GpStreams,
   Interleave.Engine in 'Interleave.Engine.pas',
-  Interleave.Engine.Impl in 'Interleave.Engine.Impl.pas',
-  GCode.Processor in '..\common\GCode.Processor.pas',
-  GCode.Processor.Impl in '..\common\GCode.Processor.Impl.pas',
-  GCode in '..\common\GCode.pas',
-  GCode.Impl in '..\common\GCode.Impl.pas';
+  Interleave.Engine.Impl in 'Interleave.Engine.Impl.pas';
 
 procedure Usage;
 begin

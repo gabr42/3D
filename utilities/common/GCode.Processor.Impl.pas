@@ -14,9 +14,9 @@ type
     FGCode       : TList<IGCode>;
     FOutputGCode : IGpBuffer;
   strict protected
-    function  GetErrorMessage: string;
-    function  GetGCodeList: TList<IGCode>;
-    function  GetOutputGCode: IGpBuffer;
+    function  GetErrorMessage: string; virtual;
+    function  GetGCodeList: TList<IGCode>; virtual;
+    function  GetOutputGCode: IGpBuffer; virtual;
   public
     constructor Create;
     destructor  Destroy; override;
