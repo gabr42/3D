@@ -50,17 +50,23 @@ type
     property FirstPosition: IPosition read GetFirstPosition;
     property LastPosition: IPosition read GetLastPosition;
     property Tools: TList<IToolInfo> read GetTools;
+    function FindTool(tool: integer): IToolInfo;
+    function FindToolIdx(tool: integer): integer;
   end;
 
   IGCodeIndex = interface ['{D768FE73-3DD7-4DB5-A539-2EB436FCEBEE}']
     function GetHeader: ILayerInfo;
     function GetLayers: TList<ILayerInfo>;
     function GetFooter: ILayerInfo;
+    function GetProperties: TDictionary<string,string>;
   //
+    function FindLayer(z: extended): ILayerInfo;
     function FindTool(z: extended; tool: integer): IToolInfo;
+    function FindToolIdx(z: extended; tool: integer): integer;
     property Header: ILayerInfo read GetHeader;
     property Layers: TList<ILayerInfo> read GetLayers;
     property Footer: ILayerInfo read GetFooter;
+    property Properties: TDictionary<string,string> read GetProperties;
   end;
 
   TGCodeSection = (secHeader, secObject, secEndcode);
@@ -71,6 +77,8 @@ type
   //
     function AsStream: TStream;
     function AtEnd: boolean;
+    procedure ExtractPositions(const line: AnsiString; var x, y, z, e: extended);
+    function  UpdatePositions(const line: AnsiString; var x, y, z, e: extended): AnsiString;
     function IsComment(const line: AnsiString): boolean;
     function IsEndCode(const line: AnsiString): boolean;
     function IsLayerChange(const line: AnsiString): boolean;

@@ -30,6 +30,7 @@ type
     function AsStream: TStream; inline;
     function AtEnd: boolean; inline;
     procedure ExtractPositions(const line: AnsiString; var x, y, z, e: extended);
+    function  UpdatePositions(const line: AnsiString; var x, y, z, e: extended): AnsiString;
     function ExtractValue(const param: string): extended;
     function IsArc(const line: AnsiString): boolean; inline;
     function IsComment(const line: AnsiString): boolean; inline;
@@ -134,6 +135,8 @@ type
     constructor Create(LayerZ, AX, AY, AZ, AE: extended; ALinePos: int64; ATool: integer);
     class function Make(LayerZ, AX, AY, AZ, AE: extended; ALinePos: int64; ATool: integer): ILayerInfo;
     destructor  Destroy; override;
+    function FindTool(tool: integer): IToolInfo;
+    function FindToolIdx(tool: integer): integer;
     property Z: extended read GetZ;
     property StartPos: int64 read GetStartPos;
     property Size: int64 read GetSize;
@@ -150,24 +153,30 @@ type
 
   TGCodeIndex = class(TInterfacedObject, IGCodeIndex, IGCodeIndexEx)
   strict private
-    FHeader: ILayerInfo;
-    FLayers: TList<ILayerInfo>;
-    FFooter: ILayerInfo;
+    FHeader        : ILayerInfo;
+    FLayers        : TList<ILayerInfo>;
+    FFooter        : ILayerInfo;
+    FProperties    : TDictionary<string,string>;
+    FLastFoundLayer: integer;
   strict protected
     function ActiveLayer: ILayerInfo;
     procedure AddLayer(const layer: ILayerInfo);
     function GetHeader: ILayerInfo;
     function GetLayers: TList<ILayerInfo>;
     function GetFooter: ILayerInfo;
+    function GetProperties: TDictionary<string,string>;
     procedure SetFooter(const value: ILayerInfo);
     procedure UpdateLastSegmentSize(newPos: int64);
   public
     constructor Create;
     destructor Destroy; override;
+    function FindLayer(z: extended): ILayerInfo;
     function FindTool(z: extended; tool: integer): IToolInfo;
+    function FindToolIdx(z: extended; tool: integer): integer;
     property Header: ILayerInfo read GetHeader;
     property Layers: TList<ILayerInfo> read GetLayers;
     property Footer: ILayerInfo read GetFooter;
+    property Properties: TDictionary<string,string> read GetProperties;
   end;
 
 { TGCode }
@@ -276,6 +285,9 @@ begin
     var prevTool := Tool;
     var line := ReadLine;
 
+    if Trim(line) = '' then
+      continue; //while
+
     if prevSect <> Section then begin
       if Section = secEndcode then
         indexEx.SetFooter(TLayerInfo.Make(gz, gx, gy, gz, ge, linePos, Tool));
@@ -285,11 +297,19 @@ begin
       if not LookaheadLayerZHeight(z) then
         Exit(false);
       indexEx.AddLayer(TLayerInfo.Make(z, gx, gy, gz, ge, linePos, Tool));
-    end
-    else if (Section <> secHeader) and (Tool <> prevTool) then begin
+    end;
+
+    if (Section <> secHeader) and (Tool <> prevTool) then begin
       var activeLayerEx := indexEx.ActiveLayer as ILayerInfoEx;
       if not activeLayerEx.Activate(Tool) then
         activeLayerEx.AddTool(TToolInfo.Make(Tool, gx, gy, gz, ge, linePos));
+    end;
+
+    if (Section = secEndcode) and (Copy(line, 1, 1) = ';') then begin
+      var s := string(line).Remove(0, 1).Trim;
+      var p := Pos('=', s);
+      if p > 0 then
+        FIndex.Properties.Add(Copy(s, 1, p-1).Trim, Copy(s, p+1).Trim);
     end
     else begin
       var cmd := UpperCase(Copy(line, 1, 3));
@@ -411,18 +431,50 @@ begin
       pos := pos + update;
 end;
 
+function TGCode.UpdatePositions(const line: AnsiString; var x, y, z, e: extended): AnsiString;
+begin
+  var uncomment := string(line).Split([';']);
+  var parts := uncomment[0].Split([' ', #$0D, #$0A], TStringSplitOptions.ExcludeEmpty);
+  for var i := Low(parts) to High(parts) do begin
+    var param := parts[i][1];
+    if (param = 'x') or (param = 'X') then begin
+      if x <> GCode.Null then
+        parts[i] := Format('X%.3f', [x], GCode.FormatSettings);
+    end
+    else if (param = 'y') or (param= 'Y') then begin
+      if y <> GCode.Null then
+        parts[i] := Format('Y%.3f', [y], GCode.FormatSettings);
+    end
+    else if (param = 'z') or (param = 'Z') then begin
+      if z <> GCode.Null then
+        parts[i] := Format('Z%.3f', [z], GCode.FormatSettings);
+    end
+    else if (param = 'e') or (param = 'E') then begin
+      if e <> GCode.Null then
+        parts[i] := Format('E%.5f', [e], GCode.FormatSettings);
+    end;
+  end;
+  Result := AnsiString(string.Join(' ', parts));
+  if High(uncomment) > 0 then begin
+    Delete(uncomment, 0, 1);
+    Result := Result + AnsiString(' ;' + string.Join(';', uncomment));
+  end;
+end;
+
 { TGCodeIndex }
 
 constructor TGCodeIndex.Create;
 begin
   inherited Create;
   FLayers := TList<ILayerInfo>.Create;
+  FProperties := TDictionary<string,string>.Create;
   FHeader := TLayerInfo.Make(0, 0, 0, 0, 0, 0, 0);
 end;
 
 destructor TGCodeIndex.Destroy;
 begin
   FreeAndNil(FLayers);
+  FreeAndNil(FProperties);
   inherited;
 end;
 
@@ -432,14 +484,38 @@ begin
   FLayers.Add(layer);
 end;
 
+function TGCodeIndex.FindLayer(z: extended): ILayerInfo;
+begin
+  if SameValue(z, FLayers[FLastFoundLayer].Z) then
+    Exit(FLayers[FLastFoundLayer]);
+
+  if z < FLayers[FLastFoundLayer].Z then
+    FLastFoundLayer := -1;
+
+  for var i := FLastFoundLayer + 1 to FLayers.Count - 1 do
+    if SameValue(z, FLayers[i].Z) then begin
+      FLastFoundLayer := i;
+      Exit(FLayers[i]);
+    end;
+    
+  FLastFoundLayer := FLayers.Count - 1;
+  Result := nil;
+end;
+
 function TGCodeIndex.FindTool(z: extended; tool: integer): IToolInfo;
 begin
   Result := nil;
-  for var layer in Layers do
-    if SameValue(z, layer.Z) then
-      for var t in layer.Tools do
-        if tool = t.Tool then
-          Exit(t);
+  var layer := FindLayer(z);
+  if assigned(layer) then
+    Result := layer.FindTool(tool);
+end;
+
+function TGCodeIndex.FindToolIdx(z: extended; tool: integer): integer;
+begin
+  Result := -1;
+  var layer := FindLayer(z);
+  if assigned(layer) then
+    Result := Layer.FindToolIdx(tool);
 end;
 
 function TGCodeIndex.ActiveLayer: ILayerInfo;
@@ -460,6 +536,11 @@ end;
 function TGCodeIndex.GetLayers: TList<ILayerInfo>;
 begin
   Result := FLayers;
+end;
+
+function TGCodeIndex.GetProperties: TDictionary<string, string>;
+begin
+  Result := FProperties;
 end;
 
 procedure TGCodeIndex.SetFooter(const value: ILayerInfo);
@@ -503,6 +584,22 @@ destructor TLayerInfo.Destroy;
 begin
   FreeAndNil(Tools);
   inherited;
+end;
+
+function TLayerInfo.FindTool(tool: integer): IToolInfo;
+begin
+  Result := nil;
+  for var t in Tools do
+    if tool = t.Tool then
+      Exit(t);
+end;
+
+function TLayerInfo.FindToolIdx(tool: integer): integer;
+begin
+  Result := -1;
+  for var i := 0 to Tools.Count - 1 do
+    if tool = Tools[i].Tool then
+      Exit(i);
 end;
 
 class function TLayerInfo.Make(LayerZ, AX, AY, AZ, AE: extended;

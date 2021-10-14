@@ -47,6 +47,8 @@ begin
           for var layer in index.Layers do
             DumpLayer('Layer ' + Format('%.2f', [layer.Z]), layer, true);
           DumpLayer('Footer', index.Footer, false);
+//          for var kv in index.Properties do
+//            Writeln('  ', kv.Key, ' = ', kv.Value);
         end;
       end;
     end;
