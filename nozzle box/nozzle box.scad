@@ -4,12 +4,12 @@ use <../lib/solids.scad>
 
 // global configuration
 
-make_top = true;
+make_top = false;
 make_bottom = true;
 
-num_nozzles = 5;
-nozzle_names = ["0.25", "0.4", "0.6", "0.4S", "0.6S"];
-num_rows = 4;
+num_nozzles = 6;
+nozzle_names = ["0.25", "0.4", "0.6", "0.4S", "0.6S", "0.8"];
+num_rows = 3;
 
 spacing = 3; // mm
 nozzle_hole_d = 6; // mm
