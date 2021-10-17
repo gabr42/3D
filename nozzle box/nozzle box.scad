@@ -4,8 +4,13 @@ use <../lib/solids.scad>
 
 // global configuration
 
-num_nozzles = 5;
-nozzle_names = ["0.25", "0.4", "0.6", "0.4S", "0.6S"];
+make_top = false;
+make_bottom = true;
+
+num_nozzles = 6;
+nozzle_names = ["0.25", "0.4", "0.6", "0.4S", "0.6S", "0.8"];
+num_rows = 3;
+
 spacing = 3; // mm
 nozzle_hole_d = 6; // mm
 mount_screw_d = 3; // mm
@@ -40,21 +45,23 @@ $fn = $preview ? 20 : 50;
 
 $nut_r = hypoth(nut_d/2, nut_d/4);
 $nozzle_r = max($nut_r + max(nut_slack_top, nut_slack_bottom)/2, nozzle_hole_d/2 + nozzle_hole_slack/2);
-$box_h = $nozzle_r * 2 + spacing * 2;
+$box_h = ($nozzle_r * 2 + spacing) * num_rows + spacing;
 $box_w = ($nozzle_r * 2 + spacing) * num_nozzles - spacing + 2 * (2 * spacing + mount_screw_head_d + mount_hole_slack);
-$first_center = [2 * spacing + mount_screw_head_d + mount_hole_slack + $nozzle_r, $box_h/2, 0];
+$first_center = [2 * spacing + mount_screw_head_d + mount_hole_slack + $nozzle_r, 0, 0];
 $center_dist = [$nozzle_r * 2 + spacing, 0, 0];
 
 echo(str("Making ", $box_w, " x ", $box_h, " box for ", num_nozzles, " nozzles"));
 
 // generate objects
 
-translate([0, 2 * $box_h, 0])
-bottom();
+if (make_bottom)
+  translate([0, 2 * $box_h, 0])
+  bottom();
 
-translate([0, $box_h, top_plate_h])
-rotate(180, [1, 0, 0])
-top();
+if (make_top)
+  translate([0, $box_h, top_plate_h])
+  rotate(180, [1, 0, 0])
+  top();
 
 // objects
 
@@ -112,36 +119,46 @@ module make_nozzle_names () {
 
 module make_nozzle_holes () {
   translate([0, 0, top_plate_h])
-  for (i = [1:num_nozzles]) {
-    translate([0, 0, - top_cover_h - inf])
+  for (j = [1:num_rows])
+  for (i = [1:num_nozzles]) 
+    translate([0, ($nozzle_r * 2 + spacing) * j - $nozzle_r, - top_cover_h - inf])
     translate($first_center + $center_dist * (i-1))
     cylinder(d = nozzle_hole_d + nozzle_hole_slack, h = top_cover_h + 2 * inf);
-  }
 }
 
 module make_nut_holes_top () {
-  for (i = [1:num_nozzles]) {
-    translate([0, 0, - nut_h + top_plate_h - top_cover_h])
+  for (j = [1:num_rows])
+  for (i = [1:num_nozzles]) 
+    translate([0, ($nozzle_r * 2 + spacing) * j - $nozzle_r, - nut_h + top_plate_h - top_cover_h])
     translate($first_center + $center_dist * (i-1))
     cylinder(r = $nut_r + nut_slack_top/2, h = nut_h + inf, $fn = 6);
-  }
 }
 
 module make_nut_holes_bottom () {
   bot_h = top_plate_h - top_cover_h - nut_h;
   if (bot_h < 0)
     translate([0, 0, bot_plate_h])
-    for (i = [1:num_nozzles]) {
-      translate([0, 0, bot_h])
+    for (j = [1:num_rows])
+    for (i = [1:num_nozzles]) 
+      translate([0, ($nozzle_r * 2 + spacing) * j - $nozzle_r, bot_h])
       translate($first_center + $center_dist * (i-1))
       cylinder(r = $nut_r + nut_slack_bottom/2, h = - bot_h + inf, $fn = 6);
-    }
 }
 
 module make_screw_holes_top () {
-  make_screw_hole_top([spacing + mount_screw_head_d/2, $box_h/2, 0])
-  make_screw_hole_top([$box_w - (spacing + mount_screw_head_d/2), $box_h/2, 0])
-  children();
+  left_offs = spacing + mount_screw_head_d/2;
+  if (num_rows == 1) {
+    make_screw_hole_top([left_offs, $box_h/2, 0])
+    make_screw_hole_top([$box_w - left_offs, $box_h/2, 0])
+    children();
+  }
+  else {
+    make_screw_hole_top([left_offs, left_offs, 0])
+    make_screw_hole_top([$box_w - left_offs, left_offs, 0])
+    make_screw_hole_top([left_offs, $box_h - left_offs, 0])
+    make_screw_hole_top([$box_w - left_offs, $box_h - left_offs, 0])
+    children();
+  }
 }
 
 module make_screw_hole_top(position) {
@@ -165,11 +182,11 @@ module make_screw_hole_top(position) {
 }
 
 module make_screw_holes_bottom () {
-  translate([spacing + mount_screw_head_d/2, $box_h/2, 0])
-  make_screw_hole_bottom();
-
-  translate([$box_w - (spacing + mount_screw_head_d/2), $box_h/2, 0])
-  make_screw_hole_bottom();
+  left_offs = spacing + mount_screw_head_d/2;
+  for (j = [1 : (num_rows > 1 ? 2 : 1)]) 
+  for (i = [1:2])
+    translate([left_offs + (i-1)*($box_w - 2*left_offs), (num_rows == 1) ? $box_h/2 : left_offs + (j-1)*($box_h - 2*left_offs), 0])
+    make_screw_hole_bottom();
 }
 
 module make_screw_hole_bottom () {

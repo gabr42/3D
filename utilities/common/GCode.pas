@@ -3,46 +3,70 @@ unit GCode;
 interface
 
 uses
-  System.Classes, System.Generics.Collections;
+  System.SysUtils, System.Classes, System.Generics.Collections;
 
 var
   Null: extended;
+  FormatSettings: TFormatSettings;
 
 type
+  IPosition = interface ['{97279064-C186-4425-AB5E-3D8B0B2E5192}']
+    function GetX: extended;
+    function GetY: extended;
+    function GetZ: extended;
+    function GetE: extended;
+  //
+    property X: extended read GetX;
+    property Y: extended read GetY;
+    property Z: extended read GetZ;
+    property E: extended read GetE;
+  end;
+
   IToolInfo = interface ['{CA91D8F9-2B92-4FBE-A311-5E4A76E3C87B}']
     function GetTool: integer;
     function GetStartPos: int64;
-    function GetLastX: extended;
-    function GetLastE: extended;
+    function GetSize: int64;
+    function GetFirstPosition: IPosition;
+    function GetLastPosition: IPosition;
     //
     property Tool: integer read GetTool;
     property StartPos: int64 read GetStartPos;
-    property LastX: extended read GetLastX;
-    property LastE: extended read GetLastE;
+    property Size: int64 read GetSize;
+    property FirstPosition: IPosition read GetFirstPosition;
+    property LastPosition: IPosition read GetLastPosition;
   end;
 
   ILayerInfo = interface ['{E0A4BDCA-B72A-416A-8A0F-E7E1949C18B3}']
     function GetZ: extended;
     function GetStartPos: int64;
-    function GetLastY: extended;
-    function GetLastZ: extended;
+    function GetSize: int64;
+    function GetFirstPosition: IPosition;
+    function GetLastPosition: IPosition;
     function GetTools: TList<IToolInfo>;
   //
-    property Z: extended read GetZ;
     property StartPos: int64 read GetStartPos;
-    property LastY: extended read GetLastY;
-    property LastZ: extended read GetLastZ;
+    property Size: int64 read GetSize;
+    property Z: extended read GetZ;
+    property FirstPosition: IPosition read GetFirstPosition;
+    property LastPosition: IPosition read GetLastPosition;
     property Tools: TList<IToolInfo> read GetTools;
+    function FindTool(tool: integer): IToolInfo;
+    function FindToolIdx(tool: integer): integer;
   end;
 
   IGCodeIndex = interface ['{D768FE73-3DD7-4DB5-A539-2EB436FCEBEE}']
     function GetHeader: ILayerInfo;
     function GetLayers: TList<ILayerInfo>;
     function GetFooter: ILayerInfo;
+    function GetProperties: TDictionary<string,string>;
   //
+    function FindLayer(z: extended): ILayerInfo;
+    function FindTool(z: extended; tool: integer): IToolInfo;
+    function FindToolIdx(z: extended; tool: integer): integer;
     property Header: ILayerInfo read GetHeader;
     property Layers: TList<ILayerInfo> read GetLayers;
     property Footer: ILayerInfo read GetFooter;
+    property Properties: TDictionary<string,string> read GetProperties;
   end;
 
   TGCodeSection = (secHeader, secObject, secEndcode);
@@ -53,6 +77,8 @@ type
   //
     function AsStream: TStream;
     function AtEnd: boolean;
+    procedure ExtractPositions(const line: AnsiString; var x, y, z, e: extended);
+    function  UpdatePositions(const line: AnsiString; var x, y, z, e: extended): AnsiString;
     function IsComment(const line: AnsiString): boolean;
     function IsEndCode(const line: AnsiString): boolean;
     function IsLayerChange(const line: AnsiString): boolean;
@@ -72,4 +98,7 @@ uses
 
 initialization
   Null := Power(2, -20);
+  FormatSettings := System.SysUtils.FormatSettings;
+  FormatSettings.DecimalSeparator := '.';
+  FormatSettings.ThousandSeparator := ',';
 end.

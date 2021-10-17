@@ -15,6 +15,9 @@
         <Projects Include="sequential\Sequential.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="dumpindex\DumpIndex.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -59,14 +62,23 @@
     <Target Name="Sequential:Make">
         <MSBuild Projects="sequential\Sequential.dproj" Targets="Make"/>
     </Target>
+    <Target Name="DumpIndex">
+        <MSBuild Projects="dumpindex\DumpIndex.dproj"/>
+    </Target>
+    <Target Name="DumpIndex:Clean">
+        <MSBuild Projects="dumpindex\DumpIndex.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DumpIndex:Make">
+        <MSBuild Projects="dumpindex\DumpIndex.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Interleave;Combine;Mirror;Sequential"/>
+        <CallTarget Targets="Interleave;Combine;Mirror;Sequential;DumpIndex"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Interleave:Clean;Combine:Clean;Mirror:Clean;Sequential:Clean"/>
+        <CallTarget Targets="Interleave:Clean;Combine:Clean;Mirror:Clean;Sequential:Clean;DumpIndex:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Interleave:Make;Combine:Make;Mirror:Make;Sequential:Make"/>
+        <CallTarget Targets="Interleave:Make;Combine:Make;Mirror:Make;Sequential:Make;DumpIndex:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

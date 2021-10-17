@@ -46,3 +46,9 @@ utilities/common/__history/
 utilities/interleave/__history/
 
 utilities/interleave/Win32/Debug/
+
+utilities/dumpindex/__history/
+
+utilities/dumpindex/Win32/Debug/
+
+utilities/interleave/test/print.gcode
