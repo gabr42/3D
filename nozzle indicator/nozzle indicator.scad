@@ -29,8 +29,8 @@ hor_spacing = 0.8;
 magnet_slot_d = 8;
 magnet_slot_h = 1;
 
-housing_cutout_distance = label_distance*1.5;
-housing_back_cutoff = label_distance + font_size;
+housing_cutout_distance = label_distance*1.6;
+housing_cutout_size = housing_size/1.7;
 
 connector_d = 8;
 connector_h = 1;
@@ -148,11 +148,8 @@ module housing (render_bottom = true, extend_stubs = false, cylinder_cutout_redu
       connector(connector_h, connector_d);
 
       translate([housing_cutout_distance, 0, housing_top_bottom/2 + 1])
-      cylinder(h = housing_h_net + housing_top_bottom + 2, d = housing_size/1.7, center = true, $fn = 5);            
+      cylinder(h = housing_h_net + housing_top_bottom + 2, d = housing_cutout_size, center = true, $fn = 5);            
     }
-    
-    translate([housing_back_cutoff, -wheel_d/2, -wheel_h*2])
-    cube([wheel_d, wheel_d, wheel_h*4]);
   }
 }
 
