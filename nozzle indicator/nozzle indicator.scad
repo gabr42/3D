@@ -35,7 +35,7 @@ housing_back_cutoff = label_distance + font_size;
 connector_d = 8;
 connector_h = 1;
 connector_d_spacing = 0.4;
-connector_h_spacing = 0.2;
+connector_h_spacing = 0;
 
 $fn = 100;
 
@@ -87,7 +87,7 @@ module wheel () {
   }
 
   translate([0, 0, wheel_h/2])
-  connector(connector_h - connector_h_spacing, connector_d - connector_d_spacing);
+  connector(connector_h - connector_h_spacing + label_height, connector_d - connector_d_spacing);
 }
 
 module labels () {
