@@ -59,7 +59,7 @@ if (render_housing_top || render_housing_bottom) {
     
     if (render_housing_bottom)
       color("lime")
-      housing_bottom(cylinder_cutout_reduction_factor = 1);
+      housing_bottom();
   }
 }
 
@@ -99,11 +99,11 @@ module labels () {
     text(nozzle_names[i-1], size = font_size, halign = "center", font = font_name);
 }
 
-module housing_stubs (h, cylinder_cutout_reduction_factor = 1) {
+module housing_stubs (h) {
   difference () {
     cylinder(h = h, d = housing_size + 2*housing_wall, center = true, $fn = 6);
 
-    cylinder(h = h + 1, d = (wheel_d + hor_spacing) * cylinder_cutout_reduction_factor, center = true);
+    cylinder(h = h + 1, d = (wheel_d + hor_spacing), center = true);
   }
 }  
 
@@ -122,26 +122,16 @@ module housing_top_bottom (make_magnet_hole = false) {
   }    
 }
 
-module housing (render_bottom = true, extend_stubs = false, cylinder_cutout_reduction_factor = 1) {  
+module housing_top () {
   difference () {  
     difference () {
       rotate(30)
       union () {
-        housing_stubs(housing_h_net, cylinder_cutout_reduction_factor);
-        
-        if (extend_stubs)
-          translate([0, 0,  - housing_h_net/2 - housing_top_bottom/2])
-          intersection () {
-            housing_stubs(housing_top_bottom);
-            
-            translate([0, 0, housing_top_bottom/4])
-            housing_top_bottom();
-          }
-          
-        for (side = [(render_bottom ? 0 : 1):1])
-          mirror(v=[0,0,side])
-          translate([0, 0, - housing_h_net/2 - housing_top_bottom/4]) 
-          housing_top_bottom();
+        housing_stubs(housing_h_net);
+                  
+        mirror(v=[0,0,1])
+        translate([0, 0, - housing_h_net/2 - housing_top_bottom/4]) 
+        housing_top_bottom();
       }
 
       translate([0, 0, housing_h_net/2 - 0.01]) 
@@ -153,10 +143,6 @@ module housing (render_bottom = true, extend_stubs = false, cylinder_cutout_redu
   }
 }
 
-module housing_top () {
-  housing(false, true);
-}
-
 module connector (connector_h, connector_d) {
   cylinder(h = connector_h/2, d = connector_d);
 
@@ -164,14 +150,10 @@ module connector (connector_h, connector_d) {
   cylinder(h = connector_h/2, d1 = connector_d, d2 = connector_d - connector_h);  
 }
 
-module housing_bottom (cylinder_cutout_reduction_factor = 1) {
+module housing_bottom () {
   translate([0, 0, - housing_h_net/2 - housing_top_bottom/4]) 
   rotate(30) {
-    difference () {
-      housing_top_bottom(make_magnet_hole = make_magnet_slot);
-      
-      housing_stubs(housing_top_bottom + 2, cylinder_cutout_reduction_factor);
-    }
+    housing_top_bottom(make_magnet_hole = make_magnet_slot);
     
     translate([0, 0, housing_top_bottom/4]) 
     connector(connector_h - connector_h_spacing, connector_d - connector_d_spacing);
