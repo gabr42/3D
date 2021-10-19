@@ -1,62 +1,53 @@
-height = 5;
 length = 100;
-extrusion = 0.45;
-layer = 0.25;
+extrusion = 0.4;
+layer = 0.2;
+width_rep = 16;
+width = width_rep*extrusion;
 
 //print_material = ["RED", "GREEN"];
-//print_material = ["RED"];
-print_material = ["GREEN"];
+print_material = ["RED"];
+//print_material = ["GREEN"];
 
-//translate([0, 4, 0]) single_material();
-//translate([0, 2, 0]) multi_material_layered();
-multi_material_mixed();
+//translate([0, 10, 0]) single_material();
+//translate([0, 0, 0])  multi_material_layered();
+translate([0, -10, 0]) multi_material_mixed();
 
 module single_material () {
   if (should_print("RED"))
     color("red")
-    cube([length, 3*extrusion, height]);
+    cube([length, width, 3*extrusion]);
 }
 
 module multi_material_layered() {
   if (should_print("RED"))
-    color("red")
-    two(height);
+    color("red") 
+    for (i=[0:2:2])
+      translate([0, 0, i*extrusion])
+      cube([length, width, extrusion]);
   
   if (should_print("GREEN"))
     color("green")
-    one(height);
+    translate([0, 0, extrusion])
+    cube([length, width, extrusion]);
 }
 
 module multi_material_mixed () {
-  for (lay = [0:height/layer/2-1]) 
-    translate([0, 0, lay*layer*2]) {
-      if (should_print("RED"))
-      color("red")
-      {    
-        two();
-        translate([0, 0, layer])
-        one();
-      }
-
-      if (should_print("GREEN"))
-      color("green") 
-      {
-        one();    
-        translate([0, 0, layer])
-        two();
-      }
-    }
-}
-
-module one (height = layer) {
-  translate([0, extrusion, 0])
-  cube([length, extrusion, height]);
-}
-
-module two (height = layer) {
-  for (i = [0:1])
-    translate([0, 2*extrusion*i, 0])
-    cube([length, extrusion, height]);
+  intersection () {
+    for (z=[1:3])
+      translate([0, (z-1)*extrusion, (z-1)*extrusion])
+      for (y=[0:width_rep/4])
+        translate([0, (y-1)*4*extrusion, 0]) {
+          if (should_print("RED"))
+            color("RED")
+            cube([length, 2*extrusion, extrusion]);
+          if (should_print("GREEN"))
+            color("GREEN")
+            translate([0, 2*extrusion, 0])
+            cube([length, 2*extrusion, extrusion]);    
+        }
+        
+    cube([length, width, 3*extrusion]);    
+  }
 }
 
 function should_print(part) =
