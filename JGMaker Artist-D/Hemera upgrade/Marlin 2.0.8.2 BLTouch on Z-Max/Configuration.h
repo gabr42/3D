@@ -752,8 +752,8 @@
  */
 #define X_DRIVER_TYPE  TMC2209 // Gp: UART
 #define Y_DRIVER_TYPE  TMC2209 // Gp: UART
-#define Z_DRIVER_TYPE  TMC2209_STANDALONE // Gp: UART
-#define X2_DRIVER_TYPE TMC2209// Gp: UART
+#define Z_DRIVER_TYPE  TMC2209 // Gp: UART
+#define X2_DRIVER_TYPE TMC2209 // Gp: UART
 //#define Y2_DRIVER_TYPE A4988
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
@@ -1063,7 +1063,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { 3.3, -22.2, -3 } // **IMP-BLTouch // Gp
+#define NOZZLE_TO_PROBE_OFFSET { 3.3, -22.2, -3.25 } // **IMP-BLTouch // Gp
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1114,7 +1114,7 @@
  * A total of 2 does fast/slow probes with a weighted average.
  * A total of 3 or more adds more slow probes, taking the average.
  */
-//#define MULTIPLE_PROBING 2
+#define MULTIPLE_PROBING 2
 //#define EXTRA_PROBING    1
 
 /**
@@ -1714,9 +1714,9 @@
 // Preheat Constants - Up to 5 are supported without changes
 //
 #define PREHEAT_1_LABEL       "PLA"
-#define PREHEAT_1_TEMP_HOTEND 180
+#define PREHEAT_1_TEMP_HOTEND 210
 #define PREHEAT_1_TEMP_BED     60
-#define PREHEAT_1_TEMP_CHAMBER 35
+#define PREHEAT_1_TEMP_CHAMBER 20
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
 #define PREHEAT_2_LABEL       "PETG"
@@ -1734,7 +1734,7 @@
 #define PREHEAT_4_LABEL       "ABS"
 #define PREHEAT_4_TEMP_HOTEND 240
 #define PREHEAT_4_TEMP_BED    100
-#define PREHEAT_4_TEMP_CHAMBER 35
+#define PREHEAT_4_TEMP_CHAMBER 40
 #define PREHEAT_4_FAN_SPEED     0 // Value from 0 to 255
 
 /**
@@ -2462,7 +2462,7 @@
 //=============================================================================
 //
 // FSMC display (MKS Robin, Alfawise U20, JGAurora A5S, REXYZ A1, etc.)
-// **IMP-Trying copy from old JG release 
+// **IMP-Trying copy from old JG release
 //#define FSMC_GRAPHICAL_TFT //**IMP-JG Mod
 
 /**
@@ -2585,7 +2585,7 @@
  *   TFT_ROTATE_270, TFT_ROTATE_270_MIRROR_X, TFT_ROTATE_270_MIRROR_Y,
  *   TFT_MIRROR_X, TFT_MIRROR_Y, TFT_NO_ROTATION
  */
-#define TFT_ROTATION TFT_MIRROR_X //IMP-Touchscreen
+#define TFT_ROTATION TFT_NO_ROTATION // Gp: No longer needed now that reset pin is correctly set
 
 //=============================================================================
 //============================  Other Controllers  ============================
@@ -2612,14 +2612,14 @@
   //#define TOUCH_OFFSET_X        -43
   //#define TOUCH_OFFSET_Y        257
   //#define TOUCH_ORIENTATION TOUCH_LANDSCAPE
-  
+
   //**IMP-Display settings (reset with M995)
   #define TOUCH_CALIBRATION_X            17140
   #define TOUCH_CALIBRATION_Y           -12115
   #define TOUCH_OFFSET_X                   -32
   #define TOUCH_OFFSET_Y                   342
   #define TOUCH_ORIENTATION    TOUCH_LANDSCAPE
-  
+
   #if BOTH(TOUCH_SCREEN_CALIBRATION, EEPROM_SETTINGS)
     #define TOUCH_CALIBRATION_AUTO_SAVE // Auto save successful calibration values to EEPROM
   #endif
