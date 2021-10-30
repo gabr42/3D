@@ -1,16 +1,24 @@
+// rendering options - select parts to be generated
+
 render_button_base = true;
 render_button_labels = true;
 
 render_housing_top = true;
 render_housing_bottom = true;
+
+// build options - turn features on and off
   
 make_magnet_slot = true;
+make_corner_pillars = true;
+
+nozzle_names = ["0.25", "0.4", "0.4S", "0.6", "0.6S", "0.8"];
+
+// configuration options - tune parameters
 
 wheel_d = 40;
 wheel_h = 5;
 wheel_bevel = 1;
 
-nozzle_names = ["0.25", "0.4", "0.4S", "0.6", "0.6S", "0.8"];
 label_height = 1;
 label_distance = wheel_d/4;
 
