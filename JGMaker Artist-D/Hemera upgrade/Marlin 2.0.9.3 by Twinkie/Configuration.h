@@ -1976,8 +1976,8 @@
 
   // Specify positions for each tool as { { X, Y, Z }, { X, Y, Z } }
   // Dual hotend system may use { {  -20, (Y_BED_SIZE / 2), (Z_MIN_POS + 1) },  {  420, (Y_BED_SIZE / 2), (Z_MIN_POS + 1) }}
-  #define NOZZLE_CLEAN_START_POINT { { -52.5, 30, (Z_MIN_POS + 1) }, { 369, 30, (Z_MIN_POS + 1) } }
-  #define NOZZLE_CLEAN_END_POINT   { { -42.5, 60, (Z_MIN_POS + 1) }, { 359, 30, (Z_MIN_POS + 1) } }
+  #define NOZZLE_CLEAN_START_POINT { { -40, 30, (Z_MIN_POS + 1) }, { 339, 30, (Z_MIN_POS + 1) } }
+  #define NOZZLE_CLEAN_END_POINT   { { -25, 30, (Z_MIN_POS + 1) }, { 354, 30, (Z_MIN_POS + 1) } }
 
   // Circular pattern radius
   #define NOZZLE_CLEAN_CIRCLE_RADIUS 6.5
