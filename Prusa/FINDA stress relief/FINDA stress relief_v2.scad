@@ -1,11 +1,13 @@
 $fn = 50;
 
+wrap_d = 5.9;
+
 difference () {
   union () {
     cylinder(d=8.5, h=8);
     
     translate([0, 0, 8])
-    cylinder(d1=8.5, d2=5.5, h=3);
+    cylinder(d1=8.5, d2=wrap_d + .5, h=3);
   }
   
   union () {
@@ -21,7 +23,7 @@ difference () {
 
 difference () {
   translate([0, 0, 11])
-  cylinder(d1=5.5, d2=5.0, h=5);
+  cylinder(d1=wrap_d + .5, d2=wrap_d, h=5);
 
   translate([0, 0, 10.9])
   cylinder(d=4, h=5.2);
@@ -39,7 +41,7 @@ a = 780;
 translate([0, 0, 16]) {
   difference () {
     difference () {
-      cylinder(d=5, h=a*dh);
+      cylinder(d=wrap_d, h=a*dh);
       
       translate([0, 0, -1])
       cylinder(d=4, h=a*dh + 2);
