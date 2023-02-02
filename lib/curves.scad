@@ -38,14 +38,15 @@ function make_segment_arc(center, radius, from_angle, to_angle) =
 
 // Multi-segment 2D ellipse segment lying on the XY plane.
 
-function make_segment_ellipse(center, radius, eccentricity = 0 /* circle */, from_angle = 0, to_angle = 360) = 
+function make_segment_ellipse(center, radius, eccentricity = 0 /* circle */, from_angle = 0, to_angle = 360, calc_larger_radius = true) = 
   let (segments = is_undef($fa) 
                     ? $fn > 0 ? $fn : 50
                     : abs(round((to_angle - from_angle) / $fa)),
         da = (to_angle - from_angle) / segments)
   [for (i = [0:segments])
     let (a = from_angle + i * da,
-         r = radius / sqrt(1 - pow(eccentricity * cos(a), 2)))
+         f = sqrt(1 - pow(eccentricity * cos(a), 2)),
+         r = calc_larger_radius ? (radius / f) : (radius * f))
 //         r = r2 * radius / sqrt(pow(radius * cos(a), 2) + pow(r2 * sin(a), 2)))
     [center.x + cos(a) * r, center.y + sin(a) * r]];
   
