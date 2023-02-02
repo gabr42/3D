@@ -1,0 +1,152 @@
+// rendering options - select parts to be generated
+
+render_button_base = true;
+render_button_labels = true;
+
+render_housing_top = true;
+render_housing_bottom = true;
+
+// development options
+
+$simplified = $preview; // remove labels and wheel indentations
+$exploded = true;
+$explode_offset = 15;
+
+// build options - turn features on and off
+  
+make_corner_pillars = true;
+
+nozzle_names = ["0.25", "0.4", "0.4S", "0.6", "0.6S", "0.8"];
+
+// configuration options - tune parameters
+
+wheel_d = 40;
+wheel_h = 5;
+wheel_bevel = 1;
+
+label_height = 1;
+label_distance = wheel_d/4;
+
+//use <BebasNeue-Regular.ttf>
+//font_name = "Bebas Neue";
+//http://bebasneue.com/
+use <KENYC___.TTF>
+font_name = "Kenyan Coffee";
+//https://typodermicfonts.com/freshly-brewed-kenyan-coffee/
+
+font_size = 6;
+
+housing_wall = 5;
+housing_top_bottom = 1.6;
+housing_size = wheel_d - housing_wall*1.25;
+vert_spacing = 0.4;
+hor_spacing = 0.8;
+
+housing_cutout_distance = label_distance*1.6;
+housing_cutout_size = housing_size/1.7;
+
+connector_d = 8;
+connector_pin_d = 4;
+connector_spacing = 0.4;
+
+$fn = 200;
+
+//
+
+housing_h_net = wheel_h + label_height + vert_spacing;
+
+if (render_button_base)
+  wheel();
+  
+if (render_button_labels && !$simplified)
+  color("red")
+  labels();
+
+if (render_housing_top || render_housing_bottom) {
+  translate([0, 0, label_height/2])
+  rotate(90) {
+    if (render_housing_top)
+      color("aqua")
+      translate([0, 0, $exploded ? $explode_offset : 0])
+      housing_top();
+    
+    if (render_housing_bottom)
+      color("lime")
+      translate([0, 0, $exploded ? -$explode_offset : 0])
+      housing_bottom();
+  }
+}
+
+//
+
+module wheel () {
+  difference () {
+    union () {
+      cylinder(h = wheel_h - 2*wheel_bevel, d = wheel_d, center = true);
+      
+      for (side = [0:1])
+        mirror(v=[0,0,side])
+        translate([0, 0, (wheel_h - wheel_bevel)/2])
+        cylinder(h = wheel_bevel, d2 = wheel_d - 2 * wheel_bevel, d1 = wheel_d, center = true);
+    }
+
+    if (!$simplified)  
+    for (a=[0:20:359]) {
+      rotate(a)
+      translate([wheel_d/2, 0, 0])
+      cylinder(h = wheel_h + 2, d = wheel_d/10, center = true);
+    }
+  }
+}
+
+module labels () {
+  num_labels = len(nozzle_names);
+  for (i=[1:num_labels]) 
+    rotate(-360/num_labels*(i-1))
+    translate([0, label_distance, wheel_h/2])
+    linear_extrude(label_height)
+    text(nozzle_names[i-1], size = font_size, halign = "center", font = font_name);
+}
+
+module housing_stubs (h) {
+  difference () {
+    cylinder(h = h, d = housing_size + 2*housing_wall, center = true, $fn = 6);
+
+    cylinder(h = h + 1, d = (wheel_d + hor_spacing), center = true);
+  }
+}  
+
+module housing_top_bottom () {
+  difference () {
+    union () {
+      cylinder(h = housing_top_bottom/2, d = housing_size + 2*housing_wall, center = true, $fn = 6);
+      
+      translate([0, 0, -housing_top_bottom/2])
+      cylinder(h = housing_top_bottom/2, d2 = housing_size + 2*housing_wall, d1 = housing_size + 2*housing_wall - housing_top_bottom/2, center = true, $fn = 6);
+    }
+  }    
+}
+
+module housing_top () {
+  difference () {  
+    difference () {
+      rotate(30)
+      union () {
+        housing_stubs(housing_h_net);
+                  
+        mirror(v=[0,0,1])
+        translate([0, 0, - housing_h_net/2 - housing_top_bottom/4]) 
+        housing_top_bottom();
+      }
+
+      translate([housing_cutout_distance, 0, housing_top_bottom/2 + 1])
+      cylinder(h = housing_h_net + housing_top_bottom + 2, d = housing_cutout_size, center = true, $fn = 5);            
+    }
+  }
+}
+
+module housing_bottom () {
+  translate([0, 0, - housing_h_net/2 - housing_top_bottom/4]) 
+  rotate(30)
+  housing_top_bottom();
+}
