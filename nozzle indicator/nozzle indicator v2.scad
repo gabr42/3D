@@ -27,11 +27,12 @@ wheel_bevel = 1;
 label_height = 1;
 label_distance = wheel_d/4;
 
-//use <BebasNeue-Regular.ttf>
-//font_name = "Bebas Neue";
+use <BebasNeue-Regular.ttf>
+font_name = "Bebas Neue";
 //http://bebasneue.com/
-use <KENYC___.TTF>
-font_name = "Kenyan Coffee";
+
+//use <KENYC___.TTF>
+//font_name = "Kenyan Coffee";
 //https://typodermicfonts.com/freshly-brewed-kenyan-coffee/
 
 font_size = 6;
@@ -51,7 +52,7 @@ connector_spacing = 0.4;
 
 $fn = 200;
 
-//
+// parts
 
 housing_h_net = wheel_h + label_height + vert_spacing;
 
@@ -73,11 +74,15 @@ if (render_housing_top || render_housing_bottom) {
     if (render_housing_bottom)
       color("lime")
       translate([0, 0, $exploded ? -$explode_offset : 0])
-      housing_bottom();
+      difference () {        
+        housing_bottom();
+        rotate(30)
+        housing_stubs(housing_h_net + housing_top_bottom, connector_spacing);
+      }
   }
 }
 
-//
+// code
 
 module wheel () {
   difference () {
@@ -96,6 +101,9 @@ module wheel () {
       translate([wheel_d/2, 0, 0])
       cylinder(h = wheel_h + 2, d = wheel_d/10, center = true);
     }
+    
+    translate([0, 0, -wheel_h/2-wheel_bevel-1])
+    cylinder(d = connector_d + connector_spacing, h = wheel_h+2*wheel_bevel+2);
   }
 }
 
@@ -108,11 +116,11 @@ module labels () {
     text(nozzle_names[i-1], size = font_size, halign = "center", font = font_name);
 }
 
-module housing_stubs (h) {
+module housing_stubs (h, spacing = 0) {
   difference () {
-    cylinder(h = h, d = housing_size + 2*housing_wall, center = true, $fn = 6);
+    cylinder(h = h, d = housing_size + 2*housing_wall + spacing, center = true, $fn = 6);
 
-    cylinder(h = h + 1, d = (wheel_d + hor_spacing), center = true);
+    cylinder(h = h + 1, d = (wheel_d + hor_spacing - spacing), center = true);
   }
 }  
 
@@ -132,21 +140,34 @@ module housing_top () {
     difference () {
       rotate(30)
       union () {
-        housing_stubs(housing_h_net);
+        housing_stubs(housing_h_net + housing_top_bottom);
                   
         mirror(v=[0,0,1])
-        translate([0, 0, - housing_h_net/2 - housing_top_bottom/4]) 
-        housing_top_bottom();
+        translate([0, 0, - housing_h_net/2]) {
+          translate([0, 0, - housing_top_bottom/4])
+          housing_top_bottom();
+          
+          cylinder(d = connector_pin_d, h = housing_h_net);
+        }
       }
 
-      translate([housing_cutout_distance, 0, housing_top_bottom/2 + 1])
-      cylinder(h = housing_h_net + housing_top_bottom + 2, d = housing_cutout_size, center = true, $fn = 5);            
+      translate([housing_cutout_distance, 0, housing_top_bottom/2 + 0.5])
+      cylinder(h = housing_h_net + housing_top_bottom*2 + 2, d = housing_cutout_size, center = true, $fn = 5); 
     }
   }
 }
 
 module housing_bottom () {
-  translate([0, 0, - housing_h_net/2 - housing_top_bottom/4]) 
-  rotate(30)
-  housing_top_bottom();
+  translate([0, 0, - housing_h_net/2]) {
+    translate([0, 0, - housing_top_bottom/4]) 
+    rotate(30)
+    housing_top_bottom();
+ 
+    difference () {   
+      cylinder(d = connector_d, h = housing_h_net);
+      
+      translate([0, 0, -1])
+      cylinder(d = connector_pin_d + connector_spacing, h = housing_h_net + housing_top_bottom + 2);
+    }
+  }
 }
