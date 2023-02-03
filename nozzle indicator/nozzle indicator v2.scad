@@ -6,16 +6,17 @@ render_button_labels = true;
 render_housing_top = true;
 render_housing_bottom = true;
 
-// development options
+// view/placement options
+
+// defaults: exploded simplified preview; print-ready render
 
 $simplified = $preview; // remove labels and wheel indentations
 $exploded = true;
 $explode_offset = 15;
+$print_ready = !$preview; // printing layout, overrides $exploded
 
 // build options - turn features on and off
   
-make_corner_pillars = true;
-
 nozzle_names = ["0.25", "0.4", "0.4S", "0.6", "0.6S", "0.8"];
 
 // configuration options - tune parameters
@@ -28,11 +29,12 @@ label_height = 1;
 label_distance = wheel_d/4;
 
 use <BebasNeue-Regular.ttf>
-font_name = "Bebas Neue";
+//font_name = "Bebas Neue";
 //http://bebasneue.com/
 
-//use <KENYC___.TTF>
-//font_name = "Kenyan Coffee";
+// alternative
+use <KENYC___.TTF>
+font_name = "Kenyan Coffee";
 //https://typodermicfonts.com/freshly-brewed-kenyan-coffee/
 
 font_size = 6;
@@ -44,7 +46,7 @@ vert_spacing = 0.4;
 hor_spacing = 0.8;
 
 housing_cutout_distance = label_distance*1.6;
-housing_cutout_size = housing_size/1.7;
+housing_cutout_size = housing_size/1.8;
 
 connector_d = 8;
 connector_pin_d = 4;
@@ -54,35 +56,47 @@ $fn = 200;
 
 // parts
 
+$real_explode_offset = ($exploded && !$print_ready) ? $explode_offset : 0;
+
 housing_h_net = wheel_h + label_height + vert_spacing;
 
 if (render_button_base)
+  translate([0, 0, $print_ready ? wheel_h/2 : 0])
   wheel();
   
 if (render_button_labels && !$simplified)
   color("red")
+  translate([0, 0, $print_ready ? wheel_h/2 : 0])
   labels();
 
-if (render_housing_top || render_housing_bottom) {
-  translate([0, 0, label_height/2])
+if (render_housing_top ) 
+  translate([$print_ready ? wheel_d * 1.5 : 0, 0, $print_ready ? housing_h_net - housing_top_bottom : label_height/2])
+  mirror(v = [0, 0, $print_ready ? 1 : 0])
   rotate(90) {
-    if (render_housing_top)
       color("aqua")
-      translate([0, 0, $exploded ? $explode_offset : 0])
+      translate([0, 0, $real_explode_offset])
       housing_top();
-    
-    if (render_housing_bottom)
-      color("lime")
-      translate([0, 0, $exploded ? -$explode_offset : 0])
-      difference () {        
-        housing_bottom();
-        rotate(30)
-        housing_stubs(housing_h_net + housing_top_bottom, connector_spacing);
-      }
   }
-}
+  
+if (render_housing_bottom) 
+  translate([$print_ready ? -wheel_d * 1.5 : 0, 0, $print_ready ? housing_h_net - housing_top_bottom : label_height/2]) {
+    color("lime")
+    translate([0, 0, -$real_explode_offset])
+    difference () {        
+      housing_bottom();
+      rotate(30)
+      housing_stubs(housing_h_net + housing_top_bottom, connector_spacing);
+    }
+  }
 
 // code
+
+module chamfered_cylinder(d, r, h, chamfer) {
+  cylinder(h = h - chamfer, d = d); 
+  
+  translate([0, 0, h - chamfer])
+  cylinder(h = chamfer, d1 = d, d2 = d - chamfer*2);
+}
 
 module wheel () {
   difference () {
@@ -120,7 +134,8 @@ module housing_stubs (h, spacing = 0) {
   difference () {
     cylinder(h = h, d = housing_size + 2*housing_wall + spacing, center = true, $fn = 6);
 
-    cylinder(h = h + 1, d = (wheel_d + hor_spacing - spacing), center = true);
+    rotate(30)
+    cylinder(h = h + 1, d = (wheel_d + hor_spacing - spacing) * 2 / sqrt(3), center = true, $fn = 6);
   }
 }  
 
@@ -147,7 +162,7 @@ module housing_top () {
           translate([0, 0, - housing_top_bottom/4])
           housing_top_bottom();
           
-          cylinder(d = connector_pin_d, h = housing_h_net);
+          chamfered_cylinder(d = connector_pin_d, h = housing_h_net, chamfer = 0.5);
         }
       }
 
@@ -158,13 +173,14 @@ module housing_top () {
 }
 
 module housing_bottom () {
+  union ()
   translate([0, 0, - housing_h_net/2]) {
     translate([0, 0, - housing_top_bottom/4]) 
     rotate(30)
     housing_top_bottom();
  
     difference () {   
-      cylinder(d = connector_d, h = housing_h_net);
+      chamfered_cylinder(d = connector_d, h = housing_h_net, chamfer = 0.5);
       
       translate([0, 0, -1])
       cylinder(d = connector_pin_d + connector_spacing, h = housing_h_net + housing_top_bottom + 2);
