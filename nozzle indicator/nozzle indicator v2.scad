@@ -72,16 +72,17 @@ if (render_button_labels && !$simplified)
 if (render_housing_top ) 
   translate([$print_ready ? wheel_d * 1.5 : 0, 0, $print_ready ? housing_h_net - housing_top_bottom : label_height/2])
   mirror(v = [0, 0, $print_ready ? 1 : 0])
-  rotate(90) {
-      color("aqua")
-      translate([0, 0, $real_explode_offset])
-      housing_top();
-  }
+  rotate(90) 
+  color("aqua")
+  translate([0, 0, $real_explode_offset])
+  housing_top();
+ 
   
 if (render_housing_bottom) 
   translate([$print_ready ? -wheel_d * 1.5 : 0, 0, $print_ready ? housing_h_net - housing_top_bottom : label_height/2]) {
     color("lime")
     translate([0, 0, -$real_explode_offset])
+    rotate(90)
     difference () {        
       housing_bottom();
       rotate(30)
