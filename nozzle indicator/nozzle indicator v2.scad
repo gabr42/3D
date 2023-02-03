@@ -1,9 +1,9 @@
 // rendering options - select parts to be generated
 
-render_button_base = true;
-render_button_labels = true;
+render_button_base = false;
+render_button_labels = false;
 
-render_housing_top = true;
+render_housing_top = false;
 render_housing_bottom = true;
 
 // view/placement options
@@ -92,11 +92,13 @@ if (render_housing_bottom)
 
 // code
 
-module chamfered_cylinder(d, r, h, chamfer) {
-  cylinder(h = h - chamfer, d = d); 
+module chamfered_cylinder(d, r, h, chamfer, center = false) {
+  translate([0, 0, center ? - h/2 : 0]) {
+    cylinder(h = h - chamfer, d = d); 
   
-  translate([0, 0, h - chamfer])
-  cylinder(h = chamfer, d1 = d, d2 = d - chamfer*2);
+    translate([0, 0, h - chamfer - 0.001 ])
+    cylinder(h = chamfer + 0.001, d1 = d, d2 = d - chamfer*2);
+  }
 }
 
 module wheel () {
@@ -136,7 +138,8 @@ module housing_stubs (h, spacing = 0) {
     cylinder(h = h, d = housing_size + 2*housing_wall + spacing, center = true, $fn = 6);
 
     rotate(30)
-    cylinder(h = h + 1, d = (wheel_d + hor_spacing - spacing) * 2 / sqrt(3), center = true, $fn = 6);
+    translate([0, 0, -housing_top_bottom])
+    chamfered_cylinder(h = h + 1, d = (wheel_d + hor_spacing - spacing) * 2 / sqrt(3), center = true, $fn = 6, chamfer = 1);
   }
 }  
 
@@ -181,7 +184,7 @@ module housing_bottom () {
     housing_top_bottom();
  
     difference () {   
-      chamfered_cylinder(d = connector_d, h = housing_h_net, chamfer = 0.5);
+      chamfered_cylinder(d = connector_d, h = housing_h_net, chamfer = 1);
       
       translate([0, 0, -1])
       cylinder(d = connector_pin_d + connector_spacing, h = housing_h_net + housing_top_bottom + 2);
