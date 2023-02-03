@@ -1,9 +1,9 @@
 // rendering options - select parts to be generated
 
-render_button_base = false;
-render_button_labels = false;
+render_button_base = true;
+render_button_labels = true;
 
-render_housing_top = false;
+render_housing_top = true;
 render_housing_bottom = true;
 
 // view/placement options
@@ -11,7 +11,7 @@ render_housing_bottom = true;
 // defaults: exploded simplified preview; print-ready render
 
 $simplified = $preview; // remove wheel indentations
-$exploded = true;
+$exploded = false;
 $explode_offset = 15;
 $print_ready = !$preview; // printing layout, overrides $exploded
 
@@ -166,7 +166,7 @@ module housing_top () {
           translate([0, 0, - housing_top_bottom/4])
           housing_top_bottom();
           
-          chamfered_cylinder(d = connector_pin_d, h = housing_h_net, chamfer = 0.5);
+          chamfered_cylinder(d = connector_pin_d, h = housing_h_net - vert_spacing/2, chamfer = 0.5);
         }
       }
 
@@ -177,14 +177,14 @@ module housing_top () {
 }
 
 module housing_bottom () {
-  union ()
-  translate([0, 0, - housing_h_net/2]) {
+  translate([0, 0, - housing_h_net/2]) 
+  union () {
     translate([0, 0, - housing_top_bottom/4]) 
     rotate(30)
     housing_top_bottom();
  
-    difference () {   
-      chamfered_cylinder(d = connector_d, h = housing_h_net, chamfer = 1);
+    difference () {  
+      chamfered_cylinder(d = connector_d, h = housing_h_net - vert_spacing, chamfer = 0.75);
       
       translate([0, 0, -1])
       cylinder(d = connector_pin_d + connector_spacing, h = housing_h_net + housing_top_bottom + 2);
