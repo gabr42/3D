@@ -10,7 +10,7 @@ render_housing_bottom = true;
 
 // defaults: exploded simplified preview; print-ready render
 
-$simplified = $preview; // remove labels and wheel indentations
+$simplified = $preview; // remove wheel indentations
 $exploded = true;
 $explode_offset = 15;
 $print_ready = !$preview; // printing layout, overrides $exploded
@@ -29,12 +29,12 @@ label_height = 1;
 label_distance = wheel_d/4;
 
 use <BebasNeue-Regular.ttf>
-//font_name = "Bebas Neue";
+font_name = "Bebas Neue";
 //http://bebasneue.com/
 
 // alternative
-use <KENYC___.TTF>
-font_name = "Kenyan Coffee";
+//use <KENYC___.TTF>
+//font_name = "Kenyan Coffee";
 //https://typodermicfonts.com/freshly-brewed-kenyan-coffee/
 
 font_size = 6;
@@ -64,7 +64,7 @@ if (render_button_base)
   translate([0, 0, $print_ready ? wheel_h/2 : 0])
   wheel();
   
-if (render_button_labels && !$simplified)
+if (render_button_labels)
   color("red")
   translate([0, 0, $print_ready ? wheel_h/2 : 0])
   labels();
