@@ -11,7 +11,7 @@ render_housing_bottom = true;
 // defaults: exploded simplified preview; print-ready render
 
 $simplified = $preview; // remove wheel indentations
-$exploded = false;
+$exploded = true;
 $explode_offset = 15;
 $print_ready = !$preview; // printing layout, overrides $exploded
 
