@@ -1,7 +1,7 @@
 // rendering options - select parts to be generated
 
-render_button_base = true;
-render_button_labels = true;
+render_wheel_base = true;
+render_wheel_labels = true;
 
 render_housing_top = true;
 render_housing_bottom = true;
@@ -17,8 +17,7 @@ $print_ready = !$preview; // printing layout, overrides $exploded
 
 // build options - turn features on and off
   
-//nozzle_names = ["0.25", "0.4", "0.4S", "0.6", "0.6S", "0.8"];
-nozzle_names = ["2.5", "4", "4 S", "6", "6 S", "8"];
+nozzle_names = [".25", ".4", ".4 S", ".6", ".6 S", ".8"];
 
 // configuration options - tune parameters
 
@@ -29,13 +28,13 @@ wheel_bevel = 1;
 label_height = 1;
 label_distance = wheel_d/4;
 
-//use <BebasNeue-Regular.ttf>
-//font_name = "Bebas Neue";
+use <BebasNeue-Regular.ttf>
+font_name = "Bebas Neue";
 //http://bebasneue.com/
 
 // alternative
-use <KENYC___.TTF>
-font_name = "Kenyan Coffee";
+//use <KENYC___.TTF>
+//font_name = "Kenyan Coffee";
 //https://typodermicfonts.com/freshly-brewed-kenyan-coffee/
 
 font_size = 6;
@@ -62,11 +61,11 @@ $real_explode_offset = ($exploded && !$print_ready) ? $explode_offset : 0;
 
 housing_h_net = wheel_h + label_height + vert_spacing;
 
-if (render_button_base)
+if (render_wheel_base)
   translate([0, 0, $print_ready ? wheel_h/2 : 0])
   wheel();
   
-if (render_button_labels)
+if (render_wheel_labels)
   color("red")
   translate([0, 0, $print_ready ? wheel_h/2 : 0])
   labels();
@@ -187,19 +186,25 @@ module housing_top () {
 
 module housing_bottom () {
   translate([0, 0, - housing_h_net/2]) 
-  union () {
-    translate([0, 0, - housing_top_bottom/4]) 
-    rotate(30)
-    housing_top_bottom();
- 
-    difference () {  
-      cylinder(d = connector_d, h = housing_h_net - vert_spacing);
-           
-      translate([0, 0, -1])
-      cylinder(d = connector_pin_d + connector_spacing, h = housing_h_net + housing_top_bottom + 2);
+  difference () {
+    union () {
+      translate([0, 0, - housing_top_bottom/4]) 
+      rotate(30)
+      housing_top_bottom();
+   
+      difference () {  
+        cylinder(d = connector_d, h = housing_h_net - vert_spacing);
+             
+        translate([0, 0, -1])
+        cylinder(d = connector_pin_d + connector_spacing, h = housing_h_net + housing_top_bottom + 2);
+      }
+      
+      translate([connector_d/2, 0, 0])
+      cylinder(r = connector_bump_r, h = housing_h_net - vert_spacing);   
     }
     
-    translate([connector_d/2, 0, 0])
-    cylinder(r = connector_bump_r, h = housing_h_net - vert_spacing);   
+    translate([(housing_size/2 + 2*housing_wall)/sqrt(2), 0, -housing_top_bottom-1])
+    rotate(180) 
+    cylinder(d = 5, h = housing_top_bottom*2 + 2, $fn=3);
   }
 }
