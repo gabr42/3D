@@ -51,7 +51,7 @@ housing_cutout_size = housing_size/1.8;
 connector_d = 8;
 connector_pin_d = 4;
 connector_spacing = 0.2;
-connector_bump_r = 1.25;
+connector_bump_r = 1;
 
 $fn = 200;
 
