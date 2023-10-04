@@ -1,0 +1,1 @@
+This is a small redesign (just the modified files) of the Trident Internal Spool Holder (https://mods.vorondesign.com/detail/Sr7Klpio9kI9V5uvbtuA) for M3 T-nuts.
