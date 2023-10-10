@@ -1,5 +1,5 @@
 # HueForge .hfp to PrusaSlicer .3mf converter
-# Home: github.com/gabr42/3D/blob/master/HueForge/hfTo3mf.py
+# Home: https://github.com/gabr42/3D/blob/master/HueForge/hfTo3mf.py
 # Writen by Primož Gabrijelčič
 # License: Freeware
 
@@ -94,7 +94,7 @@ def main():
                                     + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">\n'
                                     + '<Relationship Target="/3D/3dmodel.model" Id="rel-1" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"/>\n'
                                     + '</Relationships>')
-        zipf.writestr("Metadata/Slic3r_PE.config",  '; created by htTo3mf.py, github.com/gabr42/3D/blob/master/HueForge/hfTo3mf.py\n\n'
+        zipf.writestr("Metadata/Slic3r_PE.config",  '; created by htTo3mf.py, https://github.com/gabr42/3D/blob/master/HueForge/hfTo3mf.py\n\n'
                                                  + f'; first_layer_height = {base_layer_height:.2f}\n' 
                                                  + f'; layer_height = {layer_height:.2f}\n'
                                                  + f'; min_layer_height = {layer_height:.2f}\n'
