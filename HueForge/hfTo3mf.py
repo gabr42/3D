@@ -1,3 +1,8 @@
+# HueForge .hfp to PrusaSlicer .3mf converter
+# Home: github.com/gabr42/3D/blob/master/HueForge/hfTo3mf.py
+# Writen by Primož Gabrijelčič
+# License: Freeware
+
 import argparse
 import zipfile
 import json
@@ -17,6 +22,7 @@ def addVertex(model, vertices, v, vert_idx):
     return vert_idx
 
 def main():
+    print ("hfTo3mf v0.1")
     start_time = time.time()
     parser = argparse.ArgumentParser()
     parser.add_argument("input_hf_path", type=str, help="Input HueForge file")
@@ -88,11 +94,12 @@ def main():
                                     + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">\n'
                                     + '<Relationship Target="/3D/3dmodel.model" Id="rel-1" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"/>\n'
                                     + '</Relationships>')
-        zipf.writestr("Metadata/Slic3r_PE.config",  '; created by htTo3mf.py\n\n'
+        zipf.writestr("Metadata/Slic3r_PE.config",  '; created by htTo3mf.py, github.com/gabr42/3D/blob/master/HueForge/hfTo3mf.py\n\n'
                                                  + f'; first_layer_height = {base_layer_height:.2f}\n' 
                                                  + f'; layer_height = {layer_height:.2f}\n'
                                                  + f'; min_layer_height = {layer_height:.2f}\n'
                                                  +  '; extruder_colour = ' + filaments[-1]["Color"] + '\n'
+                                                 +  '; perimeters = 1\n'
                                                  +  '; bottom_fill_pattern = monotonic\n'
                                                  +  '; fill_density = 100%\n'
                                                  +  '; fill_pattern = rectilinear\n'
