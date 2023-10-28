@@ -24,6 +24,10 @@ Nevermore V6: https://github.com/nevermore3d/Nevermore_Micro/tree/master/V6
 
 Nevermore V6 Easy Mod: https://www.printables.com/model/514532-nevermore-v6-carbon-filter-easy-mod
 
+Nevermore funnel: https://www.printables.com/model/628621-simple-nevermore-micro-funnel
+
+Parametric nozzle brush: https://www.printables.com/model/495188-parametric-nozzle-brush-with-klipper-macros
+
 # Images
 
 Midjourney: https://www.midjourney.com
