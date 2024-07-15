@@ -6,6 +6,8 @@ Trident LDO: https://github.com/MotorDynamicsLab/LDOVoron2/tree/main/STLs
 
 Stealthburner: https://github.com/VoronDesign/Voron-Stealthburner/tree/main/STLs
 
+Galileo 2 Extruder: https://github.com/JaredC01/Galileo2/tree/main/galileo2_extruder/stl
+
 KlickyNG: https://github.com/jlas1/Klicky-Probe
 
 Tap: https://github.com/VoronDesign/Voron-Tap
