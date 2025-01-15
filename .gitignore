@@ -54,3 +54,5 @@ utilities/dumpindex/Win32/Debug/
 utilities/interleave/test/print.gcode
 
 nozzle indicator/KENYC___.TTF
+
+*.FCBak
